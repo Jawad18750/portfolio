@@ -15,6 +15,7 @@ declare global {
             getResponse: (widgetId: string) => string | undefined;
             execute: (widgetId: string | HTMLElement | string) => void;
         };
+        dataLayer?: Array<Record<string, any>>;
     }
 }
 
@@ -209,6 +210,16 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
                 // Reset Turnstile widget for next submission
                 if (turnstileWidgetId.current && window.turnstile) {
                     window.turnstile.reset(turnstileWidgetId.current);
+                }
+                
+                // Push event to GTM dataLayer for Facebook Pixel Lead tag
+                // This matches the existing GTM trigger: fluentform_success with form_name = start_project
+                if (typeof window !== 'undefined') {
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                        'event': 'fluentform_success',
+                        'DLV - form_name': 'start_project'
+                    });
                 }
                 
                 // Log success for debugging

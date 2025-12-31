@@ -13,6 +13,7 @@ import localFont from 'next/font/local';
 
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, unstable_setRequestLocale } from 'next-intl/server';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 import { routing } from "@/i18n/routing";
 import { renderContent } from "@/app/resources";
@@ -191,6 +192,9 @@ export default async function RootLayout({
 					<Footer/>
 				</Flex>
 			</Flex>
+			{process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+				<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+			)}
 		</NextIntlClientProvider>
 	);
 }

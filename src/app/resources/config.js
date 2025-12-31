@@ -27,11 +27,11 @@ const effects = {
     mask: 'topRight',             // none | cursor | topLeft | topRight | bottomLeft | bottomRight
     gradient: {
         display: true,
-        opacity: 0.7           // 0 - 1
+        opacity: 1           // 0 - 1
     },
     dots: {
         display: true,
-        opacity: 0.5,           // 0 - 1
+        opacity: 1,           // 0 - 1
         size: '40'              // 2 | 4 | 8 | 12 | 16 | 20 | 24 | 32 | 40 | 48 | 56 | 634
     },
     lines: {
@@ -44,7 +44,7 @@ const style = {
     neutral:     'gray',         // sand | gray | slate
     brand:       'cyan',      // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
     accent:      'cyan',       // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
-    solid:       'color',     // color | contrast
+    solid:       'contrast',     // color | contrast
     solidStyle:  'plastic',         // flat | plastic
     border:      'rounded',      // rounded | playful | conservative
     surface:     'translucent',  // filled | translucent

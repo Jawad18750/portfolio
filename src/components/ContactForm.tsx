@@ -148,6 +148,19 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
 
     const handleWhatsAppClick = () => {
         const whatsappURL = generateWhatsAppURL();
+        
+        // Track WhatsApp button click in GTM dataLayer
+        if (typeof window !== 'undefined') {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'whatsapp_button_click',
+                'event_category': 'engagement',
+                'event_label': 'contact_form',
+                'source': submittedData ? 'success_state' : 'form_state',
+                'form_submitted': !!submittedData
+            });
+        }
+        
         window.open(whatsappURL, '_blank');
     };
 

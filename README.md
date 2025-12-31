@@ -24,6 +24,9 @@ A customized portfolio built with [Once UI's Magic Portfolio](https://github.com
 - ✅ **WhatsApp Integration** - Deep link integration for seamless communication
 - ✅ **Smart Phone Detection** - Automatic Libyan phone number normalization (+218)
 - ✅ **SMTP Email** - Server-side email sending via nodemailer
+- ✅ **Bot Protection** - Cloudflare Turnstile invisible bot protection
+- ✅ **Analytics & Tracking** - Google Tag Manager (GTM) with GA4 and Facebook Pixel
+- ✅ **SEO Optimization** - Sitemap, robots.txt, structured data (JSON-LD), hreflang
 - ✅ **Automated Deployment** - GitHub Actions workflow for VPS deployment
 - ✅ **OpenLiteSpeed Integration** - Automatic reverse proxy configuration
 - ✅ **Enhanced RTL Support** - Improved Arabic (RTL) layout and typography
@@ -61,23 +64,35 @@ npm install
 cp .env.example .env
 ```
 
-Edit `.env` and add your SMTP configuration:
+Edit `.env` and add your configuration:
 ```env
+# SMTP Configuration
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
 SMTP_FROM=your-email@gmail.com
 CONTACT_EMAIL=your-contact@email.com
+
+# Cloudflare Turnstile (Bot Protection)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your-turnstile-site-key
+TURNSTILE_SECRET_KEY=your-turnstile-secret-key
+
+# Google Tag Manager
+NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
+
+# Next.js
 NODE_ENV=development
 ```
+
+See `.env.example` for detailed configuration instructions.
 
 **4. Run dev server**
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser (defaults to Arabic locale).
 
 **5. Edit configuration**
 - **Config:** `src/app/resources/config.js`
@@ -144,8 +159,8 @@ The contact form includes:
 ## **🌐 Localization**
 
 ### **Supported Languages**
-- **English** (en) - LTR
-- **Arabic** (ar) - RTL
+- **Arabic** (ar) - Default locale, RTL layout
+- **English** (en) - LTR layout
 
 ### **Adding Translations**
 Edit translation files:
@@ -166,6 +181,8 @@ Edit translation files:
 - **UI Components:** [Once UI](https://once-ui.com)
 - **Internationalization:** [next-intl](https://next-intl-docs.vercel.app)
 - **Email:** [nodemailer](https://nodemailer.com)
+- **Bot Protection:** [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/)
+- **Analytics:** [Google Tag Manager](https://tagmanager.google.com/) + GA4 + Facebook Pixel
 - **Deployment:** GitHub Actions + PM2 + OpenLiteSpeed
 - **Styling:** SCSS + CSS Modules
 - **Content:** MDX
@@ -262,11 +279,17 @@ See `LICENSE.txt` for more information.
 - ✅ Added contact form with email/phone/message fields
 - ✅ Integrated WhatsApp deep link functionality
 - ✅ Implemented smart phone number detection
-- ✅ Added SMTP email sending
-- ✅ Created automated VPS deployment workflow
+- ✅ Added SMTP email sending with HTML formatting
+- ✅ Integrated Cloudflare Turnstile bot protection
+- ✅ Added Google Tag Manager with GA4 and Facebook Pixel
+- ✅ Implemented SEO optimizations (sitemap, robots.txt, structured data, hreflang)
+- ✅ Changed default locale to Arabic
+- ✅ Created automated VPS deployment workflow (port 3001)
 - ✅ Enhanced RTL support for Arabic
 - ✅ Improved mobile responsiveness
 - ✅ Added comprehensive deployment documentation
+- ✅ Fixed logo slider and testimonial spacing issues
+- ✅ Updated avatar to SVG format
 
 ---
 

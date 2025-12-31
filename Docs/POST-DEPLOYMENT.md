@@ -16,11 +16,13 @@ pm2 logs portfolio --lines 50
 ## ✅ Step 2: Test Local Connection
 
 ```bash
-# Test if app responds on port 3000
-curl http://localhost:3000
+# Test if app responds on port 3001
+curl http://localhost:3001
 
 # Should return HTML (not error)
 ```
+
+**Note:** The app runs on port **3001** (not 3000) to avoid conflicts with system services.
 
 ## ✅ Step 3: Configure Environment Variables
 
@@ -29,15 +31,26 @@ curl http://localhost:3000
 nano /var/www/portfolio/.env
 ```
 
-Add your SMTP configuration:
+Add your configuration:
 ```env
+# SMTP Configuration
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
 SMTP_FROM=your-email@gmail.com
 CONTACT_EMAIL=your-contact@email.com
+
+# Cloudflare Turnstile (Bot Protection)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your-turnstile-site-key
+TURNSTILE_SECRET_KEY=your-turnstile-secret-key
+
+# Google Tag Manager
+NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
+
+# Next.js
 NODE_ENV=production
+PORT=3001
 ```
 
 After editing, restart the app:
@@ -45,18 +58,11 @@ After editing, restart the app:
 pm2 restart portfolio
 ```
 
-## ✅ Step 4: Activate OpenLiteSpeed Reverse Proxy
+## ✅ Step 4: OpenLiteSpeed Reverse Proxy
 
-```bash
-# Backup current config (safety measure)
-cp /usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf /usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf.current_backup
+The GitHub Actions workflow automatically verifies and configures the OpenLiteSpeed reverse proxy for port 3001. No manual action required.
 
-# Apply Next.js reverse proxy config
-cp /usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf.nextjs /usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf
-
-# Reload OpenLiteSpeed
-/usr/local/lsws/bin/lswsctrl reload
-```
+**Note:** The app runs on port **3001** (not 3000) to avoid conflicts with system services.
 
 ## ✅ Step 5: Verify Domain Access
 
@@ -104,14 +110,15 @@ pm2 logs portfolio --lines 100
 # - Missing dependencies
 ```
 
-### Port 3000 Already in Use?
+### Port 3001 Already in Use?
 
+The deployment workflow automatically handles port conflicts. The app runs on port **3001** (not 3000) to avoid system service conflicts.
+
+If manual intervention is needed:
 ```bash
-# Find what's using port 3000
-lsof -i :3000
-
-# Kill the process if needed
-kill -9 <PID>
+pm2 stop portfolio
+pm2 delete portfolio
+PORT=3001 pm2 start npm --name "portfolio" -- start
 ```
 
 ### OpenLiteSpeed Not Proxying?
@@ -161,10 +168,11 @@ ls -la /var/www/portfolio.backup.*
 
 You'll know everything is working when:
 - ✅ `pm2 status` shows portfolio as "online"
-- ✅ `curl http://localhost:3000` returns HTML
+- ✅ `curl http://localhost:3001` returns HTML
 - ✅ `curl https://abdeljawad.com` returns your app
-- ✅ Website loads in browser
-- ✅ Contact form submits successfully
+- ✅ Website loads in browser (defaults to Arabic locale)
+- ✅ Contact form submits successfully with bot protection
+- ✅ WhatsApp button works and tracks events in GTM
 - ✅ SSL certificate works (green lock in browser)
 
 ## 📝 Next Steps

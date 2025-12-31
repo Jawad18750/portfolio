@@ -22,7 +22,7 @@ That's it! The script will:
    - Builds the app
    - Deploys to VPS
    - Restarts PM2
-   - Activates OpenLiteSpeed reverse proxy (if needed)
+   - Verifies OpenLiteSpeed reverse proxy configuration
    - Verifies deployment
 
 ## 📋 What Happens Automatically
@@ -68,7 +68,7 @@ pm2 status
 pm2 logs portfolio
 
 # Test locally
-curl http://localhost:3000
+curl http://localhost:3001
 
 # Test domain
 curl https://abdeljawad.com
@@ -102,9 +102,9 @@ cat /usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf | grep proxy
 If this is your first deployment, make sure:
 
 1. ✅ GitHub secrets are configured (VPS_HOST, VPS_USER, VPS_SSH_KEY)
-2. ✅ `.env` file exists on server at `/var/www/portfolio/.env`
+2. ✅ `.env` file exists on server at `/var/www/portfolio/.env` with all required variables (SMTP, Turnstile, GTM)
 3. ✅ Server has Node.js, npm, and PM2 installed
-4. ✅ OpenLiteSpeed config is prepared at `/usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf.nextjs`
+4. ✅ OpenLiteSpeed is configured to proxy to `localhost:3001` (handled automatically by workflow)
 
 See `DEPLOYMENT.md` for detailed first-time setup instructions.
 

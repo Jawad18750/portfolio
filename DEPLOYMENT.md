@@ -100,9 +100,19 @@ SMTP_PASS=your-app-password
 SMTP_FROM=your-email@gmail.com
 CONTACT_EMAIL=your-contact@email.com
 
+# Cloudflare Turnstile (Bot Protection)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your-turnstile-site-key
+TURNSTILE_SECRET_KEY=your-turnstile-secret-key
+
+# Google Tag Manager
+NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
+
 # Next.js
 NODE_ENV=production
+PORT=3001
 ```
+
+**Important:** The app runs on port **3001** (not 3000) to avoid conflicts with system services.
 
 ### First Deployment
 
@@ -135,22 +145,31 @@ pm2 save
 
 ## OpenLiteSpeed Configuration (for CyberPanel)
 
-CyberPanel uses OpenLiteSpeed, not Nginx. The reverse proxy configuration is already prepared on your server.
+CyberPanel uses OpenLiteSpeed, not Nginx. The GitHub Actions workflow automatically verifies and configures the reverse proxy.
 
-### Activate OpenLiteSpeed Reverse Proxy
+### Automatic Configuration
 
-After confirming the Next.js app is running on port 3000:
+The deployment workflow automatically:
+1. Verifies the OpenLiteSpeed config contains `localhost:3001` proxy settings
+2. Reloads OpenLiteSpeed if the config is valid
+3. Cleans up `public_html` directory
+
+### Manual Verification (if needed)
+
+After deployment, verify the app is running on port 3001:
 
 ```bash
-# Backup current config (if not already done)
-cp /usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf /usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf.backup
+# Check if app is running
+pm2 status
 
-# Apply Next.js reverse proxy config
-cp /usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf.nextjs /usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf
+# Test local connection
+curl http://localhost:3001
 
-# Reload OpenLiteSpeed to apply changes
-/usr/local/lsws/bin/lswsctrl reload
+# Verify OpenLiteSpeed config
+grep -A 5 "proxy" /usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf
 ```
+
+**Note:** The app runs on port **3001** (not 3000) to avoid conflicts with system services like `nghttpx`.
 
 ### Verify OpenLiteSpeed Configuration
 
@@ -205,8 +224,10 @@ pm2 logs portfolio --lines 50
 
 ```bash
 pm2 status
-curl http://localhost:3000
+curl http://localhost:3001
 ```
+
+**Note:** The app runs on port **3001**, not 3000.
 
 ### Manual Restart
 

@@ -66,14 +66,27 @@ nano /var/www/portfolio/.env
 Add your configuration:
 
 ```env
+# SMTP Configuration
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
 SMTP_FROM=your-email@gmail.com
 CONTACT_EMAIL=your-contact@email.com
+
+# Cloudflare Turnstile (Bot Protection)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your-turnstile-site-key
+TURNSTILE_SECRET_KEY=your-turnstile-secret-key
+
+# Google Tag Manager
+NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
+
+# Next.js
 NODE_ENV=production
+PORT=3001
 ```
+
+**Important:** The app runs on port **3001** (not 3000).
 
 ## 5. Deploy!
 
@@ -88,20 +101,11 @@ GitHub Actions will automatically:
 - ✅ Deploy to VPS
 - ✅ Restart with PM2
 
-## 6. Activate OpenLiteSpeed Reverse Proxy
+## 6. OpenLiteSpeed Reverse Proxy
 
-After deployment and confirming the app runs on port 3000:
+The GitHub Actions workflow automatically verifies and configures the OpenLiteSpeed reverse proxy for port 3001.
 
-```bash
-# Apply the prepared Next.js config
-cp /usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf.nextjs /usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf
-
-# Reload OpenLiteSpeed
-/usr/local/lsws/bin/lswsctrl reload
-```
-
-**Note:** The OpenLiteSpeed reverse proxy config is already prepared on your server at:
-`/usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf.nextjs`
+**Note:** The app runs on port **3001** (not 3000) to avoid conflicts with system services. The deployment workflow handles this automatically.
 
 ## 7. SSL Certificate
 
@@ -133,13 +137,15 @@ pm2 monit
 pm2 logs portfolio --lines 50
 ```
 
-**Port 3000 not accessible?**
+**Port 3001 not accessible?**
 ```bash
 # Check if app is running
 pm2 status
 
 # Check port
-netstat -tulpn | grep 3000
+netstat -tulpn | grep 3001
+
+# The app runs on port 3001 (not 3000) to avoid system conflicts
 ```
 
 **Deployment failed?**

@@ -43,9 +43,37 @@
 
 /* RTL Table of Contents - now handled in component */
 
-/* RTL Social Links */
+/* RTL Footer Layout */
+.arabic-font footer {
+  direction: rtl;
+}
+
+/* RTL Social Links - Reverse icon order */
 .arabic-font footer .flex[data-gap="16"] {
   flex-direction: row-reverse;
+}
+
+/* RTL Footer Content Container - Reverse main content flex */
+.arabic-font footer > .flex:first-child {
+  flex-direction: row-reverse;
+}
+
+/* RTL Footer Inner Content - Reverse space-between flex */
+.arabic-font footer .flex[data-justify-content="space-between"] {
+  flex-direction: row-reverse;
+}
+
+/* RTL Footer Text - Right align text content */
+.arabic-font footer .flex[data-justify-content="space-between"] > .flex:first-child,
+.arabic-font footer .flex[data-justify-content="space-between"] > div:first-child {
+  text-align: right;
+  direction: rtl;
+}
+
+/* RTL Footer - Keep English attribution text in LTR direction */
+.arabic-font footer .flex[data-justify-content="space-between"] > .flex:first-child > *:last-child {
+  direction: ltr;
+  unicode-bidi: embed;
 }
 
 /* RTL Form Elements */
@@ -55,9 +83,22 @@
   text-align: right;
 }
 
-/* About Button - Ensure avatar is on the far right in RTL mode */
-.arabic-font .about-button-content {
-  /* No row-reverse needed - order is handled in JSX */
+/* RTL Input Labels - Position labels on the right side */
+.arabic-font form label[for],
+.arabic-font [class*="Input_wrapper"] label {
+  left: auto !important;
+  right: var(--static-space-16) !important;
+  transform-origin: right !important;
+}
+
+/* RTL Input Label floating state - maintain transform but adjust origin */
+.arabic-font [class*="Input_wrapper"] label[class*="floating"] {
+  transform-origin: right !important;
+}
+
+/* RTL Textarea Label floating state */
+.arabic-font [class*="Input_wrapper"] label[class*="textareaLabel"][class*="floating"] {
+  transform-origin: right !important;
 }
 
 /* Logo slider styling */
@@ -70,6 +111,142 @@
 /* Ensure SVG logos are transparent */
 .logo-slider svg {
   background-color: transparent !important;
+}
+
+/* Contact Form Responsive Styles */
+.contact-form-container {
+  padding: var(--static-space-xl);
+}
+
+.contact-form-fields {
+  max-width: 40rem;
+}
+
+/* Core fix: Ensure ALL direct children have proper spacing */
+.contact-form-fields > * {
+  margin-bottom: var(--static-space-m) !important;
+}
+
+.contact-form-fields > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Consistent spacing wrapper for all fields */
+.contact-field-wrapper {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.contact-email-phone-wrapper {
+  width: 100%;
+}
+
+.contact-form-success {
+  max-width: 40rem;
+  padding: 0 var(--static-space-s);
+}
+
+.contact-form-buttons {
+  width: 100%;
+}
+
+.contact-button {
+  flex: 1;
+}
+
+/* Email/Phone wrapper spacing when stacked */
+.contact-email-phone-wrapper > *:not(:last-child) {
+  margin-bottom: var(--static-space-m) !important;
+}
+
+@media (max-width: 768px) {
+  /* Adjust form container padding on mobile */
+  .contact-form-container {
+    padding: var(--static-space-l) var(--static-space-m);
+  }
+  
+  /* Full width form fields on mobile */
+  .contact-form-fields {
+    max-width: 100% !important;
+  }
+  
+  /* Stack email and phone on mobile */
+  .contact-email-phone-wrapper {
+    flex-direction: column !important;
+  }
+  
+  /* Success state adjustments */
+  .contact-form-success {
+    max-width: 100%;
+    padding: 0 var(--static-space-xs);
+  }
+  
+  /* Success state buttons stack on mobile */
+  .contact-form-buttons {
+    flex-direction: column !important;
+    gap: var(--static-space-s) !important;
+  }
+  
+  .contact-button {
+    width: 100%;
+  }
+}
+
+/* Footer Responsive Styles */
+.footer-text {
+  text-align: left;
+}
+
+@media (max-width: 768px) {
+  /* Footer mobile styles */
+  footer .flex[data-justify-content="space-between"] {
+    flex-direction: column !important;
+    gap: var(--static-space-m) !important;
+    text-align: center !important;
+  }
+  
+  footer .flex[data-justify-content="space-between"] > * {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Center footer text on mobile */
+  .footer-text {
+    text-align: center !important;
+  }
+  
+  /* Center social icons on mobile */
+  footer .flex[data-gap="16"] {
+    justify-content: center !important;
+  }
+}
+
+/* iPad Responsive Styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Adjust form max width on iPad */
+  .contact-form-fields {
+    max-width: 90% !important;
+  }
+  
+  .contact-form-success {
+    max-width: 90% !important;
+  }
+  
+  /* Maintain consistent spacing on iPad */
+  .contact-form-fields {
+    gap: var(--static-space-m) !important;
+  }
+  
+  .contact-email-phone-wrapper {
+    gap: var(--static-space-m) !important;
+  }
+  
+  /* Footer spacing on iPad */
+  footer .flex[data-justify-content="space-between"] {
+    padding-left: var(--static-space-l) !important;
+    padding-right: var(--static-space-l) !important;
+  }
 }
 
 

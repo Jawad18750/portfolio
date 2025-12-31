@@ -17,11 +17,18 @@ export const Footer = () => {
             justifyContent="center" mobileDirection="column">
             <Flex
                 className={styles.mobile}
-                fillWidth maxWidth="m" paddingY="8" paddingX="16" gap="16"
-                justifyContent="space-between" alignItems="center">
+                fillWidth 
+                maxWidth="m" 
+                paddingY="8" 
+                paddingX="16"
+                gap="16"
+                justifyContent="space-between" 
+                alignItems="center"
+                mobileDirection="column">
                 <Text
                     variant="body-default-s"
-                    onBackground="neutral-strong">
+                    onBackground="neutral-strong"
+                    className="footer-text">
                     <Text
                         onBackground="neutral-weak">
                         © {currentYear} /
@@ -31,7 +38,7 @@ export const Footer = () => {
                     </Text>
                     <Text onBackground="neutral-weak">
                         {/* Usage of this template requires attribution. Please don't remove the link to Once UI. */}
-                        / Build your portfolio with <SmartLink style={{marginLeft: '-0.125rem'}} href="https://once-ui.com/templates/magic-portfolio">Once UI</SmartLink>
+                        / {t('footer.attribution')} <SmartLink style={{marginLeft: '-0.125rem'}} href="https://once-ui.com/templates/magic-portfolio">Once UI</SmartLink>
                     </Text>
                 </Text>
                 <Flex

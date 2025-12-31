@@ -1,5 +1,5 @@
 import { Flex, Heading } from '@/once-ui/components';
-import { Mailchimp } from '@/components';
+import { ContactForm } from '@/components';
 import { Posts } from '@/components/blog/Posts';
 import { baseURL, renderContent } from '@/app/resources'
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
@@ -46,7 +46,7 @@ export default function Blog(
 	unstable_setRequestLocale(locale);
 
 	const t = useTranslations();
-	const { person, blog, newsletter } = renderContent(t);
+	const { person, blog, newsletter, contact } = renderContent(t);
     return (
         <Flex
 			fillWidth maxWidth="s"
@@ -83,8 +83,8 @@ export default function Blog(
 				<Posts range={[1,3]} locale={locale} thumbnail/>
 				<Posts range={[4]} columns="2" locale={locale}/>
 			</Flex>
-            {newsletter.display && (
-                <Mailchimp newsletter={newsletter} />
+            {contact.display && (
+                <ContactForm display={contact.display} title={contact.title} description={contact.description} />
             )}
         </Flex>
     );

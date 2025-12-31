@@ -19,6 +19,12 @@ const createI18nContent = (t) => {
         description: <>{t("newsletter.description")}</>
     }
 
+    const contact = {
+        display: true,
+        title: <>{t("contact.title")}</>,
+        description: <>{t("contact.description")}</>
+    }
+
     const social = [
         // Links are automatically displayed.
         // Import new icons in /once-ui/icons.ts
@@ -367,6 +373,7 @@ const createI18nContent = (t) => {
         person,
         social,
         newsletter,
+        contact,
         home,
         about,
         blog,

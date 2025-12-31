@@ -9,6 +9,36 @@
         "description": "I occasionally write about development and technology and share programming ideas sometimes.",
         "button": "Sign up"
     },
+    "contact": {
+        "title": "Get in touch",
+        "description": "Have a project in mind? Let's discuss how we can work together.",
+        "labels": {
+            "name": "Name",
+            "email": "Email",
+            "phone": "Phone",
+            "message": "Message"
+        },
+        "placeholders": {
+            "name": "Your name",
+            "email": "your@email.com",
+            "phone": "+1 555 123 4567",
+            "message": "Tell me about your project..."
+        },
+        "errors": {
+            "name": "Name is required",
+            "emailRequired": "Email is required",
+            "emailInvalid": "Please enter a valid email address",
+            "message": "Message is required"
+        },
+        "send": "Send Message",
+        "sending": "Sending...",
+        "success": "Message sent!",
+        "successMessage": "I'll get back to you as soon as possible.",
+        "error": "Failed to send message. Please try again.",
+        "tryAgain": "Try Again",
+        "sendAnother": "Send Another",
+        "continueWhatsApp": "Continue on WhatsApp"
+    },
     "home": {
         "label": "Home",
         "title": "Abdeljawad Almiladi",
@@ -223,6 +253,7 @@
         "link": "Project Link"
     },
     "footer": {
-        "copyright": "© {year} Abdeljawad Almiladi. All rights reserved."
+        "copyright": "© {year} Abdeljawad Almiladi. All rights reserved.",
+        "attribution": "Build your portfolio with"
     }
 }

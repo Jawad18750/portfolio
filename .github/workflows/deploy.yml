@@ -1,0 +1,213 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js app
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Create deployment package
+        run: |
+          mkdir -p deploy
+          cp -r .next deploy/
+          cp -r public deploy/
+          cp -r src deploy/
+          cp -r messages deploy/
+          cp -r fonts_to_use_for_ar deploy/ 2>/dev/null || true
+          cp package.json deploy/
+          cp package-lock.json deploy/
+          cp next.config.mjs deploy/
+          cp tsconfig.json deploy/
+          cp postcss.config.js deploy/
+          cp .env.example deploy/
+
+      - name: Compress deployment package
+        run: |
+          tar -czf deploy.tar.gz -C deploy .
+
+      - name: Deploy to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT || 22 }}
+          source: "deploy.tar.gz"
+          target: "/root/portfolio-deploy"
+          strip_components: 0
+
+      - name: Extract and deploy on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT || 22 }}
+          script: |
+            set -e
+            
+            echo "🚀 Starting automated deployment..."
+            
+            cd /root/portfolio-deploy
+            
+            # Extract deployment package
+            echo "📦 Extracting deployment package..."
+            tar -xzf deploy.tar.gz
+            rm deploy.tar.gz
+            
+            # Create app directory if it doesn't exist
+            mkdir -p /var/www/portfolio
+            
+            # Backup current deployment
+            if [ -d /var/www/portfolio/.next ]; then
+              echo "💾 Creating backup..."
+              BACKUP_DIR="/var/www/portfolio.backup.$(date +%Y%m%d_%H%M%S)"
+              mkdir -p "$BACKUP_DIR"
+              cp -r /var/www/portfolio/.next "$BACKUP_DIR/" 2>/dev/null || true
+              cp -r /var/www/portfolio/public "$BACKUP_DIR/" 2>/dev/null || true
+              cp -r /var/www/portfolio/src "$BACKUP_DIR/" 2>/dev/null || true
+              cp -r /var/www/portfolio/messages "$BACKUP_DIR/" 2>/dev/null || true
+              cp /var/www/portfolio/package.json "$BACKUP_DIR/" 2>/dev/null || true
+              echo "✅ Backup created at $BACKUP_DIR"
+            fi
+            
+            # Copy new files
+            echo "📋 Copying files..."
+            cp -r .next /var/www/portfolio/
+            cp -r public /var/www/portfolio/
+            cp -r src /var/www/portfolio/
+            cp -r messages /var/www/portfolio/
+            [ -d fonts_to_use_for_ar ] && cp -r fonts_to_use_for_ar /var/www/portfolio/ || true
+            cp package.json /var/www/portfolio/
+            cp package-lock.json /var/www/portfolio/
+            cp next.config.mjs /var/www/portfolio/
+            cp tsconfig.json /var/www/portfolio/
+            cp postcss.config.js /var/www/portfolio/
+            
+            # Handle environment file
+            if [ -f /var/www/portfolio/.env ]; then
+              echo "✅ Keeping existing .env file"
+            else
+              if [ -f .env.example ]; then
+                cp .env.example /var/www/portfolio/.env
+                echo "⚠️  Created .env from .env.example - PLEASE CONFIGURE IT!"
+              else
+                echo "⚠️  No .env file found - you need to create one manually"
+              fi
+            fi
+            
+            # Install production dependencies
+            echo "📦 Installing dependencies..."
+            cd /var/www/portfolio
+            npm ci --production --no-audit
+            
+            # Setup PM2 if not already configured
+            echo "⚙️  Configuring PM2..."
+            if ! pm2 list | grep -q "portfolio"; then
+              echo "🆕 Starting new PM2 process..."
+              pm2 start npm --name "portfolio" -- start
+              pm2 save
+              # Setup PM2 startup if not already done
+              pm2 startup systemd -u root --hp /root 2>/dev/null || echo "PM2 startup already configured"
+            else
+              echo "🔄 Restarting existing PM2 process..."
+              pm2 restart portfolio --update-env
+            fi
+            
+            # Wait for app to start
+            echo "⏳ Waiting for application to start..."
+            sleep 5
+            
+            # Health check - verify app is running
+            echo "🏥 Performing health check..."
+            MAX_RETRIES=10
+            RETRY_COUNT=0
+            APP_ONLINE=false
+            
+            while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+              if pm2 list | grep -q "portfolio.*online"; then
+                # Try to curl the app
+                if curl -f -s http://localhost:3000 > /dev/null 2>&1; then
+                  APP_ONLINE=true
+                  break
+                fi
+              fi
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              echo "   Attempt $RETRY_COUNT/$MAX_RETRIES - waiting..."
+              sleep 2
+            done
+            
+            if [ "$APP_ONLINE" = true ]; then
+              echo "✅ Application is running and responding"
+            else
+              echo "⚠️  Warning: Application may not be fully ready"
+              echo "   Check logs: pm2 logs portfolio"
+              echo "   Check status: pm2 status"
+            fi
+            
+            # Automatically activate OpenLiteSpeed reverse proxy (if not already active)
+            echo "🌐 Configuring OpenLiteSpeed reverse proxy..."
+            VHOST_CONF="/usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf"
+            NEXTJS_CONF="/usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf.nextjs"
+            
+            if [ -f "$NEXTJS_CONF" ]; then
+              # Check if Next.js proxy config is already active
+              if grep -q "localhost:3000" "$VHOST_CONF" 2>/dev/null; then
+                echo "   ✅ OpenLiteSpeed reverse proxy already active"
+              else
+                echo "   Activating Next.js reverse proxy configuration..."
+                # Backup current config
+                cp "$VHOST_CONF" "${VHOST_CONF}.backup.$(date +%Y%m%d_%H%M%S)" 2>/dev/null || true
+                # Apply Next.js config
+                cp "$NEXTJS_CONF" "$VHOST_CONF"
+                # Reload OpenLiteSpeed
+                /usr/local/lsws/bin/lswsctrl reload
+                echo "   ✅ OpenLiteSpeed reverse proxy activated"
+              fi
+            else
+              echo "   ⚠️  Next.js config file not found at $NEXTJS_CONF"
+              echo "   Skipping OpenLiteSpeed configuration (may need manual setup)"
+            fi
+            
+            # Cleanup old backups (keep last 3)
+            echo "🧹 Cleaning up old backups..."
+            cd /var/www
+            if [ -d portfolio.backup.* ]; then
+              ls -dt portfolio.backup.* 2>/dev/null | tail -n +4 | xargs rm -rf 2>/dev/null || true
+            fi
+            
+            # Cleanup deployment directory
+            cd /root
+            rm -rf portfolio-deploy
+            
+            echo ""
+            echo "✅ Deployment completed successfully!"
+            echo ""
+            echo "📊 Application Status:"
+            pm2 list | grep portfolio || echo "   (Check manually: pm2 status)"
+            echo ""
+            echo "🌐 Domain: https://abdeljawad.com"
+            echo "📝 Logs: pm2 logs portfolio"
+            echo "🔄 Restart: pm2 restart portfolio"

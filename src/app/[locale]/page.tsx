@@ -4,7 +4,7 @@ import { Heading, Flex, Text, Button,  Avatar, RevealFx, Arrow } from '@/once-ui
 import { Projects } from '@/components/work/Projects';
 
 import { baseURL, routes, renderContent } from '@/app/resources';
-import { Mailchimp } from '@/components';
+import { ContactForm } from '@/components';
 import { Posts } from '@/components/blog/Posts';
 import { TestimonialSlider } from '@/components/TestimonialSlider';
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
@@ -48,7 +48,7 @@ export default function Home(
 ) {
 	unstable_setRequestLocale(locale);
 	const t = useTranslations();
-	const { home, about, person, newsletter, testimonials, allLogos } = renderContent(t);
+	const { home, about, person, newsletter, contact, testimonials, allLogos } = renderContent(t);
 	return (
 		<Flex
 			maxWidth="m" fillWidth gap="xl"
@@ -136,8 +136,8 @@ export default function Home(
 			<RevealFx translateY="16" delay={0.8}>
 				<TestimonialSlider testimonials={testimonials} allLogos={allLogos} locale={locale} />
 			</RevealFx>
-			{ newsletter.display &&
-				<Mailchimp newsletter={newsletter} />
+			{ contact.display &&
+				<ContactForm display={contact.display} title={contact.title} description={contact.description} />
 			}
 		</Flex>
 	);

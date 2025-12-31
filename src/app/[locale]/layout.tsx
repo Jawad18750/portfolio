@@ -59,6 +59,8 @@ const primary = Inter({
 	variable: '--font-primary',
 	subsets: ['latin'],
 	display: 'swap',
+	preload: true,
+	fallback: ['system-ui', 'arial'],
 })
 
 // Lama Sans Arabic Font Setup
@@ -88,6 +90,8 @@ const secondary = localFont({
         },
     ],
     display: 'swap',
+    preload: true,
+    fallback: ['system-ui', 'arial'],
 })
 
 type FontConfig = {
@@ -106,6 +110,7 @@ const code = Source_Code_Pro({
 	variable: '--font-code',
 	subsets: ['latin'],
 	display: 'swap',
+	preload: false, // Code font is less critical, load on demand
 });
 
 interface RootLayoutProps {

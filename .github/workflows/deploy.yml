@@ -123,33 +123,51 @@ jobs:
             cd /var/www/portfolio
             npm ci --production --no-audit
             
-            # Setup PM2 if not already configured
-            echo "⚙️  Configuring PM2..."
-            if ! pm2 list | grep -q "portfolio"; then
-              echo "🆕 Starting new PM2 process..."
-              pm2 start npm --name "portfolio" -- start
-              pm2 save
-              # Setup PM2 startup if not already done
-              pm2 startup systemd -u root --hp /root 2>/dev/null || echo "PM2 startup already configured"
+            # CRITICAL FIX: Use port 3001 to avoid conflict with nghttpx on port 3000
+            echo "🔍 Checking port 3001 availability..."
+            PORT_3001_PID=$(lsof -ti :3001 2>/dev/null || echo "")
+            if [ -n "$PORT_3001_PID" ]; then
+              PORT_3001_PROCESS=$(ps -p $PORT_3001_PID -o comm= 2>/dev/null || echo "unknown")
+              echo "   ⚠️  Port 3001 is in use by: $PORT_3001_PROCESS (PID: $PORT_3001_PID)"
+              echo "   Stopping PM2 portfolio process first..."
+              pm2 stop portfolio 2>/dev/null || true
+              pm2 delete portfolio 2>/dev/null || true
+              sleep 2
             else
-              echo "🔄 Restarting existing PM2 process..."
-              pm2 restart portfolio --update-env
+              echo "   ✅ Port 3001 is available"
             fi
+            
+            # Setup PM2 - ALWAYS stop/delete first to avoid conflicts
+            echo "⚙️  Configuring PM2..."
+            if pm2 list | grep -q "portfolio"; then
+              echo "   Stopping existing portfolio process..."
+              pm2 stop portfolio 2>/dev/null || true
+              pm2 delete portfolio 2>/dev/null || true
+              sleep 2
+            fi
+            
+            # Start PM2 with port 3001
+            echo "🆕 Starting PM2 process on port 3001..."
+            PORT=3001 pm2 start npm --name "portfolio" -- start
+            pm2 save
+            
+            # Setup PM2 startup if not already done
+            pm2 startup systemd -u root --hp /root 2>/dev/null || echo "PM2 startup already configured"
             
             # Wait for app to start
             echo "⏳ Waiting for application to start..."
             sleep 5
             
-            # Health check - verify app is running
-            echo "🏥 Performing health check..."
+            # Health check - verify app is running on port 3001
+            echo "🏥 Performing health check on port 3001..."
             MAX_RETRIES=10
             RETRY_COUNT=0
             APP_ONLINE=false
             
             while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
               if pm2 list | grep -q "portfolio.*online"; then
-                # Try to curl the app
-                if curl -f -s http://localhost:3000 > /dev/null 2>&1; then
+                # Try to curl the app on port 3001
+                if curl -f -s http://localhost:3001 > /dev/null 2>&1; then
                   APP_ONLINE=true
                   break
                 fi
@@ -160,11 +178,12 @@ jobs:
             done
             
             if [ "$APP_ONLINE" = true ]; then
-              echo "✅ Application is running and responding"
+              echo "✅ Application is running and responding on port 3001"
             else
               echo "⚠️  Warning: Application may not be fully ready"
               echo "   Check logs: pm2 logs portfolio"
               echo "   Check status: pm2 status"
+              echo "   Check port: lsof -i :3001"
             fi
             
             # Automatically activate OpenLiteSpeed reverse proxy (if not already active)

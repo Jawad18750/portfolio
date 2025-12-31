@@ -127,7 +127,7 @@ jobs:
             echo "🔍 Checking port 3001 availability..."
             PORT_3001_PID=$(lsof -ti :3001 2>/dev/null || echo "")
             if [ -n "$PORT_3001_PID" ]; then
-              PORT_3001_PROCESS=$(ps -p $PORT_3001_PID -o comm= 2>/dev/null || echo "unknown")
+              PORT_3001_PROCESS=$(ps -p $PORT_3001_PID -o comm= 2>/dev/null || echo "")
               echo "   ⚠️  Port 3001 is in use by: $PORT_3001_PROCESS (PID: $PORT_3001_PID)"
               echo "   Stopping PM2 portfolio process first..."
               pm2 stop portfolio 2>/dev/null || true
@@ -146,44 +146,70 @@ jobs:
               sleep 2
             fi
             
-            # Start PM2 with port 3001
-            echo "🆕 Starting PM2 process on port 3001..."
+            echo "🆕 Starting new PM2 process..."
+            # Use port 3001 to avoid conflict with nghttpx on port 3000
             PORT=3001 pm2 start npm --name "portfolio" -- start
             pm2 save
             
             # Setup PM2 startup if not already done
-            pm2 startup systemd -u root --hp /root 2>/dev/null || echo "PM2 startup already configured"
+            pm2 startup systemd -u root --hp /root 2>/dev/null || echo "   PM2 startup already configured"
             
             # Wait for app to start
             echo "⏳ Waiting for application to start..."
             sleep 5
             
-            # Health check - verify app is running on port 3001
-            echo "🏥 Performing health check on port 3001..."
-            MAX_RETRIES=10
+            # Health check - verify app is running
+            echo "🏥 Performing health check..."
+            MAX_RETRIES=15
             RETRY_COUNT=0
             APP_ONLINE=false
             
             while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+              # Check PM2 status
               if pm2 list | grep -q "portfolio.*online"; then
-                # Try to curl the app on port 3001
+                # Try to curl the app
                 if curl -f -s http://localhost:3001 > /dev/null 2>&1; then
                   APP_ONLINE=true
                   break
+                else
+                  echo "   PM2 shows online but app not responding on port 3001..."
+                  # Check what's actually on port 3001
+                  PORT_3001_PID=$(lsof -ti :3001 2>/dev/null || echo "")
+                  if [ -n "$PORT_3001_PID" ]; then
+                    PORT_3001_PROCESS=$(ps -p $PORT_3001_PID -o comm= 2>/dev/null || echo "")
+                    echo "   Port 3001 is being used by: $PORT_3001_PROCESS (PID: $PORT_3001_PID)"
+                  fi
+                fi
+              else
+                # Check PM2 error logs
+                PM2_STATUS=$(pm2 jlist | grep -A 5 '"name":"portfolio"' | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
+                echo "   Attempt $((RETRY_COUNT + 1))/$MAX_RETRIES - PM2 status: $PM2_STATUS"
+                if [ "$PM2_STATUS" = "errored" ] || [ "$PM2_STATUS" = "stopped" ]; then
+                  echo "   Checking error logs..."
+                  pm2 logs portfolio --lines 10 --nostream 2>&1 | tail -5
                 fi
               fi
               RETRY_COUNT=$((RETRY_COUNT + 1))
-              echo "   Attempt $RETRY_COUNT/$MAX_RETRIES - waiting..."
               sleep 2
             done
             
             if [ "$APP_ONLINE" = true ]; then
               echo "✅ Application is running and responding on port 3001"
             else
-              echo "⚠️  Warning: Application may not be fully ready"
-              echo "   Check logs: pm2 logs portfolio"
-              echo "   Check status: pm2 status"
-              echo "   Check port: lsof -i :3001"
+              echo "❌ ERROR: Application failed to start or is not responding"
+              echo ""
+              echo "📋 Diagnostic Information:"
+              echo "   PM2 Status:"
+              pm2 list | grep portfolio || echo "   Portfolio process not found"
+              echo ""
+              echo "   Port 3001 Status:"
+              lsof -i :3001 2>/dev/null || echo "   Port 3001 not in use"
+              echo ""
+              echo "   Recent PM2 Logs:"
+              pm2 logs portfolio --lines 20 --nostream 2>&1 | tail -20
+              echo ""
+              echo "   Please check the logs above and fix any issues before continuing."
+              exit 1
             fi
             
             # Automatically activate OpenLiteSpeed reverse proxy (if not already active)
@@ -193,7 +219,7 @@ jobs:
             
             if [ -f "$NEXTJS_CONF" ]; then
               # Check if Next.js proxy config is already active
-              if grep -q "localhost:3000" "$VHOST_CONF" 2>/dev/null; then
+              if grep -q "localhost:3001" "$VHOST_CONF" 2>/dev/null; then
                 echo "   ✅ OpenLiteSpeed reverse proxy already active"
               else
                 echo "   Activating Next.js reverse proxy configuration..."
@@ -216,6 +242,14 @@ jobs:
             if [ -d portfolio.backup.* ]; then
               ls -dt portfolio.backup.* 2>/dev/null | tail -n +4 | xargs rm -rf 2>/dev/null || true
             fi
+            
+            # Ensure public_html is empty (OpenLiteSpeed proxy requires empty docRoot)
+            echo "📝 Ensuring public_html is empty for proxy to work..."
+            # Remove any files that might interfere with proxy
+            rm -f /home/abdeljawad.com/public_html/index.html /home/abdeljawad.com/public_html/index.php 2>/dev/null || true
+            # Keep only symlinks to static assets if they exist
+            find /home/abdeljawad.com/public_html -type f ! -type l -delete 2>/dev/null || true
+            echo "   ✅ public_html cleaned (proxy will handle all requests)"
             
             # Cleanup deployment directory
             cd /root

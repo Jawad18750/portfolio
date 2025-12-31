@@ -7,9 +7,9 @@ const person = {
         return `${this.firstName} ${this.lastName}`;
     },
     role:      'Design Engineer',
-    avatar:    '/images/avatar.jpg',
+    avatar:    '/images/avatar.avif',
     location:  'Asia/Jakarta',        // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
-    languages: ['English', 'Bahasa']  // optional: Leave the array empty if you don't want to display languages
+    languages: ['English', 'Arabic']  // optional: Leave the array empty if you don't want to display languages
 }
 
 const newsletter = {
@@ -24,12 +24,12 @@ const social = [
     {
         name: 'GitHub',
         icon: 'github',
-        link: 'https://github.com/once-ui-system/nextjs-starter',
+        link: 'https://github.com/Jawad18750',
     },
     {
         name: 'LinkedIn',
         icon: 'linkedin',
-        link: 'https://www.linkedin.com/company/once-ui/',
+        link: 'https://ly.linkedin.com/in/abdeljawad-almiladi-99a0a2208',
     },
     {
         name: 'X',
@@ -39,7 +39,7 @@ const social = [
     {
         name: 'Email',
         icon: 'email',
-        link: 'mailto:example@gmail.com',
+        link: 'mailto:me@abdeljawad.com',
     },
 ]
 

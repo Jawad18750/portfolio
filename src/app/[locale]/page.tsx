@@ -3,9 +3,10 @@ import React from 'react';
 import { Heading, Flex, Text, Button,  Avatar, RevealFx, Arrow } from '@/once-ui/components';
 import { Projects } from '@/components/work/Projects';
 
-import { baseURL, routes, renderContent } from '@/app/resources'; 
+import { baseURL, routes, renderContent } from '@/app/resources';
 import { Mailchimp } from '@/components';
 import { Posts } from '@/components/blog/Posts';
+import { TestimonialSlider } from '@/components/TestimonialSlider';
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 
@@ -47,7 +48,7 @@ export default function Home(
 ) {
 	unstable_setRequestLocale(locale);
 	const t = useTranslations();
-	const { home, about, person, newsletter } = renderContent(t);
+	const { home, about, person, newsletter, testimonials, allLogos } = renderContent(t);
 	return (
 		<Flex
 			maxWidth="m" fillWidth gap="xl"
@@ -108,15 +109,20 @@ export default function Home(
 									size="m">
 									<Flex
 										gap="8"
-										alignItems="center">
+										alignItems="center"
+										className="about-button-content">
 										{about.avatar.display && (
 											<Avatar
-												style={{marginLeft: '-0.75rem', marginRight: '0.25rem'}}
+												style={
+													locale === 'ar'
+														? { marginRight: '-0.75rem', marginLeft: '0.25rem' }
+														: { marginLeft: '-0.75rem', marginRight: '0.25rem' }
+												}
 												src={person.avatar}
 												size="m"/>
-											)}
-											{t("about.title")}
-											<Arrow trigger="#about"/>
+										)}
+										{t("about.title")}
+										<Arrow trigger="#about"/>
 									</Flex>
 								</Button>
 							</Flex>
@@ -125,27 +131,11 @@ export default function Home(
 				
 			</Flex>
 			<RevealFx translateY="16" delay={0.6}>
-				<Projects range={[1,1]} locale={locale}/>
+				<Projects locale={locale}/>
 			</RevealFx>
-			{routes['/blog'] && (
-				<Flex
-					fillWidth gap="24"
-					mobileDirection="column">
-					<Flex flex={1} paddingLeft="l">
-						<Heading
-							as="h2"
-							variant="display-strong-xs"
-							wrap="balance">
-							Latest from the blog
-						</Heading>
-					</Flex>
-					<Flex
-						flex={3} paddingX="20">
-						<Posts range={[1,2]} columns="2" locale={locale}/>
-					</Flex>
-				</Flex>
-			)}
-			<Projects range={[2]} locale={locale}/>
+			<RevealFx translateY="16" delay={0.8}>
+				<TestimonialSlider testimonials={testimonials} allLogos={allLogos} locale={locale} />
+			</RevealFx>
 			{ newsletter.display &&
 				<Mailchimp newsletter={newsletter} />
 			}

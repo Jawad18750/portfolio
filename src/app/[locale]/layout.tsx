@@ -1,5 +1,6 @@
 import "@/once-ui/styles/index.scss";
 import "@/once-ui/tokens/index.scss";
+import "@/app/resources/custom.css";
 
 import classNames from 'classnames';
 
@@ -7,7 +8,8 @@ import { Footer, Header, RouteGuard } from "@/components";
 import { baseURL, effects, style } from '@/app/resources'
 
 import { Inter } from 'next/font/google'
-import { Source_Code_Pro } from 'next/font/google';
+import { Source_Code_Pro } from 'next/font/google'
+import localFont from 'next/font/local';
 
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, unstable_setRequestLocale } from 'next-intl/server';
@@ -27,6 +29,10 @@ export async function generateMetadata(
 		metadataBase: new URL(`https://${baseURL}/${locale}`),
 		title: home.title,
 		description: home.description,
+		icons: {
+			icon: '/favicon.ico',
+			apple: '/favicon.ico',
+		},
 		openGraph: {
 			title: `${person.firstName}'s Portfolio`,
 			description: 'Portfolio website showcasing my work.',
@@ -55,15 +61,43 @@ const primary = Inter({
 	display: 'swap',
 })
 
+// Lama Sans Arabic Font Setup
+// Using the 4 weights that match Inter font usage in the portfolio
+const secondary = localFont({
+    variable: '--font-secondary',
+    src: [
+        {
+            path: '../../../public/fonts/LamaSans-Light.ttf',
+            weight: '300',
+            style: 'normal',
+        },
+        {
+            path: '../../../public/fonts/LamaSans-Regular.ttf',
+            weight: '400',
+            style: 'normal',
+        },
+        {
+            path: '../../../public/fonts/LamaSans-Bold.ttf',
+            weight: '700',
+            style: 'normal',
+        },
+        {
+            path: '../../../public/fonts/LamaSans-ExtraBold.ttf',
+            weight: '800',
+            style: 'normal',
+        },
+    ],
+    display: 'swap',
+})
+
 type FontConfig = {
     variable: string;
 };
 
 /*
-	Replace with code for secondary and tertiary fonts
+	Replace with code for tertiary fonts
 	from https://once-ui.com/customize
 */
-const secondary: FontConfig | undefined = undefined;
 const tertiary: FontConfig | undefined = undefined;
 /*
 */
@@ -92,7 +126,7 @@ export default async function RootLayout({
 	return (
 		<NextIntlClientProvider messages={messages}>
 			<Flex
-				as="html" lang="en"
+				as="html" lang={locale}
 				background="page"
 				data-neutral={style.neutral} data-brand={style.brand} data-accent={style.accent}
 				data-solid={style.solid} data-solid-style={style.solidStyle}
@@ -104,7 +138,8 @@ export default async function RootLayout({
 					primary.variable,
 					secondary ? secondary.variable : '',
 					tertiary ? tertiary.variable : '',
-					code.variable)}>
+					code.variable,
+					locale === 'ar' ? 'arabic-font' : '')}>
 				<Flex style={{minHeight: '100vh'}}
 					as="body"
 					fillWidth margin="0" padding="0"

@@ -11,6 +11,16 @@ const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     pageExtensions: ['ts', 'tsx', 'md', 'mdx'],
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'images.unsplash.com',
+                port: '',
+                pathname: '/**',
+            },
+        ],
+    },
 };
 
 export default withNextIntl(withMDX(nextConfig));

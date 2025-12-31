@@ -15,12 +15,15 @@ import {
 	HiInformationCircle,
 	HiExclamationCircle,
 	HiCheckCircle,
-	HiMiniGlobeAsiaAustralia,
+	HiOutlineGlobeAlt,
 	HiArrowTopRightOnSquare,
 	HiEnvelope,
 	HiCalendarDays,
 	HiClipboard,
-	HiArrowRight
+	HiArrowRight,
+	HiSun,
+	HiMoon,
+	HiStar
 } from "react-icons/hi2";
 
 import {
@@ -36,6 +39,9 @@ import {
 	FaGithub,
 	FaLinkedin,
 	FaXTwitter,
+	FaFacebook,
+	FaInstagram,
+	FaWhatsapp,
 } from "react-icons/fa6";
 
 export const iconLibrary: Record<string, IconType> = {
@@ -53,7 +59,7 @@ export const iconLibrary: Record<string, IconType> = {
 	errorCircle: HiExclamationCircle,
 	checkCircle: HiCheckCircle,
 	email: HiEnvelope,
-	globe: HiMiniGlobeAsiaAustralia,
+	globe: HiOutlineGlobeAlt,
 	person: PiUserCircleDuotone,
 	grid: PiGridFourDuotone,
 	book: PiBookBookmarkDuotone,
@@ -66,6 +72,12 @@ export const iconLibrary: Record<string, IconType> = {
 	github: FaGithub,
 	linkedin: FaLinkedin,
 	x: FaXTwitter,
+	facebook: FaFacebook,
+	instagram: FaInstagram,
+	whatsapp: FaWhatsapp,
 	clipboard: HiClipboard,
-	arrowUpRightFromSquare: HiArrowTopRightOnSquare
+	arrowUpRightFromSquare: HiArrowTopRightOnSquare,
+	sun: HiSun,
+	moon: HiMoon,
+	star: HiStar
 };

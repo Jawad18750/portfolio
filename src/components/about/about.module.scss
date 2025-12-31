@@ -6,10 +6,21 @@
     }
 }
 
+/* RTL hover effect - move left instead of right in Arabic */
+.arabic-font .hover:hover {
+    transform: translateX(calc(var(--static-space-4) * -1));
+}
+
 .avatar {
     position: sticky;
     height: fit-content;
     top: var(--static-space-64);
+}
+
+.nameHeading {
+    white-space: nowrap;
+    overflow: visible;
+    word-break: keep-all;
 }
 
 @media (--s) {
@@ -24,5 +35,11 @@
 
     .blockAlign {
         align-self: center;
+    }
+
+    .nameHeading {
+        font-size: clamp(1.75rem, 7vw, 3rem) !important;
+        line-height: 1.1 !important;
+        letter-spacing: -0.02em;
     }
 }

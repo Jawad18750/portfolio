@@ -16,9 +16,15 @@ interface TableOfContentsProps {
             subItems: boolean;
         };
     };
+    locale?: string;
 }
 
-const TableOfContents: React.FC<TableOfContentsProps> = ({ structure, about }) => {
+const TableOfContents: React.FC<TableOfContentsProps> = ({ structure, about, locale }) => {
+    const isRTL = locale === 'ar';
+
+
+    if (!about.tableOfContent.display) return null;
+
     const scrollTo = (id: string, offset: number) => {
         const element = document.getElementById(id);
         if (element) {
@@ -36,15 +42,10 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ structure, about }) =
 
     return (
         <Flex
-            style={{
-                left: '0',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                whiteSpace: 'nowrap'
-            }}
-            position="fixed"
-            paddingLeft="24" gap="32"
-            direction="column" hide="m">
+            fillWidth
+            direction="column"
+            gap="32"
+            className="table-of-contents">
             {structure
                 .filter(section => section.display)
                 .map((section, sectionIndex) => (
@@ -71,7 +72,9 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ structure, about }) =
                                     key={itemIndex}
                                     style={{ cursor: 'pointer' }}
                                     className={styles.hover}
-                                    gap="12" paddingLeft="24"
+                                    gap="12"
+                                    paddingLeft={isRTL ? "0" : "12"}
+                                    paddingRight={isRTL ? "12" : "0"}
                                     alignItems="center"
                                     onClick={() => scrollTo(item, 80)}>
                                     <Flex

@@ -56,6 +56,25 @@ export const Header = () => {
     const [isPending, startTransition] = useTransition();
     const pathname = usePathname() ?? '';
     const params = useParams();
+    const [isDarkMode, setIsDarkMode] = useState(true);
+
+    // Initialize theme from localStorage or HTML attribute
+    useEffect(() => {
+        const htmlElement = document.documentElement;
+        const savedTheme = localStorage.getItem('theme');
+        
+        if (savedTheme) {
+            // Apply saved theme immediately
+            htmlElement.setAttribute('data-theme', savedTheme);
+            setIsDarkMode(savedTheme === 'dark');
+        } else {
+            // Use current theme from HTML attribute (set by server)
+            const currentTheme = htmlElement.getAttribute('data-theme') || 'dark';
+            setIsDarkMode(currentTheme === 'dark');
+            // Save it to localStorage for future visits
+            localStorage.setItem('theme', currentTheme);
+        }
+    }, []);
 
     function handleLanguageChange(locale: string) {
         const nextLocale = locale as Locale;
@@ -67,8 +86,16 @@ export const Header = () => {
         })
     }
 
+    function handleThemeToggle() {
+        const newTheme = isDarkMode ? 'light' : 'dark';
+        const htmlElement = document.documentElement;
+        htmlElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        setIsDarkMode(!isDarkMode);
+    }
+
     const t = useTranslations();
-    const { person, home, about, blog, work, gallery } = renderContent(t);
+    const { person, home, about, work } = renderContent(t);
 
     return (
         <>
@@ -86,7 +113,8 @@ export const Header = () => {
                 <Flex
                     paddingLeft="12" fillWidth
                     alignItems="center"
-                    textVariant="body-default-s">
+                    textVariant="body-default-s"
+                    className="location-section">
                     { display.location && (
                         <Flex hide="s">
                             {person.location}
@@ -100,13 +128,13 @@ export const Header = () => {
                         justifyContent="center">
                         <Flex
                             gap="4"
-                            textVariant="body-default-s">
+                            textVariant="body-default-s"
+                            className="nav-menu">
                             { routes['/'] && (
                                 <ToggleButton
                                     prefixIcon="home"
                                     href={`/${params?.locale}`}
                                     selected={pathname === "/"}>
-                                    <Flex paddingX="2" hide="s">{home.label}</Flex>
                                 </ToggleButton>
                             )}
                             { routes['/about'] && (
@@ -125,53 +153,32 @@ export const Header = () => {
                                     <Flex paddingX="2" hide="s">{work.label}</Flex>
                                 </ToggleButton>
                             )}
-                            { routes['/blog'] && (
+                            {routing.locales.length > 1 && (
                                 <ToggleButton
-                                    prefixIcon="book"
-                                    href={`/${params?.locale}/blog`}
-                                    selected={pathname.startsWith('/blog')}>
-                                    <Flex paddingX="2" hide="s">{blog.label}</Flex>
-                                </ToggleButton>
+                                    prefixIcon="globe"
+                                    selected={false}
+                                    size="s"
+                                    onClick={() => handleLanguageChange(params?.locale === 'en' ? 'ar' : 'en')}
+                                    className={isPending ? 'pointer-events-none opacity-60' : ''}
+                                />
                             )}
-                            { routes['/gallery'] && (
-                                <ToggleButton
-                                    prefixIcon="gallery"
-                                    href={`/${params?.locale}/gallery`}
-                                    selected={pathname.startsWith('/gallery')}>
-                                    <Flex paddingX="2" hide="s">{gallery.label}</Flex>
-                                </ToggleButton>
-                            )}
+                            <ToggleButton
+                                prefixIcon={isDarkMode ? "moon" : "sun"}
+                                selected={false}
+                                size="s"
+                                onClick={handleThemeToggle}
+                                aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+                            />
                         </Flex>
                     </Flex>
                 </Flex>
-                <Flex fillWidth justifyContent="flex-end" alignItems="center">
+                <Flex fillWidth justifyContent="flex-end" alignItems="center" className="header-right">
                     <Flex
                         paddingRight="12"
                         justifyContent="flex-end" alignItems="center"
                         textVariant="body-default-s"
-                        gap="20">
-                        {routing.locales.length > 1 &&
-                            <Flex
-                                background="surface" border="neutral-medium" borderStyle="solid-1" radius="m-4" shadow="l"
-                                padding="4" gap="2"
-                                justifyContent="center">
-                                {i18n && routing.locales.map((locale, index) => (
-                                    <ToggleButton
-                                        key={index}
-                                        selected={params?.locale === locale}
-                                        onClick={() => handleLanguageChange(locale)}
-                                        className={isPending && 'pointer-events-none opacity-60' || ''}
-                                        >
-                                        {locale.toUpperCase()}
-                                    </ToggleButton>
-                                ))}
-                            </Flex>
-                        }
-                        <Flex hide="s">
-                            { display.time && (
-                                <TimeDisplay timeZone={person.location}/>
-                            )}
-                        </Flex>
+                        gap="20"
+                        className="header-controls">
                     </Flex>
                 </Flex>
             </Flex>

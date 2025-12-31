@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 500">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #f7c217;
+      }
+
+      .cls-3 {
+        font-size: 74.4px;
+      }
+
+      .cls-3, .cls-4 {
+        font-family: Montserrat-Black, Montserrat;
+        font-weight: 800;
+      }
+
+      .cls-4 {
+        font-size: 39.98px;
+      }
+
+      .cls-5 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-6 {
+        fill: url(#New_Pattern_Swatch_1);
+      }
+    </style>
+    <clipPath id="clippath">
+      <path class="cls-1" d="M364.46,194.54c0,70.49-48.9,113.68-119.98,113.68h-104.8V80.86h104.8c71.07,0,119.98,43.21,119.98,113.68Z"/>
+    </clipPath>
+    <pattern id="New_Pattern_Swatch_1" data-name="New Pattern Swatch 1" x="0" y="0" width="268.47" height="268.47" patternTransform="translate(-10498.46 -16712.83) rotate(-180) scale(.41)" patternUnits="userSpaceOnUse" viewBox="0 0 268.47 268.47">
+      <g>
+        <rect class="cls-1" width="268.47" height="268.47"/>
+        <rect class="cls-2" x="0" y="0" width="268.47" height="268.47"/>
+      </g>
+    </pattern>
+  </defs>
+  <g class="cls-5">
+    <g>
+      <path class="cls-6" d="M239.82,248.82l-55.92-55.92c-2.62-2.62-2.62-6.87,0-9.49L352.41,14.89c2.62-2.62,6.87-2.62,9.49,0l55.92,55.92c2.62,2.62,2.62,6.87,0,9.49l-168.52,168.52c-2.62,2.62-6.87,2.62-9.49,0Z"/>
+      <path class="cls-6" d="M57.67,440.46L-7.74,375.04l173.27-173.27c2.62-2.62,6.86-2.62,9.47,0l60.68,60.68L57.67,440.46Z"/>
+      <path class="cls-6" d="M118.16,500.94l-55.56-55.56c-2.72-2.72-2.72-7.13,0-9.85l173.08-173.08,60.49,60.49c2.72,2.72,2.72,7.13,0,9.85l-168.16,168.16c-2.72,2.72-7.13,2.72-9.85,0Z"/>
+      <path class="cls-6" d="M203.53,135.88l-55.31-55.31c-2.79-2.79-2.79-7.32,0-10.11l167.9-167.9c2.79-2.79,7.32-2.79,10.11,0l55.31,55.31c2.79,2.79,2.79,7.32,0,10.11l-167.9,167.9c-2.79,2.79-7.32,2.79-10.11,0Z"/>
+      <path class="cls-6" d="M16.87,323.01l-55.74-55.74c-2.67-2.67-2.67-7,0-9.67L129.47,89.27c2.67-2.67,7-2.67,9.67,0l55.74,55.74c2.67,2.67,2.67,7,0,9.67L26.54,323.01c-2.67,2.67-7,2.67-9.67,0Z"/>
+      <path class="cls-6" d="M314.16,323.12l-55.96-55.96c-2.61-2.61-2.61-6.84,0-9.45l168.55-168.55c2.61-2.61,6.84-2.61,9.45,0l55.96,55.96c2.61,2.61,2.61,6.84,0,9.45l-168.55,168.55c-2.61,2.61-6.84,2.61-9.45,0Z"/>
+    </g>
+  </g>
+  <text class="cls-3" transform="translate(135.54 371.77)"><tspan x="0" y="0">DECO</tspan></text>
+  <text class="cls-4" transform="translate(137.77 408.35)"><tspan x="0" y="0">FLOORING</tspan></text>
+</svg>

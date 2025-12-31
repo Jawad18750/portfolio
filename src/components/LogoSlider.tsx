@@ -1,0 +1,251 @@
+'use client';
+
+import React, { useEffect, useRef, useState } from 'react';
+import { Flex } from '@/once-ui/components';
+
+interface LogoSliderProps {
+    logos: string[];
+    speed?: number; // pixels per second
+}
+
+const LogoSlider: React.FC<LogoSliderProps> = ({
+    logos,
+    speed = 30
+}) => {
+    const [isMobile, setIsMobile] = useState(false);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [isDragging, setIsDragging] = React.useState(false);
+    const [startX, setStartX] = React.useState(0);
+    const [scrollLeft, setScrollLeft] = React.useState(0);
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    // Detect theme and screen size changes
+    useEffect(() => {
+        const checkTheme = () => {
+            const theme = document.documentElement.getAttribute('data-theme');
+            setIsDarkMode(theme === 'dark');
+        };
+
+        const checkScreenSize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+
+        checkTheme();
+        checkScreenSize();
+
+        const themeObserver = new MutationObserver(checkTheme);
+        themeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+
+        window.addEventListener('resize', checkScreenSize);
+
+        return () => {
+            themeObserver.disconnect();
+            window.removeEventListener('resize', checkScreenSize);
+        };
+    }, []);
+
+    const getLogoSrc = (logoPath: string) => {
+        const fileName = logoPath.split('/').pop() || '';
+        const baseName = fileName.replace('-light.svg', '').replace('-dark.svg', '').replace('.svg', '');
+
+        if (isDarkMode) {
+            return `/images/testimonials/${baseName}-dark.svg`;
+        } else {
+            return `/images/testimonials/${baseName}-light.svg`;
+        }
+    };
+
+    // Handle drag functionality
+    const handlePointerDown = (e: React.PointerEvent) => {
+        if (!scrollRef.current) return;
+
+        setIsDragging(true);
+        setStartX(e.clientX - scrollRef.current.offsetLeft);
+        setScrollLeft(scrollRef.current.scrollLeft);
+        scrollRef.current.style.cursor = 'grabbing';
+
+        // Capture pointer for smooth dragging
+        scrollRef.current.setPointerCapture(e.pointerId);
+    };
+
+    const handlePointerMove = (e: React.PointerEvent) => {
+        if (!isDragging || !scrollRef.current) return;
+
+        e.preventDefault();
+        const x = e.clientX - scrollRef.current.offsetLeft;
+        const walk = (x - startX) * 2; // Multiply by 2 for faster scrolling
+        scrollRef.current.scrollLeft = scrollLeft - walk;
+    };
+
+    const handlePointerUp = (e: React.PointerEvent) => {
+        if (!scrollRef.current) return;
+
+        setIsDragging(false);
+        scrollRef.current.style.cursor = 'grab';
+        scrollRef.current.releasePointerCapture(e.pointerId);
+    };
+
+    useEffect(() => {
+        if (!scrollRef.current || logos.length <= 1) return;
+
+        const scrollElement = scrollRef.current;
+        let animationId: number;
+        let isPaused = false;
+
+        const animate = () => {
+            if (!isPaused && !isDragging && scrollElement) {
+                // Slower speed on mobile for better UX
+                const currentSpeed = isMobile ? speed * 0.5 : speed;
+                scrollElement.scrollLeft += currentSpeed / 60; // 60 FPS
+
+                // Reset to beginning when reaching halfway point (duplicated content)
+                const singleSetWidth = scrollElement.scrollWidth / 3;
+                if (scrollElement.scrollLeft >= singleSetWidth) {
+                    scrollElement.scrollLeft = 0;
+                }
+            }
+            animationId = requestAnimationFrame(animate);
+        };
+
+        // Pause on hover
+        const handleMouseEnter = () => {
+            isPaused = true;
+        };
+        const handleMouseLeave = () => {
+            isPaused = false;
+        };
+
+        scrollElement.addEventListener('mouseenter', handleMouseEnter);
+        scrollElement.addEventListener('mouseleave', handleMouseLeave);
+
+        // Start animation immediately
+        animationId = requestAnimationFrame(animate);
+
+        return () => {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            if (scrollElement) {
+                scrollElement.removeEventListener('mouseenter', handleMouseEnter);
+                scrollElement.removeEventListener('mouseleave', handleMouseLeave);
+            }
+        };
+    }, [logos, speed, isDragging]);
+
+    if (logos.length === 0) return null;
+
+    // Create multiple copies for seamless infinite scroll
+    const duplicatedLogos = [...logos, ...logos, ...logos];
+
+    return (
+        <div
+            style={{
+                width: '100%',
+                maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
+                overflow: 'hidden',
+                position: 'relative'
+            }}
+        >
+            {/* Native scroll container - direction: ltr for RTL safety */}
+            <div
+                ref={scrollRef}
+                style={{
+                    width: '100%',
+                    overflowX: 'auto',
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none',
+                    cursor: isDragging ? 'grabbing' : 'grab',
+                    direction: 'ltr' // Explicit LTR for scroll math consistency
+                }}
+                className="logo-slider"
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                onPointerLeave={handlePointerUp}
+            >
+                {/* Flex row with max-content width to guarantee overflow */}
+                <div
+                    style={{
+                        display: 'flex',
+                        width: 'max-content',
+                        flexWrap: 'nowrap',
+                        alignItems: 'center',
+                        gap: 'clamp(var(--static-space-l), 6vw, var(--static-space-xxl))' // Adjusted responsive spacing
+                    }}
+                >
+                    {duplicatedLogos.map((logo, index) => (
+                        <div
+                            key={`${logo}-${index}`}
+                            style={{
+                                minWidth: '180px',
+                                height: '120px',
+                                flexShrink: 0,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'transparent'
+                            }}
+                        >
+                            <div
+                                style={{
+                                    width: 'clamp(45px, 6vw, 60px)',
+                                    height: 'clamp(45px, 6vw, 60px)',
+                                    minWidth: 'clamp(60px, 8vw, 90px)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                    borderRadius: '8px',
+                                    transition: 'all 0.3s ease'
+                                }}
+                            >
+                                <img
+                                    key={`${logo}-${isDarkMode ? 'dark' : 'light'}`}
+                                    src={getLogoSrc(logo)}
+                                    alt={`Client logo ${index + 1}`}
+                                    loading="lazy"
+                                    style={{
+                                        width: 'clamp(68px, 9vw, 90px)',
+                                        height: 'clamp(68px, 9vw, 90px)',
+                                        objectFit: 'contain',
+                                        opacity: 0,
+                                        transition: 'opacity 0.3s ease'
+                                    }}
+                                    onLoad={(e) => {
+                                        // Show image when loaded successfully
+                                        e.currentTarget.style.opacity = '1';
+                                        // Hide the background once image loads
+                                        (e.currentTarget.parentElement as HTMLElement).style.backgroundColor = 'transparent';
+                                        (e.currentTarget.parentElement as HTMLElement).style.boxShadow = 'none';
+                                    }}
+                                    onError={(e) => {
+                                        // Instead of hiding, show a subtle placeholder
+                                        e.currentTarget.style.display = 'none';
+                                        const parent = e.currentTarget.parentElement as HTMLElement;
+                                        if (parent) {
+                                            parent.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
+                                            parent.style.border = '1px dashed rgba(255, 255, 255, 0.1)';
+                                        }
+                                        console.log(`Failed to load logo: ${getLogoSrc(logo)}`);
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <style jsx>{`
+                .logo-slider::-webkit-scrollbar {
+                    display: none;
+                }
+            `}</style>
+        </div>
+    );
+};
+
+export { LogoSlider };

@@ -2,15 +2,15 @@ import { InlineCode } from "@/once-ui/components";
 
 const createI18nContent = (t) => {
     const person = {
-        firstName: 'Selene',
-        lastName:  'Yu',
+        firstName: t("person.firstName"),
+        lastName:  t("person.lastName"),
         get name() {
             return `${this.firstName} ${this.lastName}`;
         },
         role:      t("person.role"),
-        avatar:    '/images/avatar.jpg',
-        location:  'Asia/Jakarta',        // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
-        languages: ['English', 'Bahasa']  // optional: Leave the array empty if you don't want to display languages
+        avatar:    '/images/avatar.avif',
+        location:  'Africa/Tripoli',        // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
+        languages: ['English', 'Arabic']  // optional: Leave the array empty if you don't want to display languages
     }
 
     const newsletter = {
@@ -25,22 +25,27 @@ const createI18nContent = (t) => {
         {
             name: 'GitHub',
             icon: 'github',
-            link: 'https://github.com/once-ui-system/nextjs-starter',
+            link: 'https://github.com/Jawad18750',
         },
         {
             name: 'LinkedIn',
             icon: 'linkedin',
-            link: 'https://www.linkedin.com/company/once-ui/',
+            link: 'https://ly.linkedin.com/in/abdeljawad-almiladi-99a0a2208',
         },
         {
-            name: 'X',
-            icon: 'x',
-            link: '',
+            name: 'Facebook',
+            icon: 'facebook',
+            link: 'https://www.facebook.com/profile.php?id=100084824989707',
+        },
+        {
+            name: 'Instagram',
+            icon: 'instagram',
+            link: 'https://www.instagram.com/jawadalmiladi/',
         },
         {
             name: 'Email',
             icon: 'email',
-            link: 'mailto:example@gmail.com',
+            link: 'mailto:me@abdeljawad.com',
         },
     ]
 
@@ -51,6 +56,84 @@ const createI18nContent = (t) => {
         headline: <>{t("home.headline")}</>,
         subline: <>{t("home.subline")}</>
     }
+
+    const testimonials = [
+        {
+            id: 'testimonial-1',
+            name: t("testimonials.0.name"),
+            role: t("testimonials.0.role"),
+            avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face&auto=format&q=80',
+            testimonial: t("testimonials.0.testimonial"),
+            rating: 5,
+            logos: [
+                '/images/testimonials/alnawa-light.svg',
+                '/images/testimonials/alnoor-light.svg',
+                '/images/testimonials/alsamiya-light.svg',
+                '/images/testimonials/shrimp-light.svg'
+            ]
+        },
+        {
+            id: 'testimonial-2',
+            name: t("testimonials.1.name"),
+            role: t("testimonials.1.role"),
+            avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face&auto=format&q=80',
+            testimonial: t("testimonials.1.testimonial"),
+            rating: 5,
+            logos: [
+                '/images/testimonials/eyfel-light.svg',
+                '/images/testimonials/qrl-light.svg',
+                '/images/testimonials/takamol-light.svg',
+                '/images/testimonials/rawafid-light.svg'
+            ]
+        },
+        {
+            id: 'testimonial-3',
+            name: t("testimonials.2.name"),
+            role: t("testimonials.2.role"),
+            avatar: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=150&h=150&fit=crop&crop=face&auto=format&q=80',
+            testimonial: t("testimonials.2.testimonial"),
+            rating: 5,
+            logos: [
+                '/images/testimonials/color-light.svg',
+                '/images/testimonials/mero-light.svg',
+                '/images/testimonials/titanium-light.svg',
+                '/images/testimonials/39ertime-light.svg'
+            ]
+        },
+        {
+            id: 'testimonial-4',
+            name: t("testimonials.3.name"),
+            role: t("testimonials.3.role"),
+            avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&h=150&fit=crop&crop=face&auto=format&q=80',
+            testimonial: t("testimonials.3.testimonial"),
+            rating: 5,
+            logos: [
+                '/images/testimonials/deco-light.svg',
+                '/images/testimonials/decora-light.svg',
+                '/images/testimonials/alnokhba-light.svg',
+                '/images/testimonials/alnabil-light.svg'
+            ]
+        },
+        {
+            id: 'testimonial-5',
+            name: t("testimonials.4.name"),
+            role: t("testimonials.4.role"),
+            avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face&auto=format&q=80',
+            testimonial: t("testimonials.4.testimonial"),
+            rating: 5,
+            logos: [
+                '/images/testimonials/firstelite-light.svg',
+                '/images/testimonials/elemento-light.svg',
+                '/images/testimonials/qrl-light.svg',
+                '/images/testimonials/stay-healthy-light.svg'
+            ]
+        }
+    ]
+
+    // Combine all logos from all testimonials for global slider (deduplicated)
+    const allLogos = [...new Set(testimonials.reduce((acc, testimonial) => {
+        return testimonial.logos ? [...acc, ...testimonial.logos] : acc;
+    }, []))];
 
     const about = {
         label: t("about.label"),
@@ -65,7 +148,7 @@ const createI18nContent = (t) => {
         },
         calendar: {
             display: true,
-            link: 'https://cal.com'
+            link: 'https://wa.me/218910170735'
         },
         intro: {
             display: true,
@@ -77,39 +160,68 @@ const createI18nContent = (t) => {
             title: t("about.work.title"),
             experiences: [
                 {
-                    company: 'FLY',
-                    timeframe: t("about.work.experiences.FLY.timeframe"),
-                    role: t("about.work.experiences.FLY.role"),
-                    achievements: t("about.work.experiences.FLY.achievements").split(";"),
-                    images: [ // optional: leave the array empty if you don't want to display images
-                        {
-                            src: '/images/projects/project-01/cover-01.jpg',
-                            alt: 'Once UI Project',
-                            width: 16,
-                            height: 9
-                        }
-                    ]
+                    company: 'Freelancing',
+                    displayName: t("about.work.companies.Freelancing"),
+                    timeframe: '2024 - Present',
+                    role: 'App & Website Developer',
+                    achievements: [
+                        'Started developing applications alongside website design and development. To expand the scope of digital services I provide.'
+                    ],
+                    images: [ ]
                 },
                 {
-                    company: 'Creativ3',
-                    timeframe: t("about.work.experiences.Creativ3.timeframe"),
-                    role: t("about.work.experiences.Creativ3.role"),
-                    achievements: t("about.work.experiences.Creativ3.achievements").split(";"),
+                    company: 'Full-time Freelancing',
+                    displayName: t("about.work.companies.Full-time Freelancing"),
+                    timeframe: '2024 - 2023',
+                    role: 'Website Developer',
+                    achievements: [
+                        'Started developing applications alongside website design and development. To expand the scope of digital services I provide.'
+                    ],
+                    images: [ ]
+                },
+                {
+                    company: 'MyTeam',
+                    displayName: t("about.work.companies.MyTeam"),
+                    timeframe: '2023 - 2022',
+                    role: 'Social Media Designer',
+                    achievements: [
+                        'Built a specialized team for managing social media accounts and client communication. Where I managed accounts for more than 6 companies at the same time.'
+                    ],
+                    images: [ ]
+                },
+                {
+                    company: 'Decora',
+                    displayName: t("about.work.companies.Decora"),
+                    timeframe: '2022 - 2021',
+                    role: 'Visual Identity Designer',
+                    achievements: [
+                        'Started developing applications alongside website design and development. To expand the scope of digital services I provide.'
+                    ],
+                    images: [ ]
+                },
+                {
+                    company: 'FreelancerCom',
+                    displayName: t("about.work.companies.FreelancerCom"),
+                    timeframe: '2021',
+                    role: 'Brand Identity Designer',
+                    achievements: [
+                        'Started as a brand identity designer on the platform. And worked with clients from Britain, Australia, and America.'
+                    ],
                     images: [ ]
                 }
             ]
         },
         studies: {
-            display: true, // set to false to hide this section
+            display: false, // set to false to hide this section
             title: t("about.studies.title"),
             institutions: [
                 {
-                    name: 'University of Jakarta',
-                    description: <>{t(`about.studies.institutions.University of Jakarta.description`)}</>,
+                    name: 'University of Tripoli',
+                    description: <>Studied Computer Science and Software Engineering.</>,
                 },
                 {
-                    name: 'Build the Future',
-                    description: <>{t("about.studies.institutions.Build the Future.description")}</>,
+                    name: 'Online Learning Platforms',
+                    description: <>Completed advanced courses in modern web development and cloud technologies.</>,
                 }
             ]
         },
@@ -118,34 +230,40 @@ const createI18nContent = (t) => {
             title: t("about.technical.title"),
             skills: [
                 {
-                    title: 'Figma',
-                    description: <>{t("about.technical.skills.Figma.description")}</>,
-                    images: [
-                        {
-                            src: '/images/projects/project-01/cover-02.jpg',
-                            alt: 'Project image',
-                            width: 16,
-                            height: 9
-                        },
-                        {
-                            src: '/images/projects/project-01/cover-03.jpg',
-                            alt: 'Project image',
-                            width: 16,
-                            height: 9
-                        },
-                    ]
+                    title: 'Frontend & UI Engineering',
+                    description: 'description',
+                    images: [],
+                    icon: 'grid'
                 },
                 {
-                    title: 'Next.js',
-                    description: <>{t("about.technical.skills.Nextjs.description")}</>, // "." not accepted in next-intl namespace
-                    images: [
-                        {
-                            src: '/images/projects/project-01/cover-04.jpg',
-                            alt: 'Project image',
-                            width: 16,
-                            height: 9
-                        },
-                    ]
+                    title: 'Backend & APIs',
+                    description: 'description',
+                    images: [],
+                    icon: 'globe'
+                },
+                {
+                    title: 'Databases & System Architecture',
+                    description: 'description',
+                    images: [],
+                    icon: 'clipboard'
+                },
+                {
+                    title: 'Server, Cloud & Deployment',
+                    description: 'description',
+                    images: [],
+                    icon: 'calendar'
+                },
+                {
+                    title: 'Performance, Analytics & Tracking',
+                    description: 'description',
+                    images: [],
+                    icon: 'checkCircle'
+                },
+                {
+                    title: 'Security & System Awareness',
+                    description: 'description',
+                    images: [],
+                    icon: 'warningTriangle'
                 }
             ]
         }
@@ -253,7 +371,9 @@ const createI18nContent = (t) => {
         about,
         blog,
         work,
-        gallery
+        gallery,
+        testimonials,
+        allLogos
     }
 };
 

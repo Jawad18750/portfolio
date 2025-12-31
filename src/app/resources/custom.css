@@ -1,0 +1,75 @@
+/* Custom Arabic font styles */
+.arabic-font {
+  --font-family-body: var(--font-secondary);
+  --font-family-heading: var(--font-secondary);
+  --font-family-label: var(--font-secondary);
+  direction: rtl;
+}
+
+.arabic-font * {
+  font-family: var(--font-secondary) !important;
+  line-height: 1.4 !important;
+}
+
+.arabic-font .english-text {
+  direction: ltr;
+  font-family: var(--font-primary) !important;
+}
+
+/* RTL Header Fixes */
+.arabic-font .header-right {
+  flex-direction: row-reverse !important;
+}
+
+.arabic-font .location-section {
+  padding-right: 12px !important;
+  padding-left: 0 !important;
+}
+
+.arabic-font .header-controls {
+  padding-left: 12px !important;
+  padding-right: 0 !important;
+}
+
+/* RTL Navigation */
+.arabic-font .nav-menu {
+  flex-direction: row-reverse !important;
+}
+
+/* RTL Language Switcher */
+.arabic-font .language-switcher .flex {
+  flex-direction: row-reverse !important;
+}
+
+/* RTL Table of Contents - now handled in component */
+
+/* RTL Social Links */
+.arabic-font footer .flex[data-gap="16"] {
+  flex-direction: row-reverse;
+}
+
+/* RTL Form Elements */
+.arabic-font input,
+.arabic-font textarea,
+.arabic-font select {
+  text-align: right;
+}
+
+/* About Button - Ensure avatar is on the far right in RTL mode */
+.arabic-font .about-button-content {
+  /* No row-reverse needed - order is handled in JSX */
+}
+
+/* Logo slider styling */
+.logo-slider img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  background-color: transparent !important;
+}
+
+/* Ensure SVG logos are transparent */
+.logo-slider svg {
+  background-color: transparent !important;
+}
+
+

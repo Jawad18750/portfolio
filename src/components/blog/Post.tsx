@@ -23,7 +23,8 @@ export default function Post({ post, thumbnail }: PostProps) {
             <Flex
                 position="relative"
                 mobileDirection="column"
-                fillWidth paddingY="12" paddingX="16" gap="32">
+                fillWidth paddingY="12" paddingX="16" gap="32"
+                className="blog-post">
                 {post.metadata.image && thumbnail && (
                     <Flex
                         maxWidth={20} fillWidth

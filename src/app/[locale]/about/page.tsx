@@ -44,26 +44,44 @@ export default function About(
     unstable_setRequestLocale(locale);
     const t = useTranslations();
     const {person, about, social } = renderContent(t);
+
+    // Translate technical skills
+    const translatedSkills = about.technical.skills.map(skill => ({
+        ...skill,
+        description: t(`about.technical.skills.${skill.title}.description`)
+    }));
+
+    // Translate work experiences
+    const translatedWorkExperiences = about.work.experiences.map(experience => ({
+        ...experience,
+        displayName: experience.displayName || experience.company,
+        timeframe: t(`about.work.experiences.${experience.company}.timeframe`),
+        role: t(`about.work.experiences.${experience.company}.role`),
+        achievements: [
+            t(`about.work.experiences.${experience.company}.achievements`)
+        ]
+    }));
+
     const structure = [
-        { 
+        {
             title: about.intro.title,
             display: about.intro.display,
             items: []
         },
-        { 
+        {
             title: about.work.title,
             display: about.work.display,
-            items: about.work.experiences.map(experience => experience.company)
+            items: translatedWorkExperiences.map(experience => experience.displayName)
         },
-        { 
+        {
             title: about.studies.title,
             display: about.studies.display,
             items: about.studies.institutions.map(institution => institution.name)
         },
-        { 
+        {
             title: about.technical.title,
             display: about.technical.display,
-            items: about.technical.skills.map(skill => skill.title)
+            items: translatedSkills.map(skill => t(`about.technical.skills.${skill.title}.title`))
         },
     ]
     return (
@@ -94,13 +112,20 @@ export default function About(
             />
             { about.tableOfContent.display && (
                 <Flex
-                    style={{ left: '0', top: '50%', transform: 'translateY(-50%)' }}
+                    style={{
+                        [locale === 'ar' ? 'right' : 'left']: '0',
+                        top: '50%',
+                        transform: 'translateY(-50%)'
+                    }}
                     position="fixed"
-                    paddingLeft="24" gap="32"
+                    paddingLeft={locale === 'ar' ? "0" : "24"}
+                    paddingRight={locale === 'ar' ? "24" : "0"}
+                    gap="32"
                     direction="column" hide="s">
                     <TableOfContents
                         structure={structure}
-                        about={about} />
+                        about={about}
+                        locale={locale} />
                 </Flex>
             )}
             <Flex
@@ -158,12 +183,12 @@ export default function About(
                                 alignItems="center">
                                 <Flex paddingLeft="12">
                                     <Icon
-                                        name="calendar"
+                                        name="whatsapp"
                                         onBackground="brand-weak"/>
                                 </Flex>
                                 <Flex
                                     paddingX="8">
-                                    Schedule a call
+                                    WhatsApp
                                 </Flex>
                                 <IconButton
                                     href={about.calendar.link}
@@ -173,8 +198,8 @@ export default function About(
                             </Flex>
                         )}
                         <Heading
-                            className={styles.textAlign}
-                            variant="display-strong-xl">
+                            className={`${styles.textAlign} ${styles.nameHeading}`}
+                            variant="display-strong-l">
                             {person.name}
                         </Heading>
                         <Text
@@ -223,7 +248,7 @@ export default function About(
                             <Flex
                                 direction="column"
                                 fillWidth gap="l" marginBottom="40">
-                                {about.work.experiences.map((experience, index) => (
+                                {translatedWorkExperiences.map((experience, index) => (
                                     <Flex
                                         key={`${experience.company}-${experience.role}-${index}`}
                                         fillWidth
@@ -234,9 +259,9 @@ export default function About(
                                             alignItems="flex-end"
                                             marginBottom="4">
                                             <Text
-                                                id={experience.company}
+                                                id={experience.displayName}
                                                 variant="heading-strong-l">
-                                                {experience.company}
+                                                {experience.displayName}
                                             </Text>
                                             <Text
                                                 variant="heading-default-xs"
@@ -251,11 +276,9 @@ export default function About(
                                             {experience.role}
                                         </Text>
                                         <Flex
-                                            as="ul"
                                             direction="column" gap="16">
                                             {experience.achievements.map((achievement: string, index: any) => (
                                                 <Text
-                                                    as="li"
                                                     variant="body-default-m"
                                                     key={`${experience.company}-${index}`}>
                                                     {achievement}
@@ -333,15 +356,25 @@ export default function About(
                             <Flex
                                 direction="column"
                                 fillWidth gap="l">
-                                {about.technical.skills.map((skill, index) => (
+                                {translatedSkills.map((skill, index) => (
                                     <Flex
                                         key={`${skill}-${index}`}
                                         fillWidth gap="4"
                                         direction="column">
-                                        <Text
-                                            variant="heading-strong-l">
-                                            {skill.title}
-                                        </Text>
+                                        <Flex
+                                            alignItems="center"
+                                            gap="8">
+                                            {skill.icon && (
+                                                <Icon
+                                                    name={skill.icon}
+                                                    size="l" />
+                                            )}
+                                            <Text
+                                                id={t(`about.technical.skills.${skill.title}.title`)}
+                                                variant="heading-strong-l">
+                                                {t(`about.technical.skills.${skill.title}.title`)}
+                                            </Text>
+                                        </Flex>
                                         <Text
                                             variant="body-default-m"
                                             onBackground="neutral-weak">

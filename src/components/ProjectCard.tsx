@@ -83,7 +83,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                 <Flex
                     gap="4" paddingX="s"
                     fillWidth
-                    justifyContent="center">
+                    justifyContent="center"
+                    className="image-controls">
                     {images.map((_, index) => (
                         <Flex
                             key={index}

@@ -1,61 +1,204 @@
 {
     "person": {
-        "role": "Design Engineer"
+        "firstName": "Abdeljawad",
+        "lastName": "Almiladi",
+        "role": "Software Developer"
     },
     "newsletter": {
-        "title": "Subscribe to {firstName}'s Newsletter",
-        "description": "I occasionally write about design, technology, and share thoughts on the intersection of creativity and engineering",
+        "title": "Subscribe to my newsletter",
+        "description": "I occasionally write about development and technology and share programming ideas sometimes.",
         "button": "Sign up"
     },
     "home": {
         "label": "Home",
-        "title": "{name}'s Portfolio",
-        "description": "Portfolio website showcasing my work as a {role}",
-        "headline": "Design engineer and builder",
-        "subline": "I'm Selene, a design engineer at FLY, where I craft intuitive user experiences. After hours, I build my own projects."
+        "title": "Abdeljawad Almiladi",
+        "description": "Abdeljawad Almiladi's website, showcasing my work as a software developer",
+        "headline": "Software Developer",
+        "subline": "I'm Abdeljawad Almiladi, an experienced software developer specialized in developing systems, applications, and web services.",
+        "selectedWork": "Selected work ↓",
+        "intro": {
+            "title": "I work at the intersection of design and development.",
+            "description": "My approach focuses on building systems that feel intuitive, look refined, and scale with purpose.\nEvery project is shaped by context, users, and long-term value — not trends."
+        },
+        "services": {
+            "title": "What I work on",
+            "items": [
+                {
+                    "title": "Digital Products",
+                    "description": "Product strategy, UX architecture, interface design, system thinking"
+                },
+                {
+                    "title": "Web Experiences",
+                    "description": "Web design, frontend development, performance, accessibility"
+                },
+                {
+                    "title": "Mobile Applications",
+                    "description": "iOS & Android apps, cross-platform systems, scalable architectures"
+                },
+                {
+                    "title": "Visual Identity",
+                    "description": "Brand systems, visual language, digital guidelines"
+                },
+                {
+                    "title": "Content & Motion",
+                    "description": "Storytelling, short-form video, motion graphics, interaction design"
+                },
+                {
+                    "title": "Platforms & Systems",
+                    "description": "Dashboards, internal tools, SaaS products, custom workflows"
+                }
+            ]
+        },
+        "philosophy": {
+            "text": "Behind every interface is a structure.\nBehind every structure is intent.\n\nI believe strong digital work is not loud — it's precise.\nIt removes friction, respects the user, and adapts as needs evolve.\nMy role is to translate complexity into clarity, without losing depth or character."
+        },
+        "featuredWork": {
+            "title": "Selected projects",
+            "description": "A curated selection of work across products, platforms, and digital systems — each built with intention, clarity, and technical care."
+        },
+        "testimonial": {
+            "text": "\"Working together felt structured, calm, and transparent.\nComplex ideas were turned into clear solutions without overcomplication.\""
+        },
+        "video": {
+            "title": "Process over noise.",
+            "subtitle": "Systems over shortcuts.",
+            "description": "Quality over speed.\n\nA short look into how I think, design, and build."
+        },
+        "cta": {
+            "title": "Have a project in mind — or a problem worth solving?",
+            "subtitle": "Let's explore it together.",
+            "button": "Start a conversation →"
+        },
+        "footer": {
+            "availability": "Available for selected projects",
+            "location": "Based in Libya — working globally"
+        }
     },
+    "testimonials": [
+        {
+            "id": "testimonial-1",
+            "name": "Hashem Al-Shakri",
+            "role": "Al-Nakhba Al-Mudhee'a Company",
+            "testimonial": "I had the opportunity to work with Abdeljawad, and during this collaboration he proved his high efficiency and professionalism, as he showed quick responsiveness and flexibility in dealing with project requirements. He designed a comprehensive website for Al-Nakhba Al-Mudhee'a Company specialized in wood importing, taking into account the details and quality in every aspect of design and implementation.",
+            "rating": 5
+        },
+        {
+            "id": "testimonial-2",
+            "name": "Dr. Miftah Al-Haddad",
+            "role": "Al-Zaytouna University, Rawafid Al-Ma'rifa Journal",
+            "testimonial": "God has enabled us to meet Engineer Abdeljawad Almiladi who welcomed our request and accepted it with all kindness that he implement for us building a wonderful electronic site for the refereed scientific journal that I head its editorial board. The website of 'Rawafid Al-Ma'rifa' magazine that Engineer Abdeljawad Almiladi founded shows high quality and efficiency in terms of design and organization, and reflects clear comprehensiveness in presenting everything the magazine needs from objectives, policies, and controls, in addition to providing bilingual content (Arabic and English) and a detailed explanation of the double-blind peer review system. The site also contains important information such as calls for paper submission, journal listing in scientific indexing platforms and websites, and conflict of interest policy, which reflects concern for transparency and international scientific standards. Abdeljawad made it a site that is distinguished by comfortable general organization, and allows easy access to basic information about the magazine and its objectives, and thus the site enhances the user experience and serves the reader and researcher effectively. In general, the work presented by Abdeljawad shows high professionalism and professionalism in building a comprehensive electronic site that reflects the magazine's identity and provides its digital platform in the best possible way, and we wish him more progress and giving, and he has from us abundant thanks and appreciation.",
+            "rating": 5
+        },
+        {
+            "id": "testimonial-3",
+            "name": "Malik Al-Tamimi",
+            "role": "Software Engineer",
+            "testimonial": "I was very pleased to collaborate with Abdeljawad Almiladi on a web development project. His work is characterized by high reliability, with exceptional attention to details and strong focus on creating elegant and easy-to-use user interfaces. Abdeljawad always shows a high level of professionalism, technical expertise, and creativity, making him a valuable partner for any development project. Therefore, I strongly recommend dealing with him for anyone looking for quality and guaranteed results.",
+            "rating": 5
+        },
+        {
+            "id": "testimonial-4",
+            "name": "Muhammad",
+            "role": "Al-Samiya Company",
+            "testimonial": "We had an excellent experience working with Abdeljawad on our new pharmacy website. The communication was clear, he listened to our ideas, and the final results were amazing. He was always available to answer questions, very knowledgeable, easy to deal with, and professional. We highly recommend him and will definitely work with him again.",
+            "rating": 5
+        },
+        {
+            "id": "testimonial-5",
+            "name": "Mudhath Salem",
+            "role": "Khalik Sahi (Stay Healthy)",
+            "testimonial": "I was served by brother Abdeljawad in designing a website for selling nutritional supplements, and frankly it was a very excellent experience. Elegant dealing, professional work, and speed in completion beyond expectations. He understood all the details we wanted exactly, and designed the site in an organized and easy-to-use way, with a beautiful design touch that gives confidence to the user. The most important thing I noticed was the attention to details and support even after delivery, which indicates experience and respect for the client. I advise anyone who wants a professional website to deal with him without hesitation. Thank you for the excellent service.",
+            "rating": 5
+        }
+    ],
     "about": {
         "label": "About",
         "title": "About me",
-        "description": "Meet {name}, {role} from {location}",
+        "description": "Meet Abdeljawad Almiladi, a software developer from Libya",
         "intro": {
             "title": "Introduction",
-            "description": "Selene is a Jakarta-based design engineer with a passion for transforming complex challenges into simple, elegant design solutions. Her work spans digital interfaces, interactive experiences, and the convergence of design and technology."
+            "description": "I'm Abdeljawad Almiladi, an experienced software developer specialized in developing systems, applications, and web services, helping to build a strong digital presence for brands in various fields."
         },
         "work": {
-            "title": "Work Experience",
+            "title": "Professional Experience",
+            "companies": {
+                "Freelancing": "Freelancing",
+                "Full-time Freelancing": "Full-time Freelancing",
+                "MyTeam": "My Team",
+                "Decora": "Decora",
+                "FreelancerCom": "Freelancer.com"
+            },
             "experiences": {
-                "FLY": {
-                    "timeframe": "2022 - Present",
-                    "role": "Senior Design Engineer",
-                    "achievements": "Redesigned the UI/UX for the FLY platform, resulting in a 20% increase in user engagement and 30% faster load times.;Spearheaded the integration of AI tools into design workflows, enabling designers to iterate 50% faster."
+                "Freelancing": {
+                    "timeframe": "2024 - Present",
+                    "role": "App & Website Developer",
+                    "achievements": "Started developing applications alongside website design and development. To expand the scope of digital services I provide."
                 },
-                "Creativ3": {
-                    "timeframe": "2018 - 2022",
-                    "role": "Lead Designer",
-                    "achievements": "Developed a design system that unified the brand across multiple platforms, improving design consistency by 40%.;Led a cross-functional team to launch a new product line, contributing to a 15% increase in overall company revenue."
+                "Full-time Freelancing": {
+                    "timeframe": "2024 - 2023",
+                    "role": "Website Developer",
+                    "achievements": "Started developing applications alongside website design and development. To expand the scope of digital services I provide."
+                },
+                "MyTeam": {
+                    "timeframe": "2023 - 2022",
+                    "role": "Social Media Designer",
+                    "achievements": "Built a specialized team for managing social media accounts and client communication. Where I managed accounts for more than 6 companies at the same time."
+                },
+                "Decora": {
+                    "timeframe": "2022 - 2021",
+                    "role": "Visual Identity Designer",
+                    "achievements": "Started developing applications alongside website design and development. To expand the scope of digital services I provide."
+                },
+                "FreelancerCom": {
+                    "timeframe": "2021",
+                    "role": "Brand Identity Designer",
+                    "achievements": "Started as a brand identity designer on the platform. And worked with clients from Britain, Australia, and America."
                 }
             }
         },
         "studies": {
             "title": "Studies",
             "institutions": {
-                "University of Jakarta": {
-                    "description": "Studied software engineering."
+                "University of Tripoli": {
+                    "description": "Studied Computer Science and Software Engineering."
                 },
-                "Build the Future": {
-                    "description": "Studied online marketing and personal branding."
+                "Online Learning Platforms": {
+                    "description": "Completed advanced courses in modern web development and cloud technologies."
                 }
             }
         },
         "technical": {
-            "title": "Technical skills",
+            "title": "Technical Skills",
             "skills": {
-                "Figma": {
-                    "description": "Able to prototype in Figma with Once UI with unnatural speed."
+                "Frontend & UI Engineering": {
+                    "title": "Frontend & UI Engineering",
+                    "description": "Building modern, responsive web interfaces using JavaScript frameworks, with a strong focus on usability, RTL support, and clean user experience.",
+                    "icon": "grid"
                 },
-                "Nextjs": {
-                    "description": "Building next gen apps with Next.js + Once UI + Supabase."
+                "Backend & APIs": {
+                    "title": "Backend & APIs",
+                    "description": "Designing and developing backend systems, RESTful APIs, and data-driven applications, including authentication, role-based access, and business logic.",
+                    "icon": "globe"
+                },
+                "Databases & System Architecture": {
+                    "title": "Databases & System Architecture",
+                    "description": "Working with relational databases and structured data models to support scalable platforms such as dashboards, order management, and content systems.",
+                    "icon": "clipboard"
+                },
+                "Server, Cloud & Deployment": {
+                    "title": "Server, Cloud & Deployment",
+                    "description": "Managing VPS environments, Linux servers, domains, DNS, caching layers, and deployment workflows for production-ready applications.",
+                    "icon": "calendar"
+                },
+                "Performance, Analytics & Tracking": {
+                    "title": "Performance, Analytics & Tracking",
+                    "description": "Implementing analytics pipelines, conversion tracking, and event-based measurement using tools like Google Tag Manager and Meta Pixel.",
+                    "icon": "checkCircle"
+                },
+                "Security & System Awareness": {
+                    "title": "Security & System Awareness",
+                    "description": "Understanding web security fundamentals, traffic monitoring, access control, and ethical hacking concepts for safer applications.",
+                    "icon": "warningTriangle"
                 }
             }
         }
@@ -66,7 +209,7 @@
         "description": "Read what {name} has been up to recently"
     },
     "work": {
-        "label": "Work",
+        "label": "Projects",
         "title": "My projects",
         "description": "Design and dev projects by {name}"
     },
@@ -78,5 +221,8 @@
     "projectCard": {
         "label": "Read Case Study",
         "link": "Project Link"
+    },
+    "footer": {
+        "copyright": "© {year} Abdeljawad Almiladi. All rights reserved."
     }
 }

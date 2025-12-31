@@ -272,9 +272,9 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
                                     opacity: isTransitioning ? 0.7 : 1
                                 }}
                             >
-                                "{expandedStates[activeIndex] || !isLongTestimonial(activeTestimonial.testimonial)
+                                &quot;{expandedStates[activeIndex] || !isLongTestimonial(activeTestimonial.testimonial)
                                     ? activeTestimonial.testimonial
-                                    : truncateText(activeTestimonial.testimonial)}"
+                                    : truncateText(activeTestimonial.testimonial)}&quot;
                             </Text>
 
                             {/* Read More/Less Toggle */}

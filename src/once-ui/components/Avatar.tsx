@@ -74,6 +74,8 @@ const Avatar: React.FC<AvatarProps> = forwardRef<HTMLDivElement, AvatarProps>(({
         }
 
         if (src) {
+            // SVG files need unoptimized={true} for Next.js Image component
+            const isSvg = src.toLowerCase().endsWith('.svg');
             return (
                 <SmartImage
                     radius="full"
@@ -81,6 +83,7 @@ const Avatar: React.FC<AvatarProps> = forwardRef<HTMLDivElement, AvatarProps>(({
                     fill
                     alt="Avatar"
                     sizes={`${sizeMapping[size]}px`}
+                    unoptimized={isSvg}
                     className={styles.image}/>
             );
         }

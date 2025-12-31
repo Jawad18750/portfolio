@@ -2,8 +2,20 @@
 
 import { mailchimp } from '@/app/resources'
 import { Button, Flex, Heading, Input, Text, Background, Textarea } from '@/once-ui/components';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
+import Script from 'next/script';
+
+declare global {
+    interface Window {
+        turnstile?: {
+            render: (container: string | HTMLElement, options: any) => string;
+            reset: (widgetId: string) => void;
+            remove: (widgetId: string) => void;
+            getResponse: (widgetId: string) => string | undefined;
+        };
+    }
+}
 
 type ContactFormProps = {
     display: boolean;
@@ -22,8 +34,42 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+    const turnstileWidgetId = useRef<string | null>(null);
+    const turnstileContainerRef = useRef<HTMLDivElement>(null);
 
     const t = useTranslations();
+    const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAACJ9xsnz56Cagrqq';
+    
+    // Initialize Turnstile widget when script loads
+    useEffect(() => {
+        const renderTurnstile = () => {
+            if (window.turnstile && turnstileContainerRef.current && !turnstileWidgetId.current) {
+                turnstileWidgetId.current = window.turnstile.render(turnstileContainerRef.current, {
+                    sitekey: turnstileSiteKey,
+                    size: 'invisible',
+                    callback: (token: string) => {
+                        setTurnstileToken(token);
+                    },
+                    'error-callback': () => {
+                        setTurnstileToken(null);
+                        console.error('Turnstile error');
+                    },
+                    'expired-callback': () => {
+                        setTurnstileToken(null);
+                        if (turnstileWidgetId.current && window.turnstile) {
+                            window.turnstile.reset(turnstileWidgetId.current);
+                        }
+                    },
+                });
+            }
+        };
+
+        // Check if Turnstile is already loaded
+        if (window.turnstile) {
+            renderTurnstile();
+        }
+    }, [turnstileSiteKey]);
 
     const validateEmail = (email: string): boolean => {
         if (email === '') return false;
@@ -96,10 +142,31 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
         window.open(whatsappURL, '_blank');
     };
 
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!validate()) {
+            return;
+        }
+
+        // Execute Turnstile challenge if token is not available
+        if (!turnstileToken && turnstileWidgetId.current && window.turnstile) {
+            window.turnstile.execute(turnstileWidgetId.current);
+            // Wait a bit for the token to be generated
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Get the token
+            const token = window.turnstile.getResponse(turnstileWidgetId.current);
+            if (!token) {
+                setSubmitStatus('error');
+                return;
+            }
+            setTurnstileToken(token);
+        }
+
+        if (!turnstileToken) {
+            setSubmitStatus('error');
             return;
         }
 
@@ -115,17 +182,34 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
                 },
                 body: JSON.stringify({
                     ...formData,
-                    phone: normalizedPhone
+                    phone: normalizedPhone,
+                    turnstileToken: turnstileToken
                 }),
             });
 
+            const responseData = await response.json();
+            
             if (response.ok) {
                 // Save submitted data before clearing form (needed for WhatsApp button)
                 setSubmittedData({ ...formData, phone: normalizedPhone });
                 setSubmitStatus('success');
                 setFormData({ name: '', email: '', phone: '', message: '' });
+                setTurnstileToken(null);
+                
+                // Reset Turnstile widget for next submission
+                if (turnstileWidgetId.current && window.turnstile) {
+                    window.turnstile.reset(turnstileWidgetId.current);
+                }
+                
+                // Log success for debugging
+                console.log('Contact form submitted successfully:', responseData);
             } else {
+                console.error('Contact form error:', responseData);
                 setSubmitStatus('error');
+                // Store error message for potential future display
+                if (responseData.error || responseData.details) {
+                    console.error('Error details:', responseData.error, responseData.details);
+                }
             }
         } catch (error) {
             console.error('Contact form error:', error);
@@ -138,7 +222,37 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
     if (!display) return null;
 
     return (
-        <Flex
+        <>
+            <Script
+                src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+                strategy="afterInteractive"
+                onLoad={() => {
+                    // Turnstile script loaded, trigger widget render
+                    setTimeout(() => {
+                        if (window.turnstile && turnstileContainerRef.current && !turnstileWidgetId.current) {
+                            turnstileWidgetId.current = window.turnstile.render(turnstileContainerRef.current, {
+                                sitekey: turnstileSiteKey,
+                                size: 'invisible',
+                                callback: (token: string) => {
+                                    setTurnstileToken(token);
+                                },
+                                'error-callback': () => {
+                                    setTurnstileToken(null);
+                                    console.error('Turnstile error');
+                                },
+                                'expired-callback': () => {
+                                    setTurnstileToken(null);
+                                    if (turnstileWidgetId.current && window.turnstile) {
+                                        window.turnstile.reset(turnstileWidgetId.current);
+                                    }
+                                },
+                            });
+                        }
+                    }, 100);
+                }}
+            />
+            <link rel="preconnect" href="https://challenges.cloudflare.com" />
+            <Flex
             style={{overflow: 'hidden'}}
             position="relative"
             fillWidth 
@@ -302,9 +416,12 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
                                 {isSubmitting ? t('contact.sending') : t('contact.send')}
                             </Button>
                         </div>
+                        {/* Invisible Turnstile widget container */}
+                        <div ref={turnstileContainerRef} style={{ display: 'none' }} />
                     </Flex>
                 </form>
             )}
         </Flex>
-    )
-}
+        </>
+    );
+};

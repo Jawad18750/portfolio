@@ -15,18 +15,25 @@ export async function generateMetadata(
 	const description = gallery.description;
 	const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
 
+	const currentUrl = `https://${baseURL}/${locale}/gallery`;
+	
 	return {
 		title,
 		description,
+		alternates: {
+			canonical: currentUrl,
+		},
 		openGraph: {
 			title,
 			description,
 			type: 'website',
-			url: `https://${baseURL}/${locale}/gallery`,
+			url: currentUrl,
 			images: [
 				{
 					url: ogImage,
 					alt: title,
+					width: 1200,
+					height: 630,
 				},
 			],
 		},

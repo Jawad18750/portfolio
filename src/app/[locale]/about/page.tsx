@@ -14,18 +14,25 @@ export async function generateMetadata(
 	const description = about.description;
 	const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
 
+	const currentUrl = `https://${baseURL}/${locale}/about`;
+	
 	return {
 		title,
 		description,
+		alternates: {
+			canonical: currentUrl,
+		},
 		openGraph: {
 			title,
 			description,
-			type: 'website',
-			url: `https://${baseURL}/${locale}/about`,
+			type: 'profile',
+			url: currentUrl,
 			images: [
 				{
 					url: ogImage,
 					alt: title,
+					width: 1200,
+					height: 630,
 				},
 			],
 		},
@@ -171,31 +178,34 @@ export default function About(
                         direction="column" justifyContent="center"
                         marginBottom="32">
                         {about.calendar.display && (
-                            <Flex
-                                className={styles.blockAlign}
-                                style={{
-                                    backdropFilter: 'blur(var(--static-space-1))',
-                                    border: '1px solid var(--brand-alpha-medium)',
-                                    width: 'fit-content'
-                                }}
-                                alpha="brand-weak" radius="full"
-                                fillWidth padding="4" gap="8" marginBottom="m"
-                                alignItems="center">
-                                <Flex paddingLeft="12">
+                            <a
+                                href={about.calendar.link}
+                                target="_blank"
+                                rel="noreferrer"
+                                style={{ textDecoration: 'none', display: 'inline-block' }}>
+                                <Flex
+                                    className={styles.blockAlign}
+                                    style={{
+                                        backdropFilter: 'blur(var(--static-space-1))',
+                                        border: '1px solid var(--brand-alpha-medium)',
+                                        width: 'fit-content'
+                                    }}
+                                    alpha="brand-weak" radius="full"
+                                    padding="4" gap="8" marginBottom="m"
+                                    alignItems="center">
+                                    <Flex paddingLeft="12">
+                                        <Icon
+                                            name="whatsapp"
+                                            onBackground="brand-weak"/>
+                                    </Flex>
+                                    <Flex paddingX="8">
+                                        WhatsApp
+                                    </Flex>
                                     <Icon
-                                        name="whatsapp"
+                                        name="chevronRight"
                                         onBackground="brand-weak"/>
                                 </Flex>
-                                <Flex
-                                    paddingX="8">
-                                    WhatsApp
-                                </Flex>
-                                <IconButton
-                                    href={about.calendar.link}
-                                    data-border="rounded"
-                                    variant="tertiary"
-                                    icon="chevronRight"/>
-                            </Flex>
+                            </a>
                         )}
                         <Heading
                             className={`${styles.textAlign} ${styles.nameHeading}`}

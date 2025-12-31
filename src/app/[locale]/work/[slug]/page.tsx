@@ -53,20 +53,27 @@ export function generateMetadata({ params: { slug, locale } }: WorkParams) {
 		? `https://${baseURL}${image}`
 		: `https://${baseURL}/og?title=${title}`;
 
+	const currentUrl = `https://${baseURL}/${locale}/work/${post.slug}`;
+	
 	return {
 		title,
 		description,
 		images,
 		team,
+		alternates: {
+			canonical: currentUrl,
+		},
 		openGraph: {
 			title,
 			description,
 			type: 'article',
 			publishedTime,
-			url: `https://${baseURL}/${locale}/work/${post.slug}`,
+			url: currentUrl,
 			images: [
 				{
 					url: ogImage,
+					width: 1200,
+					height: 630,
 				},
 			],
 		},

@@ -25,10 +25,21 @@ export async function generateMetadata(
 	const t = await getTranslations();
 	const { person, home } = renderContent(t);
 
+	const currentUrl = `https://${baseURL}${locale === routing.defaultLocale ? '' : `/${locale}`}`;
+	const alternateLanguages: Record<string, string> = {};
+	
+	routing.locales.forEach((loc) => {
+		alternateLanguages[loc] = `https://${baseURL}${loc === routing.defaultLocale ? '' : `/${loc}`}`;
+	});
+
 	return {
-		metadataBase: new URL(`https://${baseURL}/${locale}`),
+		metadataBase: new URL(`https://${baseURL}`),
 		title: home.title,
 		description: home.description,
+		alternates: {
+			canonical: currentUrl,
+			languages: alternateLanguages,
+		},
 		icons: {
 			icon: '/favicon.ico',
 			apple: '/favicon.ico',
@@ -36,10 +47,16 @@ export async function generateMetadata(
 		openGraph: {
 			title: `${person.firstName}'s Portfolio`,
 			description: 'Portfolio website showcasing my work.',
-			url: baseURL,
+			url: currentUrl,
 			siteName: `${person.firstName}'s Portfolio`,
 			locale: locale === 'ar' ? 'ar_LY' : 'en_US',
 			type: 'website',
+			alternateLocale: locale === 'ar' ? 'en_US' : 'ar_LY',
+		},
+		twitter: {
+			card: 'summary_large_image',
+			title: home.title,
+			description: home.description,
 		},
 		robots: {
 			index: true,

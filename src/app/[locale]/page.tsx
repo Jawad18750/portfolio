@@ -18,18 +18,25 @@ export async function generateMetadata(
 	const description = home.description;
 	const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
 
+	const currentUrl = `https://${baseURL}${locale === 'ar' ? '' : `/${locale}`}`;
+	
 	return {
 		title,
 		description,
+		alternates: {
+			canonical: currentUrl,
+		},
 		openGraph: {
 			title,
 			description,
 			type: 'website',
-			url: `https://${baseURL}/${locale}`,
+			url: currentUrl,
 			images: [
 				{
 					url: ogImage,
 					alt: title,
+					width: 1200,
+					height: 630,
 				},
 			],
 		},
@@ -61,15 +68,23 @@ export default async function Home(
 						'@type': 'WebPage',
 						name: home.title,
 						description: home.description,
-						url: `https://${baseURL}`,
-						image: `${baseURL}/og?title=${encodeURIComponent(home.title)}`,
+						url: `https://${baseURL}${locale === 'ar' ? '' : `/${locale}`}`,
+						inLanguage: locale === 'ar' ? 'ar' : 'en',
+						image: `https://${baseURL}/og?title=${encodeURIComponent(home.title)}`,
 						publisher: {
 							'@type': 'Person',
 							name: person.name,
+							jobTitle: person.role,
 							image: {
 								'@type': 'ImageObject',
-								url: `${baseURL}${person.avatar}`,
+								url: `https://${baseURL}${person.avatar}`,
 							},
+						},
+						mainEntity: {
+							'@type': 'Person',
+							name: person.name,
+							jobTitle: person.role,
+							url: `https://${baseURL}${locale === 'ar' ? '' : `/${locale}`}/about`,
 						},
 					}),
 				}}

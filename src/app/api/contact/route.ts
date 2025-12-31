@@ -3,13 +3,64 @@ import nodemailer from 'nodemailer';
 
 export async function POST(request: NextRequest) {
     try {
-        const { name, email, phone, message } = await request.json();
+        const { name, email, phone, message, turnstileToken } = await request.json();
 
         // Validate required fields
         if (!name || !email || !message) {
             return NextResponse.json(
                 { error: 'Missing required fields' },
                 { status: 400 }
+            );
+        }
+
+        // Validate Turnstile token
+        const turnstileSecret = process.env.TURNSTILE_SECRET_KEY || '0x4AAAAAACJ9xj71JB8ExEynp1xo-2JR2N8';
+        if (!turnstileToken) {
+            return NextResponse.json(
+                { error: 'Bot verification failed', details: 'Missing verification token' },
+                { status: 400 }
+            );
+        }
+
+        // Get client IP for Turnstile validation
+        const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+                         request.headers.get('x-real-ip') ||
+                         'unknown';
+
+        // Validate Turnstile token with Cloudflare
+        try {
+            const turnstileResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    secret: turnstileSecret,
+                    response: turnstileToken,
+                    remoteip: clientIP,
+                }),
+            });
+
+            const turnstileResult = await turnstileResponse.json();
+
+            if (!turnstileResult.success) {
+                console.error('Turnstile validation failed:', turnstileResult['error-codes']);
+                return NextResponse.json(
+                    { 
+                        error: 'Bot verification failed', 
+                        details: 'Please try again. If the problem persists, refresh the page.' 
+                    },
+                    { status: 400 }
+                );
+            }
+        } catch (turnstileError) {
+            console.error('Turnstile validation error:', turnstileError);
+            return NextResponse.json(
+                { 
+                    error: 'Verification service error', 
+                    details: 'Unable to verify request. Please try again later.' 
+                },
+                { status: 500 }
             );
         }
 
@@ -81,8 +132,8 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Build email content
-        const emailContent = `
+        // Build email content (both text and HTML for better deliverability)
+        const emailContentText = `
 New Contact Form Submission
 
 Name: ${name}
@@ -93,13 +144,61 @@ Message:
 ${message}
         `.trim();
 
+        const emailContentHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #f4f4f4; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .field { margin-bottom: 15px; }
+        .label { font-weight: bold; color: #555; }
+        .value { margin-top: 5px; }
+        .message-box { background-color: #f9f9f9; padding: 15px; border-left: 4px solid #007bff; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>New Contact Form Submission</h2>
+        </div>
+        <div class="field">
+            <div class="label">Name:</div>
+            <div class="value">${name}</div>
+        </div>
+        <div class="field">
+            <div class="label">Email:</div>
+            <div class="value"><a href="mailto:${email}">${email}</a></div>
+        </div>
+        <div class="field">
+            <div class="label">Phone:</div>
+            <div class="value">${phone || 'Not provided'}</div>
+        </div>
+        <div class="field">
+            <div class="label">Message:</div>
+            <div class="message-box">${message.replace(/\n/g, '<br>')}</div>
+        </div>
+    </div>
+</body>
+</html>
+        `.trim();
+
         // Send email
         const mailOptions = {
-            from: process.env.SMTP_FROM || smtpUser,
+            from: `"${name}" <${process.env.SMTP_FROM || smtpUser}>`,
             to: contactEmail,
             subject: `New Contact Form Submission from ${name}`,
-            text: emailContent,
+            text: emailContentText,
+            html: emailContentHtml,
             replyTo: email,
+            // Add headers to improve deliverability
+            headers: {
+                'X-Priority': '1',
+                'X-MSMail-Priority': 'High',
+                'Importance': 'high',
+            },
         };
 
         console.log('Attempting to send email:', {

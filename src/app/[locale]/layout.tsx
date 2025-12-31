@@ -38,7 +38,7 @@ export async function generateMetadata(
 			description: 'Portfolio website showcasing my work.',
 			url: baseURL,
 			siteName: `${person.firstName}'s Portfolio`,
-			locale: 'en_US',
+			locale: locale === 'ar' ? 'ar_LY' : 'en_US',
 			type: 'website',
 		},
 		robots: {

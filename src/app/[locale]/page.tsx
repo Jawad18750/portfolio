@@ -8,7 +8,6 @@ import { ContactForm } from '@/components';
 import { Posts } from '@/components/blog/Posts';
 import { TestimonialSlider } from '@/components/TestimonialSlider';
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
 
 export async function generateMetadata(
 	{params: {locale}}: { params: { locale: string }}
@@ -43,11 +42,11 @@ export async function generateMetadata(
 	};
 }
 
-export default function Home(
+export default async function Home(
 	{ params: {locale}}: { params: { locale: string }}
 ) {
 	unstable_setRequestLocale(locale);
-	const t = useTranslations();
+	const t = await getTranslations();
 	const { home, about, person, newsletter, contact, testimonials, allLogos } = renderContent(t);
 	return (
 		<Flex

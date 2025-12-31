@@ -9,8 +9,8 @@ const createI18nContent = (t) => {
         },
         role:      t("person.role"),
         avatar:    '/images/avatar.avif',
-        location:  'Africa/Tripoli',        // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
-        languages: ['English', 'Arabic']  // optional: Leave the array empty if you don't want to display languages
+        location:  t("person.location"),        // IANA time zone identifier, e.g., 'Africa/Tripoli'
+        languages: [t("person.languages.english"), t("person.languages.arabic")]  // optional: Leave the array empty if you don't want to display languages
     }
 
     const newsletter = {

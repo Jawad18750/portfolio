@@ -6,7 +6,7 @@ const i18n = true;
 // Manage localized content in the messages folder
 const i18nOptions = {
     locales: ['en', 'ar'],      // A list of all locales that are supported, e.g. ['en','ar']
-    defaultLocale: 'en'         // Locale used by default and as a fallback
+    defaultLocale: 'ar'         // Locale used by default and as a fallback
 }
 
 const routes = {

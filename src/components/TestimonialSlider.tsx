@@ -246,7 +246,10 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
                             width: '100%',
                             maxWidth: isMobile ? '90vw' : 'var(--static-space-s)',
                             padding: isMobile ? '0 1rem' : '0',
-                            paddingBottom: expandedStates[activeIndex] ? (isRTL ? '2rem' : '1rem') : '0',
+                            paddingBottom: expandedStates[activeIndex] 
+                                ? (isMobile ? (isRTL ? '3rem' : '2.5rem') : (isRTL ? '2rem' : '1rem'))
+                                : (isMobile ? (isRTL ? '2.5rem' : '2rem') : '0'),
+                            marginBottom: isMobile ? (testimonials.length > 4 ? '1rem' : '0.5rem') : '0',
                             boxSizing: 'border-box',
                             transition: 'all 0.3s ease-in-out',
                             opacity: isTransitioning ? 0.7 : 1,
@@ -326,7 +329,9 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: '8px',
-                        marginTop: isRTL ? 'var(--static-space-xl)' : 'var(--static-space-l)'
+                        marginTop: isMobile 
+                            ? (testimonials.length > 4 ? (isRTL ? 'var(--static-space-l)' : 'var(--static-space-m)') : (isRTL ? 'var(--static-space-m)' : 'var(--static-space-s)'))
+                            : (isRTL ? 'var(--static-space-xl)' : 'var(--static-space-l)')
                     }}>
                         <Text
                             variant="heading-strong-s"

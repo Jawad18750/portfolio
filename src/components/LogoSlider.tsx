@@ -92,14 +92,32 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
         if (!scrollRef.current || logos.length <= 1) return;
 
         const scrollElement = scrollRef.current;
-        let animationId: number;
+        let animationId: number | null = null;
         let isPaused = false;
+        let lastTimestamp = performance.now();
+        let currentIsMobile = isMobile; // Capture current mobile state
+        let currentIsDragging = isDragging; // Capture current dragging state
 
-        const animate = () => {
-            if (!isPaused && !isDragging && scrollElement) {
+        const animate = (timestamp: number) => {
+            if (!scrollElement) {
+                animationId = requestAnimationFrame(animate);
+                return;
+            }
+
+            // Update captured states (in case they change)
+            currentIsMobile = window.innerWidth < 768;
+            currentIsDragging = isDragging;
+
+            // Only pause on hover for desktop, never pause on mobile
+            const shouldPause = !currentIsMobile && isPaused;
+            
+            if (!shouldPause && !currentIsDragging) {
+                const deltaTime = Math.min(timestamp - lastTimestamp, 100); // Cap delta to prevent large jumps
+                lastTimestamp = timestamp;
+                
                 // Slower speed on mobile for better UX
-                const currentSpeed = isMobile ? speed * 0.5 : speed;
-                scrollElement.scrollLeft += currentSpeed / 60; // 60 FPS
+                const currentSpeed = currentIsMobile ? speed * 0.5 : speed;
+                scrollElement.scrollLeft += (currentSpeed * deltaTime) / 1000; // Convert to pixels per millisecond
 
                 // Reset to beginning when reaching halfway point (duplicated content)
                 const singleSetWidth = scrollElement.scrollWidth / 3;
@@ -107,33 +125,42 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
                     scrollElement.scrollLeft = 0;
                 }
             }
+            
             animationId = requestAnimationFrame(animate);
         };
 
-        // Pause on hover
+        // Only pause on hover for desktop (not mobile)
         const handleMouseEnter = () => {
-            isPaused = true;
+            if (!currentIsMobile) {
+                isPaused = true;
+            }
         };
         const handleMouseLeave = () => {
-            isPaused = false;
+            if (!currentIsMobile) {
+                isPaused = false;
+            }
         };
 
-        scrollElement.addEventListener('mouseenter', handleMouseEnter);
-        scrollElement.addEventListener('mouseleave', handleMouseLeave);
+        // Only add hover listeners on desktop
+        if (!currentIsMobile) {
+            scrollElement.addEventListener('mouseenter', handleMouseEnter);
+            scrollElement.addEventListener('mouseleave', handleMouseLeave);
+        }
 
         // Start animation immediately
+        lastTimestamp = performance.now();
         animationId = requestAnimationFrame(animate);
 
         return () => {
-            if (animationId) {
+            if (animationId !== null) {
                 cancelAnimationFrame(animationId);
             }
-            if (scrollElement) {
+            if (scrollElement && !currentIsMobile) {
                 scrollElement.removeEventListener('mouseenter', handleMouseEnter);
                 scrollElement.removeEventListener('mouseleave', handleMouseLeave);
             }
         };
-    }, [logos, speed, isDragging]);
+    }, [logos, speed, isDragging, isMobile]);
 
     if (logos.length === 0) return null;
 
@@ -144,29 +171,36 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
         <div
             style={{
                 width: '100%',
-                maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
+                maskImage: isMobile 
+                    ? 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
+                    : 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
+                WebkitMaskImage: isMobile
+                    ? 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
+                    : 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
                 overflow: 'hidden',
                 position: 'relative'
             }}
         >
             {/* Native scroll container - direction: ltr for RTL safety */}
-            <div
-                ref={scrollRef}
-                style={{
-                    width: '100%',
-                    overflowX: 'auto',
-                    scrollbarWidth: 'none',
-                    msOverflowStyle: 'none',
-                    cursor: isDragging ? 'grabbing' : 'grab',
-                    direction: 'ltr' // Explicit LTR for scroll math consistency
-                }}
-                className="logo-slider"
-                onPointerDown={handlePointerDown}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-                onPointerLeave={handlePointerUp}
-            >
+                <div
+                    ref={scrollRef}
+                    style={{
+                        width: '100%',
+                        overflowX: 'auto',
+                        scrollbarWidth: 'none',
+                        msOverflowStyle: 'none',
+                        cursor: isMobile ? 'default' : (isDragging ? 'grabbing' : 'grab'),
+                        direction: 'ltr', // Explicit LTR for scroll math consistency
+                        touchAction: isMobile ? 'none' : 'pan-x', // Prevent touch scrolling on mobile, allow on desktop
+                        userSelect: 'none',
+                        WebkitUserSelect: 'none'
+                    }}
+                    className="logo-slider"
+                    onPointerDown={isMobile ? undefined : handlePointerDown}
+                    onPointerMove={isMobile ? undefined : handlePointerMove}
+                    onPointerUp={isMobile ? undefined : handlePointerUp}
+                    onPointerLeave={isMobile ? undefined : handlePointerUp}
+                >
                 {/* Flex row with max-content width to guarantee overflow */}
                 <div
                     style={{
@@ -174,15 +208,16 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
                         width: 'max-content',
                         flexWrap: 'nowrap',
                         alignItems: 'center',
-                        gap: 'clamp(var(--static-space-l), 6vw, var(--static-space-xxl))' // Adjusted responsive spacing
+                        gap: isMobile ? 'var(--static-space-m)' : 'clamp(var(--static-space-l), 6vw, var(--static-space-xxl))' // Adjusted responsive spacing
                     }}
                 >
                     {duplicatedLogos.map((logo, index) => (
                         <div
                             key={`${logo}-${index}`}
                             style={{
-                                minWidth: '180px',
-                                height: '120px',
+                                minWidth: isMobile ? '110px' : '180px',
+                                width: isMobile ? '110px' : 'auto',
+                                height: isMobile ? '90px' : '120px',
                                 flexShrink: 0,
                                 display: 'flex',
                                 alignItems: 'center',
@@ -192,9 +227,9 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
                         >
                             <div
                                 style={{
-                                    width: 'clamp(45px, 6vw, 60px)',
-                                    height: 'clamp(45px, 6vw, 60px)',
-                                    minWidth: 'clamp(60px, 8vw, 90px)',
+                                    width: isMobile ? '90px' : 'clamp(45px, 6vw, 60px)',
+                                    height: isMobile ? '90px' : 'clamp(45px, 6vw, 60px)',
+                                    minWidth: isMobile ? '90px' : 'clamp(60px, 8vw, 90px)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -209,8 +244,8 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
                                     alt={`Client logo ${index + 1}`}
                                     loading="lazy"
                                     style={{
-                                        width: 'clamp(68px, 9vw, 90px)',
-                                        height: 'clamp(68px, 9vw, 90px)',
+                                        width: isMobile ? '90px' : 'clamp(68px, 9vw, 90px)',
+                                        height: isMobile ? '90px' : 'clamp(68px, 9vw, 90px)',
                                         objectFit: 'contain',
                                         opacity: 0,
                                         transition: 'opacity 0.3s ease'

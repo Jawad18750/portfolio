@@ -2,7 +2,12 @@
     "person": {
         "firstName": "Abdeljawad",
         "lastName": "Almiladi",
-        "role": "Software Developer"
+        "role": "Software Developer",
+        "location": "Libya/Tripoli",
+        "languages": {
+            "english": "English",
+            "arabic": "Arabic"
+        }
     },
     "newsletter": {
         "title": "Subscribe to my newsletter",
@@ -167,7 +172,7 @@
                 "Full-time Freelancing": {
                     "timeframe": "2024 - 2023",
                     "role": "Website Developer",
-                    "achievements": "Started developing applications alongside website design and development. To expand the scope of digital services I provide."
+                    "achievements": "Focused on building responsive and modern websites for various clients. Delivered high-quality web solutions with attention to user experience and performance."
                 },
                 "MyTeam": {
                     "timeframe": "2023 - 2022",
@@ -177,7 +182,7 @@
                 "Decora": {
                     "timeframe": "2022 - 2021",
                     "role": "Visual Identity Designer",
-                    "achievements": "Started developing applications alongside website design and development. To expand the scope of digital services I provide."
+                    "achievements": "Created comprehensive visual identities including logos, brand guidelines, and marketing materials. Developed cohesive design systems that strengthened brand presence."
                 },
                 "FreelancerCom": {
                     "timeframe": "2021",

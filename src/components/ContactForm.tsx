@@ -13,6 +13,7 @@ declare global {
             reset: (widgetId: string) => void;
             remove: (widgetId: string) => void;
             getResponse: (widgetId: string) => string | undefined;
+            execute: (widgetId: string | HTMLElement | string) => void;
         };
     }
 }
@@ -39,15 +40,22 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
     const turnstileContainerRef = useRef<HTMLDivElement>(null);
 
     const t = useTranslations();
-    const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAACJ9xsnz56Cagrqq';
+    const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    
+    if (!turnstileSiteKey) {
+        console.error('NEXT_PUBLIC_TURNSTILE_SITE_KEY is not configured');
+    }
     
     // Initialize Turnstile widget when script loads
     useEffect(() => {
+        if (!turnstileSiteKey) return; // Don't initialize if site key is missing
+        
         const renderTurnstile = () => {
             if (window.turnstile && turnstileContainerRef.current && !turnstileWidgetId.current) {
                 turnstileWidgetId.current = window.turnstile.render(turnstileContainerRef.current, {
                     sitekey: turnstileSiteKey,
                     size: 'invisible',
+                    execution: 'execute', // Run challenge automatically on form submit
                     callback: (token: string) => {
                         setTurnstileToken(token);
                     },
@@ -150,24 +158,26 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
             return;
         }
 
-        // Execute Turnstile challenge if token is not available
-        if (!turnstileToken && turnstileWidgetId.current && window.turnstile) {
-            window.turnstile.execute(turnstileWidgetId.current);
-            // Wait a bit for the token to be generated
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            // Get the token
-            const token = window.turnstile.getResponse(turnstileWidgetId.current);
-            if (!token) {
+        // For invisible Turnstile, the challenge runs automatically
+        // We just need to wait for the token if it's not already available
+        if (turnstileSiteKey) {
+            if (!turnstileToken && turnstileWidgetId.current && window.turnstile) {
+                // Wait for the token to be generated (invisible widget runs automatically)
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Get the token
+                const token = window.turnstile.getResponse(turnstileWidgetId.current);
+                if (!token) {
+                    setSubmitStatus('error');
+                    return;
+                }
+                setTurnstileToken(token);
+            }
+
+            if (!turnstileToken) {
                 setSubmitStatus('error');
                 return;
             }
-            setTurnstileToken(token);
-        }
-
-        if (!turnstileToken) {
-            setSubmitStatus('error');
-            return;
         }
 
         setIsSubmitting(true);
@@ -183,7 +193,7 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
                 body: JSON.stringify({
                     ...formData,
                     phone: normalizedPhone,
-                    turnstileToken: turnstileToken
+                    ...(turnstileToken && { turnstileToken })
                 }),
             });
 

@@ -40,6 +40,7 @@
 		"@types/react-dom": "^18",
 		"critters": "^0.0.23",
 		"eslint": "^8.57.0",
+		"eslint-config-next": "^14.2.16",
 		"postcss-custom-media": "^10.0.7",
 		"postcss-flexbugs-fixes": "^5.0.2",
 		"typescript": "^5"

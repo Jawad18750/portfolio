@@ -48,10 +48,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     let routes = locales.flatMap((locale)=> 
         activeRoutes.map((route) => {
             const path = route !== '/' ? route : '';
+            const changeFreq: 'weekly' | 'monthly' = route === '/' ? 'weekly' : 'monthly';
             return {
                 url: getUrl(locale, path),
                 lastModified: new Date(),
-                changeFrequency: (route === '/' ? 'weekly' : 'monthly') as const,
+                changeFrequency: changeFreq,
                 priority: route === '/' ? 1.0 : 0.9,
                 alternates: {
                     languages: Object.fromEntries(

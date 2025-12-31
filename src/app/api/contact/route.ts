@@ -14,7 +14,15 @@ export async function POST(request: NextRequest) {
         }
 
         // Validate Turnstile token
-        const turnstileSecret = process.env.TURNSTILE_SECRET_KEY || '0x4AAAAAACJ9xj71JB8ExEynp1xo-2JR2N8';
+        const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+        if (!turnstileSecret) {
+            console.error('TURNSTILE_SECRET_KEY is not configured');
+            return NextResponse.json(
+                { error: 'Server configuration error', details: 'Bot protection is not properly configured' },
+                { status: 500 }
+            );
+        }
+        
         if (!turnstileToken) {
             return NextResponse.json(
                 { error: 'Bot verification failed', details: 'Missing verification token' },

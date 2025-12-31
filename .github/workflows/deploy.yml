@@ -27,6 +27,9 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          # NEXT_PUBLIC_* variables are embedded at build time and need to be available during build
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
+          NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
 
       - name: Create deployment package
         run: |

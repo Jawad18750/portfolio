@@ -212,28 +212,26 @@ jobs:
               exit 1
             fi
             
-            # Automatically activate OpenLiteSpeed reverse proxy (if not already active)
-            echo "🌐 Configuring OpenLiteSpeed reverse proxy..."
+            # Verify OpenLiteSpeed reverse proxy configuration
+            echo "🌐 Verifying OpenLiteSpeed reverse proxy configuration..."
             VHOST_CONF="/usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf"
-            NEXTJS_CONF="/usr/local/lsws/conf/vhosts/abdeljawad.com/vhost.conf.nextjs"
             
-            if [ -f "$NEXTJS_CONF" ]; then
-              # Check if Next.js proxy config is already active
-              if grep -q "localhost:3001" "$VHOST_CONF" 2>/dev/null; then
-                echo "   ✅ OpenLiteSpeed reverse proxy already active"
-              else
-                echo "   Activating Next.js reverse proxy configuration..."
-                # Backup current config
-                cp "$VHOST_CONF" "${VHOST_CONF}.backup.$(date +%Y%m%d_%H%M%S)" 2>/dev/null || true
-                # Apply Next.js config
-                cp "$NEXTJS_CONF" "$VHOST_CONF"
-                # Reload OpenLiteSpeed
+            if [ -f "$VHOST_CONF" ]; then
+              # Check if proxy config is correctly set up for port 3001
+              if grep -q "address 127.0.0.1:3001" "$VHOST_CONF" 2>/dev/null || grep -q "address localhost:3001" "$VHOST_CONF" 2>/dev/null; then
+                echo "   ✅ OpenLiteSpeed reverse proxy is correctly configured for port 3001"
+                # Reload OpenLiteSpeed to ensure config is active
                 /usr/local/lsws/bin/lswsctrl reload
-                echo "   ✅ OpenLiteSpeed reverse proxy activated"
+                echo "   ✅ OpenLiteSpeed reloaded"
+              else
+                echo "   ⚠️  Warning: OpenLiteSpeed config may not be set up for port 3001"
+                echo "   Current config exists but proxy may not be configured correctly"
+                echo "   Please verify manually: $VHOST_CONF"
+                echo "   Expected: context / with type proxy and address 127.0.0.1:3001"
               fi
             else
-              echo "   ⚠️  Next.js config file not found at $NEXTJS_CONF"
-              echo "   Skipping OpenLiteSpeed configuration (may need manual setup)"
+              echo "   ⚠️  Warning: OpenLiteSpeed config file not found at $VHOST_CONF"
+              echo "   OpenLiteSpeed may need manual configuration"
             fi
             
             # Cleanup old backups (keep last 3)

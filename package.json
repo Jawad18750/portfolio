@@ -18,7 +18,7 @@
 		"next": "^14.2.16",
 		"next-intl": "^3.23.5",
 		"next-mdx-remote": "^5.0.0",
-		"nodemailer": "^6.9.8",
+		"nodemailer": "^7.0.12",
 		"postcss": "^8.4.39",
 		"postcss-preset-env": "^9.5.15",
 		"prismjs": "^1.29.0",
@@ -40,7 +40,7 @@
 		"@types/react-dom": "^18",
 		"critters": "^0.0.23",
 		"eslint": "^8.57.0",
-		"eslint-config-next": "^14.2.16",
+		"eslint-config-next": "^16.1.1",
 		"postcss-custom-media": "^10.0.7",
 		"postcss-flexbugs-fixes": "^5.0.2",
 		"typescript": "^5"

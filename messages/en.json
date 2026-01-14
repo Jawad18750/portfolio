@@ -15,8 +15,13 @@
         "button": "Sign up"
     },
     "contact": {
+        "label": "Contact",
         "title": "Get in touch",
         "description": "Have a project in mind? Let's discuss how we can work together.",
+        "channels": {
+            "email": "Email",
+            "whatsapp": "WhatsApp"
+        },
         "labels": {
             "name": "Name",
             "email": "Email",

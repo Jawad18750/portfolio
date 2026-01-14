@@ -24,7 +24,7 @@ export async function generateStaticParams(): Promise<{ slug: string; locale: st
 
     // Fetch posts for each locale
     for (const locale of locales) {
-        const posts = getPosts(['src', 'app', '[locale]', 'work', 'projects', locale]);
+        const posts = getPosts(['src', 'app', '[locale]', 'projects', 'projects', locale]);
         allPosts.push(...posts.map(post => ({
             slug: post.slug,
             locale: locale,
@@ -35,7 +35,7 @@ export async function generateStaticParams(): Promise<{ slug: string; locale: st
 }
 
 export function generateMetadata({ params: { slug, locale } }: WorkParams) {
-	let post = getPosts(['src', 'app', '[locale]', 'work', 'projects', locale]).find((post) => post.slug === slug)
+	let post = getPosts(['src', 'app', '[locale]', 'projects', 'projects', locale]).find((post) => post.slug === slug)
 	
 	if (!post) {
 		return
@@ -53,7 +53,8 @@ export function generateMetadata({ params: { slug, locale } }: WorkParams) {
 		? `https://${baseURL}${image}`
 		: `https://${baseURL}/og?title=${title}`;
 
-	const currentUrl = `https://${baseURL}/${locale}/work/${post.slug}`;
+    const localePrefix = locale === routing.defaultLocale ? '' : `/${locale}`;
+	const currentUrl = `https://${baseURL}${localePrefix}/projects/${post.slug}`;
 	
 	return {
 		title,
@@ -88,14 +89,15 @@ export function generateMetadata({ params: { slug, locale } }: WorkParams) {
 
 export default function Project({ params }: WorkParams) {
 	unstable_setRequestLocale(params.locale);
-	let post = getPosts(['src', 'app', '[locale]', 'work', 'projects', params.locale]).find((post) => post.slug === params.slug)
+	let post = getPosts(['src', 'app', '[locale]', 'projects', 'projects', params.locale]).find((post) => post.slug === params.slug)
 
 	if (!post) {
 		notFound()
 	}
 
 	const t = useTranslations();
-	const { person } = renderContent(t);
+	const { person, work } = renderContent(t);
+    const localePrefix = params.locale === routing.defaultLocale ? '' : `/${params.locale}`;
 
 	const avatars = post.metadata.team?.map((person) => ({
         src: person.avatar,
@@ -120,7 +122,7 @@ export default function Project({ params }: WorkParams) {
 						image: post.metadata.image
 							? `https://${baseURL}${post.metadata.image}`
 							: `https://${baseURL}/og?title=${post.metadata.title}`,
-							url: `https://${baseURL}/${params.locale}/work/${post.slug}`,
+							url: `https://${baseURL}${localePrefix}/projects/${post.slug}`,
 						author: {
 							'@type': 'Person',
 							name: person.name,
@@ -132,11 +134,11 @@ export default function Project({ params }: WorkParams) {
 				fillWidth maxWidth="xs" gap="16"
 				direction="column">
 				<Button
-					href={`/${params.locale}/work`}
+					href={`/${params.locale}/projects`}
 					variant="tertiary"
 					size="s"
 					prefixIcon="chevronLeft">
-					Projects
+					{work.label}
 				</Button>
 				<Heading
 					variant="display-strong-s">

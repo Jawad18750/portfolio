@@ -1,7 +1,6 @@
 "use client";
 
-import { mailchimp } from '@/app/resources'
-import { Button, Flex, Heading, Input, Text, Background, Textarea } from '@/once-ui/components';
+import { Button, Flex, Heading, Input, Text, Textarea } from '@/once-ui/components';
 import { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import Script from 'next/script';
@@ -32,7 +31,6 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
         phone: '',
         message: ''
     });
-    const [submittedData, setSubmittedData] = useState<typeof formData | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -137,34 +135,6 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
         return Object.keys(newErrors).length === 0;
     };
 
-    const generateWhatsAppURL = (): string => {
-        // Use submittedData if available (after success), otherwise use current formData
-        const data = submittedData || formData;
-        const normalizedPhone = normalizePhoneNumber(data.phone);
-        const message = `مرحبًا، اسمي: ${data.name}\nرقمي: ${normalizedPhone || 'غير محدد'}\nبريدي الإلكتروني: ${data.email}\nرسالتي: ${data.message}`;
-        const encodedMessage = encodeURIComponent(message);
-        return `https://wa.me/218912160676?text=${encodedMessage}`;
-    };
-
-    const handleWhatsAppClick = () => {
-        const whatsappURL = generateWhatsAppURL();
-        
-        // Track WhatsApp button click in GTM dataLayer
-        if (typeof window !== 'undefined') {
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push({
-                'event': 'whatsapp_button_click',
-                'event_category': 'engagement',
-                'event_label': 'contact_form',
-                'source': submittedData ? 'success_state' : 'form_state',
-                'form_submitted': !!submittedData
-            });
-        }
-        
-        window.open(whatsappURL, '_blank');
-    };
-
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -214,8 +184,6 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
             const responseData = await response.json();
             
             if (response.ok) {
-                // Save submitted data before clearing form (needed for WhatsApp button)
-                setSubmittedData({ ...formData, phone: normalizedPhone });
                 setSubmitStatus('success');
                 setFormData({ name: '', email: '', phone: '', message: '' });
                 setTurnstileToken(null);
@@ -287,25 +255,14 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
             />
             <link rel="preconnect" href="https://challenges.cloudflare.com" />
             <Flex
-            style={{overflow: 'hidden'}}
-            position="relative"
-            fillWidth 
-            padding="xl" 
-            radius="l" 
-            marginBottom="m"
-            direction="column" 
-            alignItems="center" 
-            align="center"
-            background="surface" 
-            border="neutral-medium" 
-            borderStyle="solid-1"
-            className="contact-form-container">
-            <Background
-                position="absolute"
-                mask={mailchimp.effects.mask as any}
-                gradient={mailchimp.effects.gradient as any}
-                dots={mailchimp.effects.dots as any}
-                lines={mailchimp.effects.lines as any}/>
+                style={{ width: '100%', maxWidth: 'var(--responsive-width-m)' }}
+                position="relative"
+                padding="xl"
+                direction="column"
+                alignItems="center"
+                align="center"
+                gap="m"
+                className="contact-form-container">
             <Heading style={{position: 'relative'}}
                 marginBottom="s"
                 variant="display-strong-xs">
@@ -337,33 +294,14 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
                     <Text onBackground="neutral-medium" align="center">
                         {t('contact.successMessage')}
                     </Text>
-                    <Flex 
-                        gap="s" 
-                        marginTop="s"
-                        direction="row"
-                        mobileDirection="column"
-                        fillWidth
-                        className="contact-form-buttons">
-                        <Button
-                            variant="secondary"
-                            size="m"
-                            onClick={() => {
-                                setSubmitStatus('idle');
-                                setSubmittedData(null); // Clear submitted data when starting new form
-                            }}
-                            className="contact-button"
-                        >
-                            {t('contact.sendAnother')}
-                        </Button>
-                        <Button
-                            variant="primary"
-                            size="m"
-                            onClick={handleWhatsAppClick}
-                            className="contact-button"
-                        >
-                            {t('contact.continueWhatsApp')}
-                        </Button>
-                    </Flex>
+                    <Button
+                        variant="secondary"
+                        size="m"
+                        onClick={() => setSubmitStatus('idle')}
+                        className="contact-button"
+                    >
+                        {t('contact.sendAnother')}
+                    </Button>
                 </Flex>
             ) : submitStatus === 'error' ? (
                 <Flex direction="column" gap="m" alignItems="center" style={{position: 'relative'}}>

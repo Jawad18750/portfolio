@@ -198,6 +198,11 @@
   text-align: left;
 }
 
+body[data-route-key="home"],
+body[data-route-key="contact"] {
+  overflow-y: hidden;
+}
+
 @media (max-width: 768px) {
   /* Footer mobile styles */
   footer .flex[data-justify-content="space-between"] {

@@ -21,8 +21,13 @@ const createI18nContent = (t) => {
 
     const contact = {
         display: true,
+        label: t("contact.label"),
         title: <>{t("contact.title")}</>,
-        description: <>{t("contact.description")}</>
+        description: <>{t("contact.description")}</>,
+        channels: {
+            email: t("contact.channels.email"),
+            whatsapp: t("contact.channels.whatsapp")
+        }
     }
 
     const social = [
@@ -60,7 +65,12 @@ const createI18nContent = (t) => {
         title: t("home.title", {name: person.name}),
         description: t("home.description", {role: person.role}),
         headline: <>{t("home.headline")}</>,
-        subline: <>{t("home.subline")}</>
+        subline: <>{t("home.subline")}</>,
+        featured: {
+            display: true,
+            title: <>{t("home.selectedWork")}</>,
+            href: '/projects'
+        }
     }
 
     const testimonials = [
@@ -288,7 +298,7 @@ const createI18nContent = (t) => {
         title: t("work.title"),
         description: t("work.description", {name: person.name})
         // Create new project pages by adding a new .mdx file to app/blog/posts
-        // All projects will be listed on the /home and /work routes
+        // All projects will be listed on the /home and /projects routes
     }
 
     const gallery = {

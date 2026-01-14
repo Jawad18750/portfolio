@@ -10,33 +10,69 @@ const i18nOptions = {
 }
 
 const routes = {
-    '/':        true,
-    '/about':   true,
-    '/work':    false,  // Set to false to hide from header
-    '/blog':    false,  // Set to false to hide from header and home page
-    '/gallery': true,
+    '/':         true,
+    '/about':    true,
+    '/projects': true,
+    '/contact':  true,
+    '/blog':     false,  // Set to false to hide from header and home page
+    '/gallery':  true,
 }
 
 // Enable password protection on selected routes
 // Set password in pages/api/authenticate.ts
 const protectedRoutes = {
-    '/work/automate-design-handovers-with-a-figma-to-code-pipeline': false
+    '/projects/automate-design-handovers-with-a-figma-to-code-pipeline': false
 }
 
 const effects = {
-    mask: 'topRight',             // none | cursor | topLeft | topRight | bottomLeft | bottomRight
+    mask: {
+        cursor: false,
+        x: 50,
+        y: 0,
+        radius: 100,
+    },
     gradient: {
-        display: true,
-        opacity: 1           // 0 - 1
+        display: false,
+        opacity: 1,
+        x: 50,
+        y: 60,
+        width: 100,
+        height: 50,
+        tilt: 0,
+        colorStart: 'accent-background-strong',
+        colorEnd: 'page-background',
     },
     dots: {
         display: true,
-        opacity: 1,           // 0 - 1
-        size: '40'              // 2 | 4 | 8 | 12 | 16 | 20 | 24 | 32 | 40 | 48 | 56 | 634
+        opacity: 0.4,
+        size: '2',
+        color: 'brand-background-strong',
+    },
+    grid: {
+        display: false,
+        opacity: 1,
+        width: '0.25rem',
+        height: '0.25rem',
+        color: 'neutral-alpha-medium',
     },
     lines: {
         display: false,
+        opacity: 1,
+        color: 'neutral-alpha-weak',
+        size: '16',
+        thickness: 1,
+        angle: 45,
     },
+    particles: {
+        display: true,
+        color: 'brand-on-background-weak',
+        size: '2',
+        opacity: 40,
+        speed: 3,
+        density: 200,
+        interactive: true,
+        interactionRadius: 10,
+    }
 }
 
 const style = {
@@ -59,12 +95,28 @@ const display = {
 const mailchimp = {
     action: 'https://url/subscribe/post?parameters',
     effects: {
-        mask: 'topRight',           // none | cursor | topLeft | topRight | bottomLeft | bottomRight
+        mask: {
+            cursor: true,
+            radius: 80,
+        },
         gradient: {
             display: true,
-            opacity: 0.6            // 0 - 1
+            opacity: 0.6,
+            x: 50,
+            y: 0,
+            width: 80,
+            height: 60,
+            tilt: 0,
+            colorStart: 'accent-background-strong',
+            colorEnd: 'static-transparent',
         },
         dots: {
+            display: true,
+            opacity: 0.2,
+            size: '16',
+            color: 'brand-on-background-weak',
+        },
+        grid: {
             display: false,
         },
         lines: {

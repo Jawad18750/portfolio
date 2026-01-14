@@ -36,6 +36,8 @@ export { Kbd } from './Kbd';
 export { LetterFx } from './LetterFx';
 export { Logo } from './Logo';
 export { NavIcon } from './NavIcon';
+export { Particle } from './Particle';
+export { Mask } from './Mask';
 export { RadioButton } from './RadioButton';
 export type { RadioButtonProps } from './RadioButton';
 export { RevealFx } from './RevealFx';

@@ -70,6 +70,7 @@ export const Mailchimp = (
                 mask={mailchimp.effects.mask as any}
                 gradient={mailchimp.effects.gradient as any}
                 dots={mailchimp.effects.dots as any}
+                grid={mailchimp.effects.grid as any}
                 lines={mailchimp.effects.lines as any}/>
             <Heading style={{position: 'relative'}}
                 marginBottom="s"

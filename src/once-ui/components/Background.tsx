@@ -1,7 +1,62 @@
 'use client';
 
-import React, { CSSProperties, forwardRef, useEffect, useRef, useState } from 'react';
-import { SpacingToken } from '../types';
+import React, { CSSProperties, forwardRef, useEffect, useMemo, useRef } from 'react';
+import classNames from 'classnames';
+
+import { Flex } from './Flex';
+import { Mask } from './Mask';
+import styles from './Background.module.scss';
+
+type GradientConfig = {
+    display?: boolean;
+    opacity?: number;
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    tilt?: number;
+    colorStart?: string;
+    colorEnd?: string;
+};
+
+type DotsConfig = {
+    display?: boolean;
+    opacity?: number;
+    color?: string;
+    size?: string;
+};
+
+type GridConfig = {
+    display?: boolean;
+    opacity?: number;
+    width?: string;
+    height?: string;
+    color?: string;
+};
+
+type LinesConfig = {
+    display?: boolean;
+    opacity?: number;
+    angle?: number;
+    color?: string;
+    thickness?: number;
+    size?: string;
+};
+
+type MaskConfig = {
+    cursor?: boolean;
+    x?: number;
+    y?: number;
+    radius?: number;
+};
+
+type BackgroundProps = React.ComponentProps<typeof Flex> & {
+    gradient?: GradientConfig;
+    dots?: DotsConfig;
+    grid?: GridConfig;
+    lines?: LinesConfig;
+    mask?: MaskConfig;
+};
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
     if (typeof ref === 'function') {
@@ -11,199 +66,156 @@ function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
     }
 }
 
-export interface MaskOptions {
-    none: 'none';
-    cursor: 'cursor';
-    topLeft: 'topLeft';
-    topRight: 'topRight';
-    bottomLeft: 'bottomLeft';
-    bottomRight: 'bottomRight';
-}
+const remap = (value: number, inputMin: number, inputMax: number, outputMin: number, outputMax: number) => {
+    return ((value - inputMin) / (inputMax - inputMin)) * (outputMax - outputMin) + outputMin;
+};
 
-type MaskType = keyof MaskOptions;
-
-export interface BackgroundProps {
-    position?: CSSProperties['position'];
-    gradient?: GradientProps;
-    dots?: DotsProps;
-    lines?: LinesProps;
-    mask?: MaskType;
-    className?: string;
-    style?: React.CSSProperties;
-}
-
-export interface GradientProps {
-    display?: boolean;
-    opacity?: number;
-}
-
-export interface DotsProps {
-    display?: boolean;
-    opacity?: number;
-    color?: string;
-    size?: SpacingToken;
-}
-
-export interface LinesProps {
-    display?: boolean;
-    opacity?: number;
-    size?: SpacingToken;
-}
-
-const Background = forwardRef<HTMLDivElement, BackgroundProps>(
-    ({
-        position = 'fixed',
+const Background = forwardRef<HTMLDivElement, BackgroundProps>(({
         gradient = {},
         dots = {},
+    grid = {},
         lines = {},
-        mask = 'none',
+    mask,
         className,
-        style
+    style,
+    children,
+    ...rest
     }, forwardedRef) => {
-        const dotsColor = dots.color ?? 'brand-on-background-weak';
-        const dotsSize = dots.size ?? '16';
-
-        const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-        const [smoothPosition, setSmoothPosition] = useState({ x: 0, y: 0 });
-        const maskSize = 1200;
-        const backgroundRef = useRef<HTMLDivElement>(null);
+    const backgroundRef = useRef<HTMLDivElement | null>(null);
 
         useEffect(() => {
             setRef(forwardedRef, backgroundRef.current);
         }, [forwardedRef]);
 
-        useEffect(() => {
-            const handleMouseMove = (event: MouseEvent) => {
-                if (backgroundRef.current) {
-                    const rect = backgroundRef.current.getBoundingClientRect();
-                    setCursorPosition({
-                        x: event.clientX - rect.left,
-                        y: event.clientY - rect.top,
-                    });
-                }
-            };
+    const gradientPosition = useMemo(() => {
+        if (gradient.x == null || gradient.y == null) return { x: 50, y: 50 };
+        const adjustedX = remap(gradient.x, 0, 100, 37.5, 62.5);
+        const adjustedY = remap(gradient.y, 0, 100, 37.5, 62.5);
+        return { x: adjustedX, y: adjustedY };
+    }, [gradient.x, gradient.y]);
 
-            document.addEventListener('mousemove', handleMouseMove);
-
-            return () => {
-                document.removeEventListener('mousemove', handleMouseMove);
-            };
-        }, []);
-
-        useEffect(() => {
-            let animationFrameId: number;
-
-            const updateSmoothPosition = () => {
-                setSmoothPosition((prev) => {
-                    const dx = cursorPosition.x - prev.x;
-                    const dy = cursorPosition.y - prev.y;
-                    const easingFactor = 0.05;
-
-                    return {
-                        x: Math.round(prev.x + dx * easingFactor),
-                        y: Math.round(prev.y + dy * easingFactor),
-                    };
-                });
-                animationFrameId = requestAnimationFrame(updateSmoothPosition);
-            };
-
-            if (mask === 'cursor') {
-                animationFrameId = requestAnimationFrame(updateSmoothPosition);
-            }
-
-            return () => {
-                cancelAnimationFrame(animationFrameId);
-            };
-        }, [cursorPosition, mask]);
-
-        const commonStyles: CSSProperties = {
-            position,
-            top: '0',
-            left: '0',
-            zIndex: '0',
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            ...style,
-        };
-
-        const maskStyle = (): CSSProperties => {
-            switch (mask) {
-                case 'none':
-                    return { maskImage: 'none' };
-                case 'cursor':
-                    return {
-                        maskImage: `radial-gradient(circle ${maskSize / 2}px at ${smoothPosition.x}px ${smoothPosition.y}px, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0) 100%)`,
-                        maskSize: '100% 100%',
-                    };
-                case 'topLeft':
-                    return {
-                        maskImage: `radial-gradient(circle ${maskSize / 2}px at 0% 0%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0) 100%)`,
-                        maskSize: '100% 100%',
-                    };
-                case 'topRight':
-                    return {
-                        maskImage: `radial-gradient(circle ${maskSize / 2}px at 100% 0%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0) 100%)`,
-                        maskSize: '100% 100%',
-                    };
-                case 'bottomLeft':
-                    return {
-                        maskImage: `radial-gradient(circle ${maskSize / 2}px at 0% 100%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0) 100%)`,
-                        maskSize: '100% 100%',
-                    };
-                case 'bottomRight':
-                    return {
-                        maskImage: `radial-gradient(circle ${maskSize / 2}px at 100% 100%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0) 100%)`,
-                        maskSize: '100% 100%',
-                    };
-                default:
-                    return {};
-            }
-        };
-
-        return (
+    const renderLayers = () => (
             <>
                 {gradient.display && (
-                    <div
-                        ref={backgroundRef}
-                        className={className}
+                <Flex
+                    position="absolute"
+                    className={styles.gradient}
+                    pointerEvents="none"
                         style={{
-                            ...commonStyles,
                             opacity: gradient.opacity,
-                            background: 'radial-gradient(100% 100% at 50% 0%, var(--static-transparent) 0%, var(--page-background) 100%), radial-gradient(90% 80% at 10% 20%, var(--brand-background-medium) 0%, var(--static-transparent) 100%), radial-gradient(200% 120% at 50% 0%, var(--accent-solid-medium) 0%, var(--static-transparent) 100%)',
-                            ...maskStyle(),
-                        }}
+                        '--gradient-position-x': `${gradientPosition.x}%`,
+                        '--gradient-position-y': `${gradientPosition.y}%`,
+                        '--gradient-width': gradient.width != null ? `${gradient.width / 4}%` : '25%',
+                        '--gradient-height': gradient.height != null ? `${gradient.height / 4}%` : '25%',
+                        '--gradient-tilt': gradient.tilt != null ? `${gradient.tilt}deg` : '0deg',
+                        '--gradient-color-start': gradient.colorStart ? `var(--${gradient.colorStart})` : 'var(--brand-solid-strong)',
+                        '--gradient-color-end': gradient.colorEnd ? `var(--${gradient.colorEnd})` : 'var(--brand-solid-weak)',
+                    } as CSSProperties}
                     />
                 )}
                 {dots.display && (
-                    <div
-                        ref={backgroundRef}
-                        className={className}
+                <Flex
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    fillWidth
+                    fillHeight
+                    pointerEvents="none"
+                    className={styles.dots}
                         style={{
-                            ...commonStyles,
                             opacity: dots.opacity,
-                            backgroundImage: `radial-gradient(var(--${dotsColor}) 0.5px, var(--static-transparent) 1px)`,
-                            backgroundSize: `var(--static-space-${dotsSize}) var(--static-space-${dotsSize})`,
-                            ...maskStyle(),
-                        }}
+                        '--dots-color': `var(--${dots.color ?? 'brand-on-background-weak'})`,
+                        '--dots-size': `var(--static-space-${dots.size ?? '24'})`,
+                    } as CSSProperties}
                     />
                 )}
                 {lines.display && (
-                    <div
-                        ref={backgroundRef}
-                        className={className}
+                <Flex
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    fillWidth
+                    fillHeight
+                    pointerEvents="none"
+                    className={styles.lines}
                         style={{
-                            ...commonStyles,
                             opacity: lines.opacity,
-                            backgroundImage: `repeating-linear-gradient(45deg, var(--brand-on-background-weak) 0, var(--brand-on-background-weak) 0.5px, var(--static-transparent) 0.5px, var(--static-transparent) ${dots.size})`,
-                            ...maskStyle(),
-                        }}
-                    />
-                )}
+                        '--lines-angle': `${lines.angle ?? -45}deg`,
+                        '--lines-color': `var(--${lines.color ?? 'brand-on-background-weak'})`,
+                        '--lines-thickness': `${lines.thickness ?? 1}px`,
+                        '--lines-size': `var(--static-space-${lines.size ?? '16'})`,
+                        background: `
+                            repeating-linear-gradient(
+                                var(--lines-angle),
+                                var(--static-transparent),
+                                var(--static-transparent) calc(var(--lines-size) - var(--lines-thickness)),
+                                var(--lines-color) calc(var(--lines-size) - var(--lines-thickness)),
+                                var(--lines-color) var(--lines-size)
+                            )
+                        `,
+                    } as CSSProperties}
+                />
+            )}
+            {grid.display && (
+                <Flex
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    fillWidth
+                    fillHeight
+                    pointerEvents="none"
+                    style={{
+                        opacity: grid.opacity,
+                        backgroundImage: `
+                            linear-gradient(
+                                to right,
+                                var(--${grid.color ?? 'brand-on-background-weak'}) 1px,
+                                transparent 1px
+                            ),
+                            linear-gradient(
+                                to bottom,
+                                var(--${grid.color ?? 'brand-on-background-weak'}) 1px,
+                                transparent 1px
+                            )
+                        `,
+                        backgroundSize: `${grid.width ?? '160px'} ${grid.height ?? '160px'}`,
+                    } as CSSProperties}
+                />
+            )}
+            {children}
             </>
         );
-    }
-);
+
+    return (
+        <Flex
+            ref={backgroundRef}
+            className={classNames(className)}
+            fillWidth
+            fillHeight
+            position="absolute"
+            top="0"
+            left="0"
+            zIndex={0}
+            overflow="hidden"
+            style={{
+                pointerEvents: 'none',
+                ...style,
+            }}
+            {...rest}>
+            {mask ? (
+                <Mask
+                    cursor={mask.cursor}
+                    x={mask.x}
+                    y={mask.y}
+                    radius={mask.radius}>
+                    {renderLayers()}
+                </Mask>
+            ) : (
+                renderLayers()
+            )}
+        </Flex>
+    );
+});
 
 Background.displayName = 'Background';
 

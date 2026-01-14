@@ -1,12 +1,9 @@
 import React from 'react';
 
-import { Heading, Flex, Text, Button,  Avatar, RevealFx, Arrow } from '@/once-ui/components';
-import { Projects } from '@/components/work/Projects';
+import { Badge, Button, Flex, Heading, RevealFx, Text, Avatar } from '@/once-ui/components';
 
-import { baseURL, routes, renderContent } from '@/app/resources';
-import { ContactForm } from '@/components';
-import { Posts } from '@/components/blog/Posts';
-import { TestimonialSlider } from '@/components/TestimonialSlider';
+import { baseURL, renderContent } from '@/app/resources';
+import { routing } from '@/i18n/routing';
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 
 export async function generateMetadata(
@@ -54,11 +51,25 @@ export default async function Home(
 ) {
 	unstable_setRequestLocale(locale);
 	const t = await getTranslations();
-	const { home, about, person, newsletter, contact, testimonials, allLogos } = renderContent(t);
+	const { home, about, person } = renderContent(t);
+	const localePrefix = locale === routing.defaultLocale ? '' : `/${locale}`;
+	const withLocale = (path: string) => {
+		if (path === '/' || path === '') {
+			return localePrefix || '/';
+		}
+		return `${localePrefix}${path}`;
+	};
+	const badgeHref = withLocale(home.featured?.href ?? '/projects');
 	return (
 		<Flex
-			maxWidth="m" fillWidth gap="xl"
-			direction="column" alignItems="center">
+			maxWidth="m"
+			fillWidth
+			alignItems="center"
+			justifyContent="center"
+			direction="column"
+			style={{ minHeight: 'calc(100vh - 120px)' }}
+			gap="m"
+		>
 			<script
 				type="application/ld+json"
 				suppressHydrationWarning
@@ -91,40 +102,59 @@ export default async function Home(
 			/>
 			<Flex
 				fillWidth
+				paddingY="24"
 				direction="column"
-				paddingY="l" gap="m">
-					<Flex
-						direction="column"
-						fillWidth maxWidth="s">
-						<RevealFx
-							translateY="4" fillWidth justifyContent="flex-start" paddingBottom="m">
+				gap="m"
+				alignItems="center"
+			>
+				<Flex
+					direction="column"
+					fillWidth
+					maxWidth="s"
+					alignItems="center"
+					justifyContent="center"
+					style={{ textAlign: 'center' }}
+				>
+					{home.featured?.display && (
+						<RevealFx fillWidth justifyContent="center" paddingTop="16" paddingBottom="32">
+							<Badge arrow={false} href={badgeHref}>
+								{home.featured.title}
+							</Badge>
+						</RevealFx>
+					)}
+					<RevealFx translateY="4" fillWidth justifyContent="center" paddingBottom="16">
 							<Heading
 								wrap="balance"
-								variant="display-strong-l">
+							variant="display-strong-l"
+							align="center"
+						>
 								{home.headline}
 							</Heading>
 						</RevealFx>
-						<RevealFx
-							translateY="8" delay={0.2} fillWidth justifyContent="flex-start" paddingBottom="m">
+					<RevealFx translateY="8" delay={0.02} fillWidth justifyContent="center" paddingBottom="32">
 							<Text
 								wrap="balance"
 								onBackground="neutral-weak"
-								variant="heading-default-xl">
+							variant="heading-default-xl"
+							align="center"
+						>
 								{home.subline}
 							</Text>
 						</RevealFx>
-						<RevealFx translateY="12" delay={0.4}>
-							<Flex fillWidth>
+					<RevealFx paddingTop="12" delay={0.04} justifyContent="center">
 								<Button
 									id="about"
 									data-border="rounded"
-									href={`/${locale}/about`}
-									variant="tertiary"
-									size="m">
+							href={withLocale('/about')}
+							variant="secondary"
+							size="m"
+							style={{ marginInline: 'auto' }}
+						>
 									<Flex
 										gap="8"
 										alignItems="center"
-										className="about-button-content">
+								paddingRight="4"
+							>
 										{about.avatar.display && (
 											<Avatar
 												style={
@@ -133,26 +163,15 @@ export default async function Home(
 														: { marginLeft: '-0.75rem', marginRight: '0.25rem' }
 												}
 												src={person.avatar}
-												size="m"/>
+										size="m"
+									/>
 										)}
-										{t("about.title")}
-										<Arrow trigger="#about"/>
-									</Flex>
-								</Button>
+								{t('about.title')}
 							</Flex>
+						</Button>
 						</RevealFx>
 					</Flex>
-				
 			</Flex>
-			<RevealFx translateY="16" delay={0.6}>
-				<Projects locale={locale}/>
-			</RevealFx>
-			<RevealFx translateY="16" delay={0.8}>
-				<TestimonialSlider testimonials={testimonials} allLogos={allLogos} locale={locale} />
-			</RevealFx>
-			{ contact.display &&
-				<ContactForm display={contact.display} title={contact.title} description={contact.description} />
-			}
 		</Flex>
 	);
 }

@@ -1,9 +1,11 @@
 import { getPosts } from '@/app/utils/utils';
-import { Flex } from '@/once-ui/components';
+import { Flex, Heading } from '@/once-ui/components';
 import { Projects } from '@/components/work/Projects';
 import { baseURL, renderContent } from '@/app/resources';
+import { TestimonialSlider } from '@/components/TestimonialSlider';
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
+import { routing } from '@/i18n/routing';
 
 export async function generateMetadata(
     {params: {locale}}: { params: { locale: string }}
@@ -16,7 +18,8 @@ export async function generateMetadata(
 	const description = work.description;
 	const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
 
-	const currentUrl = `https://${baseURL}/${locale}/work`;
+    const localePrefix = locale === routing.defaultLocale ? '' : `/${locale}`;
+	const currentUrl = `https://${baseURL}${localePrefix}/projects`;
 	
 	return {
 		title,
@@ -47,14 +50,15 @@ export async function generateMetadata(
 	};
 }
 
-export default function Work(
+export default function ProjectsPage(
     { params: {locale}}: { params: { locale: string }}
 ) {
     unstable_setRequestLocale(locale);
-    let allProjects = getPosts(['src', 'app', '[locale]', 'work', 'projects', locale]);
+    const localePrefix = locale === routing.defaultLocale ? '' : `/${locale}`;
+    let allProjects = getPosts(['src', 'app', '[locale]', 'projects', 'projects', locale]);
 
     const t = useTranslations();
-    const { person, work } = renderContent(t);
+    const { person, work, testimonials, allLogos } = renderContent(t);
 
     return (
         <Flex
@@ -69,7 +73,7 @@ export default function Work(
                         '@type': 'CollectionPage',
                         headline: work.title,
                         description: work.description,
-                        url: `https://${baseURL}/projects`,
+                        url: `https://${baseURL}${localePrefix}/projects`,
                         image: `${baseURL}/og?title=Design%20Projects`,
                         author: {
                             '@type': 'Person',
@@ -79,13 +83,25 @@ export default function Work(
                             '@type': 'CreativeWork',
                             headline: project.metadata.title,
                             description: project.metadata.summary,
-                            url: `https://${baseURL}/projects/${project.slug}`,
+                            url: `https://${baseURL}${localePrefix}/projects/${project.slug}`,
                             image: `${baseURL}/${project.metadata.image}`,
                         })),
                     }),
                 }}
             />
             <Projects locale={locale}/>
+            {testimonials?.length > 0 && (
+                <Flex direction="column" gap="m" marginTop="64">
+                    <Heading variant="display-strong-s" align="center">
+                        {locale === 'ar' ? 'آراء العملاء' : 'Client testimonials'}
+                    </Heading>
+                    <TestimonialSlider
+                        testimonials={testimonials}
+                        allLogos={allLogos}
+                        locale={locale}
+                    />
+                </Flex>
+            )}
         </Flex>
     );
 }

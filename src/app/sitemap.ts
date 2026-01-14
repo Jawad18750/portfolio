@@ -29,15 +29,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }))
     );
 
-    let works = locales.flatMap((locale) => 
-        getPosts(['src', 'app', '[locale]', 'work', 'projects', locale]).map((post) => ({
-            url: getUrl(locale, `/work/${post.slug}`),
+    let projects = locales.flatMap((locale) => 
+        getPosts(['src', 'app', '[locale]', 'projects', 'projects', locale]).map((post) => ({
+            url: getUrl(locale, `/projects/${post.slug}`),
             lastModified: post.metadata.publishedAt,
             changeFrequency: 'monthly' as const,
             priority: 0.8,
             alternates: {
                 languages: Object.fromEntries(
-                    locales.map(loc => [loc, getUrl(loc, `/work/${post.slug}`)])
+                    locales.map(loc => [loc, getUrl(loc, `/projects/${post.slug}`)])
                 ),
             },
         }))
@@ -63,5 +63,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         })
     );
 
-    return [...routes, ...blogs, ...works]
+    return [...routes, ...blogs, ...projects]
 }

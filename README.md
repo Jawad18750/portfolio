@@ -102,7 +102,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser (defaults to
 **6. Create blog posts / projects**
 Add new `.mdx` files to:
 - `src/app/[locale]/blog/posts/[locale]/`
-- `src/app/[locale]/work/projects/[locale]/`
+- `src/app/[locale]/projects/projects/[locale]/`
 
 ---
 

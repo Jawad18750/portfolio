@@ -9,7 +9,7 @@ export async function generateMetadata(
     {params: {locale}}: { params: { locale: string }}
 ) {
     const t = await getTranslations();
-    const {person, about, social } = renderContent(t);
+    const {person, about, social, testimonials, allLogos } = renderContent(t);
 	const title = about.title;
 	const description = about.description;
 	const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
@@ -94,7 +94,9 @@ export default function About(
     return (
         <Flex
             fillWidth maxWidth="m"
-            direction="column">
+            direction="column"
+            marginTop="xl"
+            marginBottom="xl">
             <script
                 type="application/ld+json"
                 suppressHydrationWarning

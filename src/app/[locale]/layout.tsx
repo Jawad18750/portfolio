@@ -5,6 +5,7 @@ import "@/app/resources/custom.css";
 import classNames from 'classnames';
 
 import { Footer, Header, RouteGuard } from "@/components";
+import { RouteStyler } from "@/components/RouteStyler";
 import { baseURL, effects, style } from '@/app/resources'
 
 import { Inter } from 'next/font/google'
@@ -17,7 +18,7 @@ import { GoogleTagManager } from '@next/third-parties/google';
 
 import { routing } from "@/i18n/routing";
 import { renderContent } from "@/app/resources";
-import { Background, Flex } from "@/once-ui/components";
+import { Background, Flex, Particle } from "@/once-ui/components";
 
 export async function generateMetadata(
 	{ params: { locale }}: { params: { locale: string }}
@@ -167,22 +168,37 @@ export default async function RootLayout({
 					as="body"
 					fillWidth margin="0" padding="0"
 					direction="column">
+					<RouteStyler />
 					{process.env.NEXT_PUBLIC_GTM_ID && (
 						<GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
 					)}
+					{effects.particles?.display && (
+						<Particle
+							fillHeight
+							fillWidth
+							position="fixed"
+							style={{ top: 0, left: 0, zIndex: 0 }}
+							density={effects.particles.density ?? 200}
+							color={effects.particles.color ?? 'brand-on-background-weak'}
+							size={effects.particles.size ?? '2'}
+							speed={effects.particles.speed ?? 0.3}
+							interactive={effects.particles.interactive ?? false}
+							interactionRadius={effects.particles.interactionRadius ?? 20}
+							opacity={effects.particles.opacity ?? 40}
+						/>
+					)}
 					<Background
+						position="fixed"
 						mask={effects.mask as any}
 						gradient={effects.gradient as any}
 						dots={effects.dots as any}
+						grid={effects.grid as any}
 						lines={effects.lines as any}/>
-					<Flex
-						fillWidth
-						minHeight="16">
-					</Flex>
-					<Header/>
+					<Flex fillWidth minHeight="16"></Flex>
+					<Header locale={locale}/>
 					<Flex
 						zIndex={0}
-						fillWidth paddingY="l" paddingX="l"
+						fillWidth paddingY="0" paddingX="l"
 						justifyContent="center" flex={1}>
 						<Flex
 							justifyContent="center"
@@ -192,7 +208,9 @@ export default async function RootLayout({
 							</RouteGuard>
 						</Flex>
 					</Flex>
-					<Footer/>
+					<div className="layout-footer">
+						<Footer/>
+					</div>
 				</Flex>
 			</Flex>
 		</NextIntlClientProvider>

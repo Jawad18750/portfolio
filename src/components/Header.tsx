@@ -233,7 +233,7 @@ export const Header = ({ locale }: HeaderProps) => {
                 <Flex fillWidth justifyContent="center">
                     <Flex
                         background="page"
-                        border="neutral-alpha-weak"
+                        border="neutral-weak"
                         radius="xs"
                         shadow="l"
                         padding="4"

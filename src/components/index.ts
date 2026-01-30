@@ -1,3 +1,5 @@
+export { AppBadges } from '@/components/AppBadges'
+export { ProjectImageGallery } from '@/components/ProjectImageGallery'
 export { Header } from '@/components/Header'
 export { Footer } from '@/components/Footer'
 export { ContactForm } from '@/components/ContactForm'

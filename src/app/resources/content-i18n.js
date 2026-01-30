@@ -69,7 +69,7 @@ const createI18nContent = (t) => {
         featured: {
             display: true,
             title: <>{t("home.selectedWork")}</>,
-            href: '/projects'
+            href: '/projects/shrimp-nation'
         }
     }
 
@@ -249,37 +249,80 @@ const createI18nContent = (t) => {
                     title: 'Frontend & UI Engineering',
                     description: 'description',
                     images: [],
-                    icon: 'grid'
+                    icon: 'grid',
+                    tags: [
+                        { name: 'React', icon: 'react' },
+                        { name: 'Next.js', icon: 'nextjs' },
+                        { name: 'TypeScript', icon: 'typescript' },
+                        { name: 'Tailwind CSS', icon: 'tailwindcss' },
+                        { name: 'SCSS', icon: 'sass' },
+                        { name: 'JavaScript', icon: 'javascript' },
+                    ]
                 },
                 {
                     title: 'Backend & APIs',
                     description: 'description',
                     images: [],
-                    icon: 'globe'
+                    icon: 'globe',
+                    tags: [
+                        { name: 'Node.js', icon: 'nodejs' },
+                        { name: 'Express', icon: 'express' },
+                        { name: 'REST APIs' },
+                        { name: 'GraphQL', icon: 'graphql' },
+                        { name: 'Python', icon: 'python' },
+                    ]
                 },
                 {
                     title: 'Databases & System Architecture',
                     description: 'description',
                     images: [],
-                    icon: 'clipboard'
+                    icon: 'clipboard',
+                    tags: [
+                        { name: 'PostgreSQL', icon: 'postgresql' },
+                        { name: 'MongoDB', icon: 'mongodb' },
+                        { name: 'Redis', icon: 'redis' },
+                        { name: 'MySQL', icon: 'mysql' },
+                        { name: 'Supabase', icon: 'supabase' },
+                    ]
                 },
                 {
                     title: 'Server, Cloud & Deployment',
                     description: 'description',
                     images: [],
-                    icon: 'calendar'
+                    icon: 'arrowUpRightFromSquare',
+                    tags: [
+                        { name: 'Vercel', icon: 'vercel' },
+                        { name: 'VPS' },
+                        { name: 'Libyan Spider' },
+                        { name: 'AWS', icon: 'aws' },
+                        { name: 'Docker', icon: 'docker' },
+                        { name: 'Nginx', icon: 'nginx' },
+                        { name: 'GitHub Actions', icon: 'githubactions' },
+                    ]
                 },
                 {
                     title: 'Performance, Analytics & Tracking',
                     description: 'description',
                     images: [],
-                    icon: 'checkCircle'
+                    icon: 'checkCircle',
+                    tags: [
+                        { name: 'Google Analytics', icon: 'googleanalytics' },
+                        { name: 'GTM', icon: 'googletagmanager' },
+                        { name: 'Lighthouse', icon: 'lighthouse' },
+                        { name: 'Web Vitals' },
+                    ]
                 },
                 {
                     title: 'Security & System Awareness',
                     description: 'description',
                     images: [],
-                    icon: 'warningTriangle'
+                    icon: 'warningTriangle',
+                    tags: [
+                        { name: 'OAuth' },
+                        { name: 'JWT', icon: 'jwt' },
+                        { name: 'HTTPS/SSL' },
+                        { name: 'Security Best Practices' },
+                    ]
                 }
             ]
         }

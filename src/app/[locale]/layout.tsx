@@ -19,6 +19,7 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import { routing } from "@/i18n/routing";
 import { renderContent } from "@/app/resources";
 import { Background, Flex, Particle } from "@/once-ui/components";
+import { SpacingToken } from "@/once-ui/types";
 
 export async function generateMetadata(
 	{ params: { locale }}: { params: { locale: string }}
@@ -82,29 +83,34 @@ const primary = Inter({
 	fallback: ['system-ui', 'arial'],
 })
 
-// Lama Sans Arabic Font Setup
-// Using the 4 weights that match Inter font usage in the portfolio
+// IBM Plex Sans Arabic Font Setup
+// Using weights that match Inter font usage in the portfolio
 const secondary = localFont({
     variable: '--font-secondary',
     src: [
         {
-            path: '../../../public/fonts/LamaSans-Light.ttf',
+            path: '../../../public/fonts/IBMPlexSansArabic-Light.ttf',
             weight: '300',
             style: 'normal',
         },
         {
-            path: '../../../public/fonts/LamaSans-Regular.ttf',
+            path: '../../../public/fonts/IBMPlexSansArabic-Regular.ttf',
             weight: '400',
             style: 'normal',
         },
         {
-            path: '../../../public/fonts/LamaSans-Bold.ttf',
-            weight: '700',
+            path: '../../../public/fonts/IBMPlexSansArabic-Medium.ttf',
+            weight: '500',
             style: 'normal',
         },
         {
-            path: '../../../public/fonts/LamaSans-ExtraBold.ttf',
-            weight: '800',
+            path: '../../../public/fonts/IBMPlexSansArabic-SemiBold.ttf',
+            weight: '600',
+            style: 'normal',
+        },
+        {
+            path: '../../../public/fonts/IBMPlexSansArabic-Bold.ttf',
+            weight: '700',
             style: 'normal',
         },
     ],
@@ -164,29 +170,29 @@ export default async function RootLayout({
 					tertiary ? tertiary.variable : '',
 					code.variable,
 					locale === 'ar' ? 'arabic-font' : '')}>
-				<Flex style={{minHeight: '100vh'}}
-					as="body"
-					fillWidth margin="0" padding="0"
-					direction="column">
+			<Flex
+				as="body"
+				fillWidth margin="0" padding="0"
+				direction="column"
+				style={{ minHeight: '100vh', position: 'relative' }}>
 					<RouteStyler />
 					{process.env.NEXT_PUBLIC_GTM_ID && (
 						<GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
 					)}
-					{effects.particles?.display && (
-						<Particle
-							fillHeight
-							fillWidth
-							position="fixed"
-							style={{ top: 0, left: 0, zIndex: 0 }}
-							density={effects.particles.density ?? 200}
-							color={effects.particles.color ?? 'brand-on-background-weak'}
-							size={effects.particles.size ?? '2'}
-							speed={effects.particles.speed ?? 0.3}
-							interactive={effects.particles.interactive ?? false}
-							interactionRadius={effects.particles.interactionRadius ?? 20}
-							opacity={effects.particles.opacity ?? 40}
-						/>
-					)}
+				{effects.particles?.display && (
+					<Particle
+						fillWidth
+						position="absolute"
+						style={{ height: '100%', top: 0, left: 0, zIndex: 0 }}
+						density={effects.particles.density ?? 200}
+						color={effects.particles.color ?? 'brand-on-background-weak'}
+						size={(effects.particles.size ?? '2') as SpacingToken}
+						speed={effects.particles.speed ?? 0.3}
+						interactive={effects.particles.interactive ?? false}
+						interactionRadius={effects.particles.interactionRadius ?? 20}
+						opacity={effects.particles.opacity ?? 40}
+					/>
+				)}
 					<Background
 						position="fixed"
 						mask={effects.mask as any}
@@ -194,20 +200,20 @@ export default async function RootLayout({
 						dots={effects.dots as any}
 						grid={effects.grid as any}
 						lines={effects.lines as any}/>
-					<Flex fillWidth minHeight="16"></Flex>
-					<Header locale={locale}/>
+				<Flex fillWidth minHeight="16"></Flex>
+				<Header locale={locale}/>
+				<Flex
+					zIndex={0}
+					fillWidth paddingX="l" paddingTop="0" paddingBottom="l"
+					justifyContent="center" flex={1}>
 					<Flex
-						zIndex={0}
-						fillWidth paddingY="0" paddingX="l"
-						justifyContent="center" flex={1}>
-						<Flex
-							justifyContent="center"
-							fillWidth minHeight="0">
-							<RouteGuard>
-								{children}
-							</RouteGuard>
-						</Flex>
+						justifyContent="center"
+						fillWidth minHeight="0">
+						<RouteGuard>
+							{children}
+						</RouteGuard>
 					</Flex>
+				</Flex>
 					<div className="layout-footer">
 						<Footer/>
 					</div>

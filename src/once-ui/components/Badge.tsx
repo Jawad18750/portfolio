@@ -34,10 +34,10 @@ const Badge = forwardRef<HTMLDivElement | HTMLAnchorElement, BadgeProps>(({
         children: (
             <Flex
                 id="badge"
-                paddingX="20" paddingY="12"
+                paddingX="12" paddingY="4"
                 className={classNames(styles.badge, effect && styles.animation)}
                 alignItems="center"
-                radius="full" background="neutral-weak" shadow="l">
+                radius="full" background="brand-alpha-weak">
                 { icon && (
                     <Icon className="mr-8"
                         size="s"
@@ -46,12 +46,15 @@ const Badge = forwardRef<HTMLDivElement | HTMLAnchorElement, BadgeProps>(({
                 )}
                 {title && (
                     <Text
-                        onBackground="brand-strong"
-                        variant="label-strong-s">
+                        onBackground="neutral-strong"
+                        variant="label-default-s"
+                        style={{ transition: 'color var(--transition-micro-medium)' }}>
                         {title}
                     </Text>
                 )}
-                {children}
+                <span style={{ transition: 'color var(--transition-micro-medium)' }}>
+                    {children}
+                </span>
                 { arrow && (
                     <Arrow trigger="#badge"/>
                 )}

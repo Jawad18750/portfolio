@@ -3,6 +3,7 @@ import React from 'react';
 import { Badge, Button, Flex, Heading, RevealFx, Text, Avatar } from '@/once-ui/components';
 
 import { baseURL, renderContent } from '@/app/resources';
+import { getCanonicalUrl, getAlternateLanguages } from '@/app/utils/seo';
 import { routing } from '@/i18n/routing';
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 
@@ -15,13 +16,14 @@ export async function generateMetadata(
 	const description = home.description;
 	const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
 
-	const currentUrl = `https://${baseURL}${locale === 'ar' ? '' : `/${locale}`}`;
+	const currentUrl = getCanonicalUrl(locale, '/');
 	
 	return {
 		title,
 		description,
 		alternates: {
 			canonical: currentUrl,
+			languages: getAlternateLanguages('/'),
 		},
 		openGraph: {
 			title,
@@ -67,8 +69,7 @@ export default async function Home(
 			alignItems="center"
 			justifyContent="center"
 			direction="column"
-			style={{ minHeight: 'calc(100vh - 120px)' }}
-			gap="m"
+			gap="xl"
 		>
 			<script
 				type="application/ld+json"
@@ -115,13 +116,15 @@ export default async function Home(
 					justifyContent="center"
 					style={{ textAlign: 'center' }}
 				>
-					{home.featured?.display && (
-						<RevealFx fillWidth justifyContent="center" paddingTop="16" paddingBottom="32">
+				{home.featured?.display && (
+					<RevealFx fillWidth justifyContent="center" alignItems="center" paddingTop="16" paddingBottom="32" paddingLeft="12">
+						<Flex justifyContent="center" fillWidth>
 							<Badge arrow={false} href={badgeHref}>
 								{home.featured.title}
 							</Badge>
-						</RevealFx>
-					)}
+						</Flex>
+					</RevealFx>
+				)}
 					<RevealFx translateY="4" fillWidth justifyContent="center" paddingBottom="16">
 							<Heading
 								wrap="balance"
@@ -141,15 +144,17 @@ export default async function Home(
 								{home.subline}
 							</Text>
 						</RevealFx>
-					<RevealFx paddingTop="12" delay={0.04} justifyContent="center">
-								<Button
-									id="about"
-									data-border="rounded"
-							href={withLocale('/about')}
-							variant="secondary"
-							size="m"
-							style={{ marginInline: 'auto' }}
-						>
+				<RevealFx paddingTop="12" delay={0.04} fillWidth justifyContent="center" paddingLeft="12">
+					<Flex justifyContent="center" fillWidth>
+							<Button
+								id="about"
+								data-border="rounded"
+						href={withLocale('/about')}
+						variant="secondary"
+						size="m"
+								weight="default"
+								arrowIcon
+					>
 									<Flex
 										gap="8"
 										alignItems="center"
@@ -169,6 +174,7 @@ export default async function Home(
 								{t('about.title')}
 							</Flex>
 						</Button>
+					</Flex>
 						</RevealFx>
 					</Flex>
 			</Flex>

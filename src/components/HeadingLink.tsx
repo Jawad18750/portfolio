@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { Heading, Flex, IconButton, Toaster } from '@/once-ui/components';
 
 import styles from '@/components/HeadingLink.module.scss';
@@ -18,31 +19,32 @@ export const HeadingLink: React.FC<HeadingLinkProps> = ({
     children,
     style
 }) => {
+    const t = useTranslations('headingLink');
     const [toasts, setToasts] = useState<
         { id: string; variant: 'success' | 'danger'; message: string; action?: React.ReactNode }[]
     >([]);
 
     const addToast = useCallback(
         (variant: 'success' | 'danger', message: string, action?: React.ReactNode) => {
-            const id = `${new Date().getTime()}`;
-            setToasts((prevToasts) => [...prevToasts, { id, variant, message, action }]);
+            const toastId = `${new Date().getTime()}`;
+            setToasts((prevToasts) => [...prevToasts, { id: toastId, variant, message, action }]);
         },
         []
     );
 
     const removeToast = useCallback(
-        (id: string) => {
-            setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
+        (toastId: string) => {
+            setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== toastId));
         },
         []
     );
 
-    const copyURL = (id: string): void => {
-        const url = `${window.location.origin}${window.location.pathname}#${id}`;
+    const copyURL = (headingId: string): void => {
+        const url = `${window.location.origin}${window.location.pathname}#${headingId}`;
         navigator.clipboard.writeText(url).then(() => {
-            addToast('success', 'Link copied to clipboard.');
+            addToast('success', t('linkCopied'));
         }, () => {
-            addToast('danger', 'Failed to copy link.');
+            addToast('danger', t('copyFailed'));
         });
     };
 
@@ -79,7 +81,7 @@ export const HeadingLink: React.FC<HeadingLinkProps> = ({
                     size="s"
                     icon="openLink"
                     variant="ghost"
-                    tooltip="Copy"
+                    tooltip={t('copyTooltip')}
                     tooltipPosition="right" />
             </Flex>
         </Flex>

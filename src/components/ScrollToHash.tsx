@@ -1,23 +1,42 @@
 "use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
+
+function scrollToHashElement() {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const id = decodeURIComponent(hash.replace('#', ''));
+    const element = document.getElementById(id);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
 
 export default function ScrollToHash() {
-    const router = useRouter();
+    const pathname = usePathname();
+
+    const tryScroll = useCallback(() => {
+        scrollToHashElement();
+    }, []);
 
     useEffect(() => {
-        // Get the hash from the URL
-        const hash = window.location.hash;
-        if (hash) {
-            // Remove the '#' symbol
-            const id = hash.replace('#', '');
-            const element = document.getElementById(id);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    }, [router]);
+        // Scroll on mount and when pathname changes (e.g. client navigation)
+        tryScroll();
+        // Retry after a short delay for async content (MDX, etc.)
+        const t1 = setTimeout(tryScroll, 100);
+        const t2 = setTimeout(tryScroll, 500);
+        return () => {
+            clearTimeout(t1);
+            clearTimeout(t2);
+        };
+    }, [pathname, tryScroll]);
+
+    useEffect(() => {
+        const handleHashChange = () => scrollToHashElement();
+        window.addEventListener('hashchange', handleHashChange);
+        return () => window.removeEventListener('hashchange', handleHashChange);
+    }, []);
 
     return null;
 } 

@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تقرير حادثة أمنية – موقع qrl.ly (إذاعة القرآن الكريم)</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #0f766e;
+      --danger: #b91c1c;
+      --warn: #b45309;
+      --ok: #166534;
+      --chip: #f3f4f6;
+    }
+    @page { size: A4; margin: 16mm; }
+    html, body { background: var(--bg); color: var(--ink); }
+    body {
+      font-family: "Noto Naskh Arabic", "Noto Sans Arabic", "Noto Kufi Arabic", "DejaVu Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      line-height: 1.75;
+      font-size: 13.5px;
+    }
+    .container { max-width: 820px; margin: 0 auto; }
+    header {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px 18px 14px;
+      margin-bottom: 14px;
+    }
+    h1 { font-size: 20px; margin: 0 0 6px; }
+    .sub { color: var(--muted); font-size: 12px; }
+    .meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 18px;
+      margin-top: 12px;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .meta b { color: var(--ink); font-weight: 700; }
+    section {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin: 12px 0;
+    }
+    h2 { font-size: 16px; margin: 0 0 8px; }
+    h3 { font-size: 14px; margin: 14px 0 6px; }
+    ul { margin: 6px 0 0; padding: 0 18px 0 0; }
+    li { margin: 4px 0; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .chip {
+      background: var(--chip);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    .badge { font-weight: 700; }
+    .danger { color: var(--danger); }
+    .warn { color: var(--warn); }
+    .ok { color: var(--ok); }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "DejaVu Sans Mono", monospace;
+      font-size: 12px;
+      direction: ltr;
+      text-align: left;
+      unicode-bidi: plaintext;
+    }
+    pre {
+      background: #0b1220;
+      color: #e5e7eb;
+      padding: 10px 12px;
+      border-radius: 10px;
+      overflow: auto;
+      margin: 8px 0 0;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 12.5px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      vertical-align: top;
+    }
+    th { background: #fafafa; font-weight: 700; }
+    .footer {
+      color: var(--muted);
+      font-size: 11.5px;
+      margin-top: 10px;
+    }
+    .hr { height: 1px; background: var(--line); margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>تقرير حادثة أمنية – موقع <span dir="ltr">qrl.ly</span> (إذاعة القرآن الكريم)</h1>
+      <div class="sub">معدّ للتقديم إلى مجلس إدارة إذاعة القرآن الكريم – نسخة قابلة للطباعة/الحفظ PDF</div>
+      <div class="meta">
+        <div><b>تاريخ إعداد التقرير (UTC):</b> 19 يناير 2026</div>
+        <div><b>الجهة:</b> فريق التشغيل/الأمن التقني</div>
+        <div><b>النطاق المتأثر:</b> <span dir="ltr">qrl.ly</span></div>
+        <div><b>نوع الحادثة:</b> اختراق على مستوى تطبيق الويب (WordPress)</div>
+      </div>
+      <div class="chips">
+        <div class="chip"><span class="badge danger">مرتفع</span> – تأثير على الزوار (إعادة توجيه/تعطّل)</div>
+        <div class="chip"><span class="badge warn">مرجّح</span> – استخدام خوادم/VPN (مؤشرات مزود استضافة)</div>
+        <div class="chip"><span class="badge ok">لا دليل</span> – دخول <span dir="ltr">root/SSH</span> من المهاجمين ضمن السجلات المتاحة</div>
+      </div>
+    </header>
+
+    <section>
+      <h2>1) الملخص التنفيذي</h2>
+      <p>
+        تعرض موقع <span dir="ltr">qrl.ly</span> (WordPress) لاختراق على مستوى الويب أدى إلى زرع ملفات PHP خبيثة
+        (Webshell/Backdoor) وتعديل ملفات أساسية مثل <span dir="ltr">index.php</span> لتنفيذ إعادة توجيه فورية إلى نطاق خارجي
+        <span dir="ltr">ssl-host.com</span>. لا تشير السجلات المتوفرة لدينا إلى وصول المهاجم عبر SSH بصلاحية root،
+        ما يرجّح أن الاختراق تم عبر ثغرة داخل WordPress/الإضافات/القالب أو عبر رفع ملف خبيث ثم تنفيذه من الويب.
+      </p>
+      <h3>أهداف الهجوم المرجحة</h3>
+      <ul>
+        <li>تحويل زيارات الموقع (Traffic Hijack) أو إخفاء الموقع لتقليل اكتشاف النشاط الخبيث.</li>
+        <li>إبقاء “باب خلفي” للعودة لاحقًا وتنفيذ أوامر عن بعد.</li>
+        <li>التسبب بضرر تشغيلي وسمعة للموقع حتى لو كان النطاق المحول إليه “فارغًا”.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>2) نطاق التأثير</h2>
+      <ul>
+        <li><b>الزوار:</b> تم توجيههم إلى نطاق خارجي بشكل فوري عند فتح الموقع في فترة الحادثة.</li>
+        <li><b>المحتوى والملفات:</b> تم العثور على ملفات خبيثة ضمن مسارات WordPress (بعضها بأسماء قريبة من ملفات النظام).</li>
+        <li><b>قاعدة البيانات:</b> لم يتم إثبات تسريبها من السجلات فقط، لكن الاختراق على مستوى الويب يسمح بذلك نظريًا.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>3) مؤشرات الاختراق (IoCs)</h2>
+      <h3>أمثلة لمسارات/ملفات خبيثة تمت ملاحظتها في السجلات</h3>
+      <ul>
+        <li><code>/wp-confiq.php</code> (اسم قريب من <code>wp-config.php</code>)</li>
+        <li><code>/wp-content/themes/salient-child/vendor/index_enc_ion.php</code></li>
+        <li><code>/wp-content/uploads/wp/wVlyI.php</code></li>
+        <li>مسارات عديدة داخل <code>/wp-admin/</code> بأسماء PHP غير قياسية.</li>
+      </ul>
+      <h3>عناوين IP ذات صلة</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>IP</th>
+            <th>الدور</th>
+            <th>الفترة (UTC)</th>
+            <th>ملاحظات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td dir="ltr">212.87.194.21</td>
+            <td>نشاط اختراقي (تفاعل مع مسارات خبيثة)</td>
+            <td dir="ltr">16/Jan/2026 01:35–01:40</td>
+            <td>Akari Networks (Tokyo) – حسب WHOIS</td>
+          </tr>
+          <tr>
+            <td dir="ltr">147.45.112.198</td>
+            <td>نشاط اختراقي (POST متكرر إلى Backdoors)</td>
+            <td dir="ltr">18/Jan/2026 15:35 – 19/Jan/2026 13:28</td>
+            <td>VU/VPS provider (Digi-Cloud) – حسب RIPE WHOIS</td>
+          </tr>
+          <tr>
+            <td dir="ltr">77.239.125.97</td>
+            <td>نشاط اختراقي (الوصول إلى Webshell paths)</td>
+            <td dir="ltr">18/Jan/2026 14:21 – 23:53</td>
+            <td>play2go.cloud (country DE in RIPE) – حسب WHOIS</td>
+          </tr>
+          <tr>
+            <td dir="ltr">113.10.166.179</td>
+            <td>مسح/استطلاع (Scanning)</td>
+            <td dir="ltr">19/Jan/2026 08:15 – 08:30</td>
+            <td>HKBN Enterprise (RDNS ctinets.com) – حسب WHOIS</td>
+          </tr>
+          <tr>
+            <td dir="ltr">41.254.85.176</td>
+            <td>نشاط إداري معروف (طاقم)</td>
+            <td dir="ltr">07/Jan/2026 00:31 – 00:50</td>
+            <td>يتوافق مع دخول لوحة التحكم وإنشاء حسابات (حسب سجل WordPress)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>4) الإجراءات المتخذة (مستوى عالٍ)</h2>
+      <ul>
+        <li>عزل/إزالة الملفات الخبيثة التي تم العثور عليها ضمن مسارات WordPress.</li>
+        <li>استعادة ملفات أساسية تم العبث بها (مثل <span dir="ltr">index.php</span>) وإيقاف إعادة التوجيه.</li>
+        <li>مراجعة سجلات الوصول لتحديد عناوين IP والفترات الزمنية ذات الصلة.</li>
+        <li>إنشاء حزمة أدلة وتحضير مكاتبات إساءة الاستخدام (Abuse Reports) لمزودي الخدمة المرتبطين بالـ IPs.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5) توصيات عاجلة (خلال 24–48 ساعة)</h2>
+      <ul>
+        <li><b>تغيير كلمات مرور جميع حسابات المدراء</b> وتفعيل <b>2FA</b> لكل المدراء.</li>
+        <li>تنصيب وتفعيل حل حماية (مثل Wordfence) ومراجعة التنبيهات.</li>
+        <li>تحديث WordPress والإضافات والقالب إلى آخر إصدار مدعوم بعد التحقق من التوافق.</li>
+        <li>تعطيل <span dir="ltr">XML-RPC</span> إن لم تكن هناك حاجة تشغيلية له.</li>
+        <li>تفعيل WAF/Proxy (مثل Cloudflare) إن أمكن، وتسجيل محاولات الدخول وتقييدها.</li>
+        <li>ضبط صلاحيات الملفات ومنع تعديل ملفات WordPress من لوحة التحكم (<span dir="ltr">DISALLOW_FILE_EDIT</span>).</li>
+      </ul>
+      <div class="hr"></div>
+      <p class="footer">
+        ملاحظة: تحديد هوية “شخص” بعينه من السجلات وحدها غير ممكن عادةً؛ كثير من هذه العناوين تعود لمزودي استضافة/VPN.
+        تحديد الهوية يتطلب تعاون المزودين أو مسار قانوني رسمي.
+      </p>
+    </section>

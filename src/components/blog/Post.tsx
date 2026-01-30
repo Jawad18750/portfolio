@@ -7,9 +7,10 @@ import { formatDate } from '@/app/utils/formatDate';
 interface PostProps {
     post: any;
     thumbnail: boolean;
+    locale?: string;
 }
 
-export default function Post({ post, thumbnail }: PostProps) {
+export default function Post({ post, thumbnail, locale = 'en' }: PostProps) {
     return (
         <SmartLink
             className={styles.hover}
@@ -56,7 +57,7 @@ export default function Post({ post, thumbnail }: PostProps) {
                     <Text
                         variant="label-default-s"
                         onBackground="neutral-weak">
-                        {formatDate(post.metadata.publishedAt, false)}
+                        {formatDate(post.metadata.publishedAt, false, locale as 'en' | 'ar')}
                     </Text>
                     { post.metadata.tag &&
                         <Tag

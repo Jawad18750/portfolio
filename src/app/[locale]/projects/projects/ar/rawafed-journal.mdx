@@ -1,0 +1,58 @@
+---
+title: "مجلة روافد المعرفة للعلوم الطبيعية والتطبيقية"
+publishedAt: "2025-08-15"
+summary: "منصة نشر علمي محكمة مفتوحة الوصول مصممة للسوق الأكاديمي الليبي، مبنية على OJS (Open Journal Systems) وتصدر عن جامعة الزيتونة بترهونة."
+link: "https://ra.azu.edu.ly"
+image: "/images/projects/rawafed/cover.avif"
+images:
+  - "/images/projects/rawafed/cover.avif"
+  - "/images/projects/rawafed/image-01.avif"
+  - "/images/projects/rawafed/image-02.avif"
+team:
+  - name: "جامعة الزيتونة – ترهونة"
+    role: "العميل"
+---
+
+## نظرة عامة
+
+مجلة روافد المعرفة للعلوم الطبيعية والتطبيقية منصة نشر علمي محكمة مفتوحة الوصول مصممة للسوق الأكاديمي الليبي. تربط المنصة الباحثين والمراجعين والمحررين من خلال نظام OJS (Open Journal Systems) موحد. تصدر المجلة عن جامعة الزيتونة بترهونة في ليبيا، وتنشر أبحاثاً أصلية ومقالات مراجعة في مجالات العلوم الطبيعية والتطبيقية وعلوم الحاسوب والرياضيات والكيمياء والفيزياء والأحياء والبيئة. تدعم المجلة العربية والإنجليزية، واجهة RTL، فهرسة جوجل وجوجل سكولار، OAI-PMH، خريطة موقع ديناميكية، ورسائل SMTP محلية عبر البريد الإلكتروني.
+
+## المميزات الرئيسية
+
+**الواجهة الأمامية (OJS 3.3 + Noble Theme):** تصفح الأعداد الحالية والمحفوظات، البحث في المقالات، عرض المقالات وملخصاتها، تحميل PDF، دعم العربية والإنجليزية وRTL، خط Cairo، تصميم متجاوب مع الموبايل، وضع فاتح/داكن، وعلامات canonical وcitation للفهرسة.
+
+**إدارة التحرير:** تدفق التقديم والمراجعة والنشر، إدارة المؤلفين والمحررين والمراجعين، إصدارات وأعداد، سياسات التحرير، إرشادات المؤلفين، وإعلانات.
+
+**الفهرسة والاكتشاف:** مكوّن Google Scholar مفعّل، OAI-PMH (Identify و ListRecords)، خريطة موقع ديناميكية، robots.txt مع Sitemap، وعلامات citation_* (عنوان، مؤلفون، تاريخ، PDF، ISSN، إلخ).
+
+**البريد الإلكتروني:** SMTP عبر ra.azu.edu.ly (منفذ 465، SSL)، حسابات info@ و noreply@ و payments@، واستعادة بريد cPanel إلى CyberPanel/Dovecot.
+
+**الاستجابة للموبايل:** إصلاحات overflow، قوائم تنقل متجاوبة، جداول وصفوف قابلة للتمرير، أحجام خطوط مناسبة، ونقاط توقف 768px و 1024px.
+
+## التقنيات المستخدمة
+
+**OJS 3.3.0.21:** نظام إدارة المجلات المفتوحة من PKP، PHP، MySQL/MariaDB، Smarty، وبنية MVC.
+
+**Noble Theme (1.5.4.2):** ثيم من openjournaltheme.com، Tailwind CSS، دعم RTL، وضع داكن، Cairo Font، Font Awesome 4.7.
+
+**الإضافات:** Google Scholar Indexing، XML Sitemap، Editorial Pick Block، PayPal (اختياري)، Backup، و Quick Submit.
+
+**البنية التحتية:** Ubuntu 24 LTS، CyberPanel، LiteSpeed، PHP 8.3 (lsphp81/83)، MySQL، Dovecot/Postfix للبريد، SSL (Let's Encrypt).
+
+**التكاملات:** OAI-PMH، Google Search Console، Google Scholar، و Creative Commons (BY-NC-ND).
+
+## التحديات والدروس المستفادة
+
+**التحول من WHM/cPanel إلى CyberPanel:** نقل OJS من AlmaLinux/WHM إلى Ubuntu 24/CyberPanel تطلّب نسخ قاعدة البيانات، مجلد files_dir، public_html، والبريد. تحديث config.inc.php (base_url، files_dir، SMTP)، إنشاء DB/مستخدم جديد، ومزامنة البريد إلى مسارات vmail في CyberPanel.
+
+**توافق PHP:** OJS 3.3 مدعوم رسمياً حتى PHP 8.0. على Ubuntu 24 لا يتوفر lsphp74 أو lsphp80 في المستودعات؛ المتاح lsphp81/82/83/84. ثيم Noble كان يسجّل hook `nobleCredit` دون تعريف الدالة، مما سبب TypeError في PHP 8.x. إضافة دالة no-op `nobleCredit()` حلّت المشكلة وجعلت الموقع يعمل على PHP 8.3.
+
+**الفهرسة في جوجل سكولار:** استخدام بنية URL القياسية `/index.php/JOURNAL/article/view/ID` حسب توجيهات PKP، إضافة canonical tags، Sitemap في robots.txt، وعلامات citation_* كاملة (بما فيها citation_publication_date بتنسيق كامل) لتحسين الفهرسة.
+
+**الاستجابة للموبايل:** معالجة overflow الأفقي، تحسين القوائم والجداول والنماذج، واختبار على أجهزة فعلية لضمان تجربة جيدة.
+
+## النتيجة
+
+مجلة روافد المعرفة تقدم منصة نشر علمي متكاملة مصممة لاحتياجات الجامعة: الباحثون يقدّمون الأوراق عبر الويب، المحررون يديرون التدفق التحريري، المراجعون يقيّمون الأوراق، والقرّاء يصلون إلى المحتوى مفتوح الوصول. يدعم النظام العربية وRTL والوصول المفتوح والفهرسة في جوجل وجوجل سكولار—ما يجعله جاهزاً للإنتاج في السوق الأكاديمي الليبي.
+
+**زيارة الموقع:** [ra.azu.edu.ly](https://ra.azu.edu.ly/)

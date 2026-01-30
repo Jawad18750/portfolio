@@ -53,9 +53,9 @@
         "label": "Home",
         "title": "Abdeljawad Almiladi",
         "description": "Abdeljawad Almiladi's website, showcasing my work as a software developer",
-        "headline": "Software Developer",
+        "headline": "Evolving ambitious ideas into software reality",
         "subline": "I'm Abdeljawad Almiladi, an experienced software developer specialized in developing systems, applications, and web services.",
-        "selectedWork": "Selected work ↓",
+        "selectedWork": "Latest Projects: Shrimp Nation",
         "intro": {
             "title": "I work at the intersection of design and development.",
             "description": "My approach focuses on building systems that feel intuitive, look refined, and scale with purpose.\nEvery project is shaped by context, users, and long-term value — not trends."
@@ -153,8 +153,8 @@
     ],
     "about": {
         "label": "About",
-        "title": "About me",
-        "description": "Meet Abdeljawad Almiladi, a software developer from Libya",
+        "title": "About - Abdeljawad",
+        "description": "I'm Abdeljawad Almiladi, a software developer from Libya",
         "intro": {
             "title": "Introduction",
             "description": "I'm Abdeljawad Almiladi, an experienced software developer specialized in developing systems, applications, and web services, helping to build a strong digital presence for brands in various fields."
@@ -261,6 +261,11 @@
     "projectCard": {
         "label": "Read Case Study",
         "link": "Project Link"
+    },
+    "headingLink": {
+        "copyTooltip": "Copy",
+        "linkCopied": "Link copied to clipboard.",
+        "copyFailed": "Failed to copy link."
     },
     "footer": {
         "copyright": "© {year} Abdeljawad Almiladi. All rights reserved.",

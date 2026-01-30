@@ -23,7 +23,7 @@ export function Projects({ range, locale }: ProjectsProps) {
 
     return (
         <Flex
-            fillWidth gap="xl" marginBottom="40" paddingX="l"
+            fillWidth gap="m" paddingX="l"
             direction="column">
             {displayedProjects.map((post) => (
                 <ProjectCard
@@ -33,7 +33,7 @@ export function Projects({ range, locale }: ProjectsProps) {
                     title={post.metadata.title}
                     description={post.metadata.summary}
                     content={post.content}
-                    avatars={post.metadata.team?.map((member) => ({ src: member.avatar })) || []}
+                    avatars={post.metadata.team?.map((member) => ({ src: member.avatar || '/images/avatar.svg' })) || []}
                     link={post.metadata.link || ""}
                 />
             ))}

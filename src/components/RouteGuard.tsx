@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { notFound } from 'next/navigation';
 import { usePathname } from '@/i18n/routing';
 import { routes, protectedRoutes } from '@/app/resources';
+import { routing } from '@/i18n/routing';
 import { Flex, Spinner, Input, Button, Heading } from '@/once-ui/components';
 
 interface RouteGuardProps {
@@ -28,16 +30,22 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
             const checkRouteEnabled = () => {
                 if (!pathname) return false;
 
-                if (pathname in routes) {
-                    return routes[pathname as keyof typeof routes];
+                // Strip locale prefix for checking (e.g. /en/blog -> /blog)
+                const segments = pathname.split('/').filter(Boolean);
+                const locales = routing.locales;
+                const pathWithoutLocale = segments[0] && locales.includes(segments[0])
+                    ? '/' + segments.slice(1).join('/')
+                    : pathname;
+                const basePath = '/' + (pathWithoutLocale?.split('/').filter(Boolean)[0] || '');
+
+                if (basePath in routes) {
+                    return routes[basePath as keyof typeof routes];
                 }
 
-                const dynamicRoutes = ['/blog', '/projects'] as const;
-                for (const route of dynamicRoutes) {
-                    if (pathname?.startsWith(route) && routes[route]) {
-                        return true;
-                    }
-                }
+                // Dynamic routes: /projects/slug, /blog/slug
+                if (pathWithoutLocale?.startsWith('/projects') && routes['/projects']) return true;
+                if (pathWithoutLocale?.startsWith('/blog') && routes['/blog']) return true;
+                if (pathWithoutLocale?.startsWith('/gallery') && routes['/gallery']) return true;
 
                 return false;
             };
@@ -84,11 +92,7 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
     }
 
     if (!isRouteEnabled) {
-        return (
-        <Flex fillWidth paddingY="128" justifyContent="center">
-            <Spinner />
-        </Flex>
-        );
+        notFound();
     }
 
     if (isPasswordRequired && !isAuthenticated) {

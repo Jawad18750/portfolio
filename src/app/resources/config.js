@@ -12,10 +12,10 @@ const i18nOptions = {
 const routes = {
     '/':         true,
     '/about':    true,
-    '/projects': true,
+    '/projects': true,   // Portfolio
     '/contact':  true,
-    '/blog':     false,  // Set to false to hide from header and home page
-    '/gallery':  true,
+    '/blog':     false,  // Disabled - not used
+    '/gallery':  false,  // Disabled - not used
 }
 
 // Enable password protection on selected routes

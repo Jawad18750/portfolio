@@ -111,7 +111,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                         <Heading
                             as="h2"
                             wrap="balance"
-                            variant="heading-strong-xl">
+                            variant="heading-strong-l">
                             {title}
                         </Heading>
                     </Flex>
@@ -120,12 +120,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                     <Flex
                         flex={7} direction="column"
                         gap="16">
-                        {avatars?.length > 0 && (
-                            <AvatarGroup
-                                avatars={avatars}
-                                size="m"
-                                reverseOrder/>
-                        )}
                         {description?.trim() && (
                             <Text
                                 wrap="balance"
@@ -134,7 +128,13 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                                 {description}
                             </Text>
                         )}
-                        <Flex gap="24" wrap>
+                        <Flex gap="24" wrap alignItems="center">
+                            {avatars?.length > 0 && (
+                                <AvatarGroup
+                                    avatars={avatars}
+                                    size="m"
+                                    reverseOrder/>
+                            )}
                             {content?.trim() && (
                                 <SmartLink
                                     suffixIcon="arrowRight"

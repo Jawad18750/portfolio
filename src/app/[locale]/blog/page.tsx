@@ -4,6 +4,7 @@ import { Posts } from '@/components/blog/Posts';
 import { baseURL, renderContent } from '@/app/resources'
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
+import { getCanonicalUrl, getAlternateLanguages } from '@/app/utils/seo';
 
 export async function generateMetadata(
 	{params: {locale}}: { params: { locale: string }}
@@ -16,13 +17,14 @@ export async function generateMetadata(
 	const description = blog.description;
 	const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
 
-	const currentUrl = `https://${baseURL}/${locale}/blog`;
+	const currentUrl = getCanonicalUrl(locale, '/blog');
 	
 	return {
 		title,
 		description,
 		alternates: {
 			canonical: currentUrl,
+			languages: getAlternateLanguages('/blog'),
 		},
 		openGraph: {
 			title,

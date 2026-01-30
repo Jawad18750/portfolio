@@ -6,26 +6,27 @@ import { TestimonialSlider } from '@/components/TestimonialSlider';
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { routing } from '@/i18n/routing';
+import { getCanonicalUrl, getAlternateLanguages } from '@/app/utils/seo';
 
 export async function generateMetadata(
     {params: {locale}}: { params: { locale: string }}
 ) {
 
     const t = await getTranslations();
-    const { work } = renderContent(t);
+    const { work, person } = renderContent(t);
 
-	const title = work.title;
+	const title = `${work.label} – ${person.name}`;
 	const description = work.description;
 	const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
 
-    const localePrefix = locale === routing.defaultLocale ? '' : `/${locale}`;
-	const currentUrl = `https://${baseURL}${localePrefix}/projects`;
+    const currentUrl = getCanonicalUrl(locale, '/projects');
 	
 	return {
 		title,
 		description,
 		alternates: {
 			canonical: currentUrl,
+			languages: getAlternateLanguages('/projects'),
 		},
 		openGraph: {
 			title,
@@ -63,7 +64,16 @@ export default function ProjectsPage(
     return (
         <Flex
 			fillWidth maxWidth="m"
-			direction="column">
+			direction="column"
+			gap="xs"
+			paddingTop="xl">
+            <Flex fillWidth justifyContent="center">
+                <Heading
+                    variant="display-strong-s"
+                    align="center">
+                    {work.label} – {person.name}
+                </Heading>
+            </Flex>
             <script
                 type="application/ld+json"
                 suppressHydrationWarning
@@ -89,12 +99,8 @@ export default function ProjectsPage(
                     }),
                 }}
             />
-            <Projects locale={locale}/>
             {testimonials?.length > 0 && (
-                <Flex direction="column" gap="m" marginTop="64">
-                    <Heading variant="display-strong-s" align="center">
-                        {locale === 'ar' ? 'آراء العملاء' : 'Client testimonials'}
-                    </Heading>
+                <Flex direction="column">
                     <TestimonialSlider
                         testimonials={testimonials}
                         allLogos={allLogos}
@@ -102,6 +108,7 @@ export default function ProjectsPage(
                     />
                 </Flex>
             )}
+            <Projects locale={locale}/>
         </Flex>
     );
 }

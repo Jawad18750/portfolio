@@ -39,6 +39,7 @@ export function Posts({
                             key={post.slug}
                             post={post}
                             thumbnail={thumbnail}
+                            locale={locale}
                         />
                     ))}
                 </Grid>

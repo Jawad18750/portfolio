@@ -2,11 +2,13 @@ import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc';
 import React, { ReactNode } from 'react';
 
 import { SmartImage, SmartLink, Text } from '@/once-ui/components';
+import { AppBadges } from '@/components/AppBadges';
 import { CodeBlock } from '@/once-ui/modules';
 import { HeadingLink } from '@/components';
 
 import { TextProps } from '@/once-ui/interfaces';
 import { SmartImageProps } from '@/once-ui/components/SmartImage';
+import { routing } from '@/i18n/routing';
 
 type TableProps = {
     data: {
@@ -42,24 +44,29 @@ type CustomLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
     children: ReactNode;
 };
 
-function CustomLink({ href, children, ...props }: CustomLinkProps) {
-    if (href.startsWith('/')) {
+function createCustomLink(locale?: string) {
+    return function CustomLink({ href, children, ...props }: CustomLinkProps) {
+        if (href.startsWith('/')) {
+            const localizedHref = locale && locale !== routing.defaultLocale
+                ? `/${locale}${href}`
+                : href;
+            return (
+                <SmartLink href={localizedHref} {...props}>
+                    {children}
+                </SmartLink>
+            );
+        }
+
+        if (href.startsWith('#')) {
+            return <a href={href} {...props}>{children}</a>;
+        }
+
         return (
-            <SmartLink href={href} {...props}>
+            <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
                 {children}
-            </SmartLink>
+            </a>
         );
-    }
-
-    if (href.startsWith('#')) {
-        return <a href={href} {...props}>{children}</a>;
-    }
-
-    return (
-        <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
-            {children}
-        </a>
-    );
+    };
 }
 
 function createImage({ alt, src, ...props }: SmartImageProps & { src: string }) {
@@ -87,8 +94,10 @@ function slugify(str: string): string {
         .trim() // Remove whitespace from both ends of a string
         .replace(/\s+/g, '-') // Replace spaces with -
         .replace(/&/g, '-and-') // Replace & with 'and'
-        .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for -
+        .replace(/[^\w\-]+/gu, '') // Remove non-word chars (u flag = Unicode, keeps Arabic)
         .replace(/\-\-+/g, '-') // Replace multiple - with single -
+        .replace(/^-|-$/g, '') // Trim leading/trailing hyphens
+        || 'section' // Fallback for empty slugs (e.g. from non-Latin text)
 }
 
 function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
@@ -112,7 +121,7 @@ function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
 
 function createParagraph({ children }: TextProps) {
     return (
-        <Text style={{lineHeight: '150%'}}
+        <Text style={{lineHeight: '1.7'}}
             variant="body-default-m"
             onBackground="neutral-medium"
             marginTop="8"
@@ -122,31 +131,45 @@ function createParagraph({ children }: TextProps) {
     );
 };
 
-const components = {
-    p: createParagraph as any,
-    h1: createHeading(1) as any,
-    h2: createHeading(2) as any,
-    h3: createHeading(3) as any,
-    h4: createHeading(4) as any,
-    h5: createHeading(5) as any,
-    h6: createHeading(6) as any,
-    img: createImage as any,
-    a: CustomLink as any,
-    Table,
-    CodeBlock
-};
+function createMDXComponents(locale?: string) {
+    const localeForBadges = locale === 'ar' ? 'ar' : 'en';
+    const CustomLinkWithLocale = createCustomLink(locale);
+    return {
+        p: createParagraph as any,
+        h1: createHeading(1) as any,
+        h2: createHeading(2) as any,
+        h3: createHeading(3) as any,
+        h4: createHeading(4) as any,
+        h5: createHeading(5) as any,
+        h6: createHeading(6) as any,
+        img: createImage as any,
+        a: CustomLinkWithLocale as any,
+        Table,
+        CodeBlock,
+        AppBadges: (props: { appStoreUrl?: string; playStoreUrl?: string }) => (
+            <AppBadges locale={localeForBadges} {...props} />
+        ),
+    };
+}
+
+const defaultComponents = createMDXComponents();
 
 type CustomMDXProps = MDXRemoteProps & {
-    components?: typeof components;
+    components?: Record<string, React.ComponentType<any>>;
+    locale?: string;
 };
 
 export function CustomMDX(props: CustomMDXProps) {
-    
+    const { locale, components: customComponents, ...mdxProps } = props;
+    const components = locale
+        ? { ...createMDXComponents(locale), ...(customComponents || {}) }
+        : { ...defaultComponents, ...(customComponents || {}) };
+
     return (
         // @ts-ignore: Suppressing type error for MDXRemote usage
         <MDXRemote
-            {...props}
-            components={{ ...components, ...(props.components || {}) }}
+            {...mdxProps}
+            components={components}
         />
     );
 }

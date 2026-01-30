@@ -1,4 +1,6 @@
-export function formatDate(date: string, includeRelative = false) {
+type Locale = 'en' | 'ar';
+
+export function formatDate(date: string, includeRelative = false, locale: Locale = 'en') {
     const currentDate = new Date();
 
     if (!date.includes('T')) {
@@ -10,19 +12,26 @@ export function formatDate(date: string, includeRelative = false) {
     const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
     const daysAgo = currentDate.getDate() - targetDate.getDate();
 
+    const localeMap = {
+        en: { yAgo: 'y ago', moAgo: 'mo ago', dAgo: 'd ago', today: 'Today' },
+        ar: { yAgo: ' سنة', moAgo: ' شهر', dAgo: ' يوم', today: 'اليوم' },
+    };
+    const t = localeMap[locale];
+
     let formattedDate = '';
 
     if (yearsAgo > 0) {
-        formattedDate = `${yearsAgo}y ago`;
+        formattedDate = `${yearsAgo}${t.yAgo}`;
     } else if (monthsAgo > 0) {
-        formattedDate = `${monthsAgo}mo ago`;
+        formattedDate = `${monthsAgo}${t.moAgo}`;
     } else if (daysAgo > 0) {
-        formattedDate = `${daysAgo}d ago`;
+        formattedDate = `${daysAgo}${t.dAgo}`;
     } else {
-        formattedDate = 'Today';
+        formattedDate = t.today;
     }
 
-    const fullDate = targetDate.toLocaleString('en-us', {
+    const localeForDate = locale === 'ar' ? 'ar-LY' : 'en-US';
+    const fullDate = targetDate.toLocaleString(localeForDate, {
         month: 'long',
         day: 'numeric',
         year: 'numeric',

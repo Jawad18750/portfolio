@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 
 import { baseURL, renderContent } from '@/app/resources';
+import { getCanonicalUrl, getAlternateLanguages } from '@/app/utils/seo';
 import { ContactForm } from '@/components';
 import { Flex } from '@/once-ui/components';
 
@@ -13,13 +14,14 @@ export async function generateMetadata(
 
 	const title = `${t('contact.title')} – ${person.name}`;
 	const description = t('contact.description');
-	const currentUrl = `https://${baseURL}${locale === 'ar' ? '' : `/${locale}`}/contact`;
+	const currentUrl = getCanonicalUrl(locale, '/contact');
 
 	return {
 		title,
 		description,
 		alternates: {
 			canonical: currentUrl,
+			languages: getAlternateLanguages('/contact'),
 		},
 		openGraph: {
 			title,

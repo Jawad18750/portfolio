@@ -7,6 +7,7 @@ import { Avatar, Button, Flex, Heading, Text } from '@/once-ui/components'
 import { baseURL, renderContent } from '@/app/resources'
 import { unstable_setRequestLocale } from 'next-intl/server'
 import { routing } from '@/i18n/routing';
+import { getCanonicalUrl, getAlternateLanguages } from '@/app/utils/seo';
 import { useTranslations } from 'next-intl';
 import { formatDate } from '@/app/utils/formatDate'
 
@@ -52,13 +53,14 @@ export function generateMetadata({ params: { slug, locale } }: BlogParams) {
 		? `https://${baseURL}${image}`
 		: `https://${baseURL}/og?title=${title}`;
 
-	const currentUrl = `https://${baseURL}/${locale}/blog/${post.slug}`;
+	const currentUrl = getCanonicalUrl(locale, `/blog/${post.slug}`);
 	
 	return {
 		title,
 		description,
 		alternates: {
 			canonical: currentUrl,
+			languages: getAlternateLanguages(`/blog/${post.slug}`),
 		},
 		openGraph: {
 			title,
@@ -143,14 +145,14 @@ export default function Blog({ params }: BlogParams) {
 				<Text
 					variant="body-default-s"
 					onBackground="neutral-weak">
-					{formatDate(post.metadata.publishedAt)}
+					{formatDate(post.metadata.publishedAt, false, params.locale as 'en' | 'ar')}
 				</Text>
 			</Flex>
 			<Flex
 				as="article"
 				direction="column"
 				fillWidth>
-				<CustomMDX source={post.content} />
+				<CustomMDX source={post.content} locale={params.locale} />
 			</Flex>
 			<ScrollToHash />
 		</Flex>

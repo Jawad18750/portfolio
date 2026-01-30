@@ -156,10 +156,10 @@ const Particle = React.forwardRef<HTMLDivElement, ParticleProps>(({
     return (
         <Flex
             ref={containerRef}
-            fill
-            pointerEvents="none"
+            fillWidth
+            fillHeight
             className={className}
-            style={style}
+            style={{ ...style, pointerEvents: 'none' }}
             {...rest}>
             {children}
         </Flex>

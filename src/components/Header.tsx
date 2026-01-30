@@ -145,9 +145,7 @@ export const Header = ({ locale }: HeaderProps) => {
                     prefixIcon="person"
                     href={withLocale('/about')}
                     selected={pathname === withLocale('/about')}
-                >
-                    <Flex paddingX="2" hide="s">{about.label}</Flex>
-                </ToggleButton>
+                />
             )
         });
     }
@@ -160,9 +158,7 @@ export const Header = ({ locale }: HeaderProps) => {
                     prefixIcon="grid"
                     href={withLocale('/projects')}
                     selected={pathname.startsWith(withLocale('/projects'))}
-                >
-                    <Flex paddingX="2" hide="s">{work.label}</Flex>
-                </ToggleButton>
+                />
             )
         });
     }
@@ -175,9 +171,7 @@ export const Header = ({ locale }: HeaderProps) => {
                     prefixIcon="email"
                     href={withLocale('/contact')}
                     selected={pathname.startsWith(withLocale('/contact'))}
-                >
-                    <Flex paddingX="2" hide="s">{contact.label}</Flex>
-                </ToggleButton>
+                />
             )
         });
     }

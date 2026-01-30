@@ -198,9 +198,35 @@
   text-align: left;
 }
 
+/* Prevent scrollbar on home and contact pages */
+html:has(body[data-route-key="home"]),
+html:has(body[data-route-key="contact"]) {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
 body[data-route-key="home"],
 body[data-route-key="contact"] {
-  overflow-y: hidden;
+  overflow: hidden !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+}
+
+/* Position footer absolutely on home and contact pages to prevent overflow */
+body[data-route-key="home"] .layout-footer,
+body[data-route-key="contact"] .layout-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+/* Ensure main content doesn't overflow on these pages */
+body[data-route-key="home"] > *,
+body[data-route-key="contact"] > * {
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {

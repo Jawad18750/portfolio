@@ -1,0 +1,58 @@
+---
+title: "Rawafed Journal of Natural and Applied Sciences"
+publishedAt: "2025-08-15"
+summary: "Open-access peer-reviewed academic publishing platform for the Libyan market, built on OJS (Open Journal Systems) and published by Al-Zaytuna University in Tarhuna."
+link: "https://ra.azu.edu.ly"
+image: "/images/projects/rawafed/cover.avif"
+images:
+  - "/images/projects/rawafed/cover.avif"
+  - "/images/projects/rawafed/image-01.avif"
+  - "/images/projects/rawafed/image-02.avif"
+team:
+  - name: "Al-Zaytuna University – Tarhuna"
+    role: "Client"
+---
+
+## Overview
+
+Rawafed Journal of Natural and Applied Sciences (مجلة روافد المعرفة للعلوم الطبيعية والتطبيقية) is an open-access peer-reviewed academic publishing platform designed for the Libyan academic market. The platform connects researchers, reviewers, and editors through a unified OJS (Open Journal Systems) setup. The journal is published by Al-Zaytuna University in Tarhuna, Libya, and publishes original research and review articles in natural and applied sciences, computer science, mathematics, chemistry, physics, biology, and environment. It supports Arabic and English, RTL layout, Google and Google Scholar indexing, OAI-PMH, dynamic sitemap, and local SMTP email.
+
+## Key Features
+
+**Frontend (OJS 3.3 + Noble Theme):** Browse current and archived issues, search articles, view articles and abstracts, download PDFs, Arabic/English and RTL support, Cairo font, responsive mobile design, light/dark mode, and canonical and citation tags for indexing.
+
+**Editorial Management:** Submission, review, and publication workflow; author, editor, and reviewer management; volumes and issues; editorial policies; author guidelines; and announcements.
+
+**Indexing and Discovery:** Google Scholar component enabled, OAI-PMH (Identify and ListRecords), dynamic sitemap, robots.txt with Sitemap, and citation_* tags (title, authors, date, PDF, ISSN, etc.).
+
+**Email:** SMTP via ra.azu.edu.ly (port 465, SSL), info@, noreply@, and payments@ accounts, and cPanel mail migration to CyberPanel/Dovecot.
+
+**Mobile Responsiveness:** Overflow fixes, responsive navigation menus, scrollable tables and rows, appropriate font sizes, and breakpoints at 768px and 1024px.
+
+## Technologies Used
+
+**OJS 3.3.0.21:** PKP's open journal management system, PHP, MySQL/MariaDB, Smarty, MVC architecture.
+
+**Noble Theme (1.5.4.2):** Theme from openjournaltheme.com, Tailwind CSS, RTL support, dark mode, Cairo Font, Font Awesome 4.7.
+
+**Plugins:** Google Scholar Indexing, XML Sitemap, Editorial Pick Block, PayPal (optional), Backup, Quick Submit.
+
+**Infrastructure:** Ubuntu 24 LTS, CyberPanel, LiteSpeed, PHP 8.3, MySQL, Dovecot/Postfix for mail, SSL (Let's Encrypt).
+
+**Integrations:** OAI-PMH, Google Search Console, Google Scholar, Creative Commons (BY-NC-ND).
+
+## Challenges and Learnings
+
+**Migration from WHM/cPanel to CyberPanel:** Moving OJS from AlmaLinux/WHM to Ubuntu 24/CyberPanel required copying the database, files_dir, public_html, and mail. Updating config.inc.php (base_url, files_dir, SMTP), creating a new DB/user, and syncing mail to vmail paths in CyberPanel.
+
+**PHP Compatibility:** OJS 3.3 officially supports up to PHP 8.0. On Ubuntu 24, lsphp74 or lsphp80 are not in the repos; lsphp81/82/83/84 are available. The Noble theme registered a `nobleCredit` hook without defining the function, causing a TypeError in PHP 8.x. Adding a no-op `nobleCredit()` function resolved it and allowed the site to run on PHP 8.3.
+
+**Google Scholar Indexing:** Using the standard URL structure `/index.php/JOURNAL/article/view/ID` per PKP guidelines, adding canonical tags, Sitemap in robots.txt, and full citation_* tags (including citation_publication_date in full format) to improve indexing.
+
+**Mobile Responsiveness:** Addressing horizontal overflow, improving menus, tables, and forms, and testing on real devices for a good experience.
+
+## Outcome
+
+Rawafed Journal delivers a complete academic publishing platform tailored for the university: researchers submit papers via the web, editors manage the editorial workflow, reviewers evaluate submissions, and readers access open-access content. The system supports Arabic, RTL, open access, and indexing in Google and Google Scholar—making it production-ready for the Libyan academic market.
+
+**Visit the website:** [ra.azu.edu.ly](https://ra.azu.edu.ly/)

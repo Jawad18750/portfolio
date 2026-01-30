@@ -1,5 +1,13 @@
 .badge {
     border: 1px solid var(--brand-alpha-medium);
+    transition: background-color var(--transition-micro-medium), 
+                border-color var(--transition-micro-medium),
+                color var(--transition-micro-medium);
+    
+    // Ensure text inherits transition
+    * {
+        transition: color var(--transition-micro-medium);
+    }
 }
 
 .animation {

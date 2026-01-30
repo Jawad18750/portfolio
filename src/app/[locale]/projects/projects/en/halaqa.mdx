@@ -1,0 +1,60 @@
+---
+title: "Halaqa — Quran Memorization Testing Platform"
+publishedAt: "2025-11-15"
+summary: "Open-source platform for teachers to manage students and run weekly Quran memorization tests using the نقزة and جزء system, with per-student history and a weekly dashboard."
+link: "https://halaqa.abdeljawad.com"
+image: "/images/projects/halaqa/cover.avif"
+images:
+  - "/images/projects/halaqa/cover.avif"
+  - "/images/projects/halaqa/image-01.avif"
+  - "/images/projects/halaqa/image-02.avif"
+  - "/images/projects/halaqa/image-03.avif"
+  - "/images/projects/halaqa/image-04.avif"
+team:
+  - name: "Open Source"
+    role: "Personal Project"
+---
+
+## Overview
+
+Halaqa (حلقة) is an open-source platform that helps teachers (الشيخ) manage their students and run weekly Quran memorization tests. It follows the نقزة (progress level) and جزء (juz) system, with a full history per student and a shared weekly dashboard. The interface is fully in Arabic and designed for mobile first.
+
+The platform is free to use at [halaqa.abdeljawad.com](https://halaqa.abdeljawad.com/). It was developed by Abdeljawad Almiladi, based on an idea from Sheikh Abdulrahman Algharyani.
+
+## What the Platform Offers
+
+- **Teacher account**: Register and sign in with username or email.
+- **Students**: Add students with a unique ID, name, date of birth, and profile photo.
+- **Progress (نقزة)**: Each student has a current نقزة starting at 20, which decreases on success.
+- **Tests during the حلقة**: Run random tests by:
+  - Current نقزة (default)
+  - Specific جزء when needed
+  - Five أحزاب, quarter, half, or full Quran
+  - No immediate repeat of the same ثمن; otherwise fully random.
+- **Recording**: After each test, record ثمن tested, فتحة count, تردد count, pass/fail, numeric grade, verbal rating, date and time.
+- **History**: Per-student history with optional time edits (within 30 days) and a time-range overview.
+- **Reports**: Export to PDF and Excel.
+- **Guest mode**: Test without signing in.
+
+## Success and Grading Rules
+
+- Up to 3 فتحة do not fail the student; the 4th is an automatic fail.
+- تردد is tracked but does not cause failure.
+- Grades: 60–100 on pass (based on فتحة and تردد); below 60 on fail.
+- Ratings: ممتاز، جيد جدًا، جيد، مقبول، ضعيف.
+- Weekly progress: Each success reduces نقزة by 1; a fail on Sunday keeps the student at the same نقزة for the next week.
+
+## Tech Stack
+
+- **Frontend**: React 18 + Vite, with a single reference file for all 480 أثمان (سور، أحزاب، أجزاء، نقزات).
+- **Backend**: Node.js + Express + PostgreSQL.
+- **Auth**: JWT, password reset via email.
+- **Deployment**: GitHub Actions for build and deploy; manual deployment package available. Hosted at [halaqa.abdeljawad.com](https://halaqa.abdeljawad.com/).
+
+## Outcome
+
+Halaqa provides a focused, Arabic-first tool for Quran memorization circles, with structured testing, progress tracking, and exportable reports. The project is open source and welcomes contributions.
+
+**Live platform:** [halaqa.abdeljawad.com](https://halaqa.abdeljawad.com/)
+
+**Source code:** [github.com/Jawad18750/halaqa](https://github.com/Jawad18750/halaqa)

@@ -1,9 +1,11 @@
 import { notFound } from 'next/navigation'
 import { CustomMDX } from '@/components/mdx'
 import { getPosts } from '@/app/utils/utils'
-import { AvatarGroup, Button, Flex, Heading, SmartImage, Text } from '@/once-ui/components'
+import { AvatarGroup, Button, Flex, Heading, Text } from '@/once-ui/components'
+import { ProjectImageGallery } from '@/components/ProjectImageGallery'
 import { baseURL, renderContent } from '@/app/resources';
 import { routing } from '@/i18n/routing';
+import { getCanonicalUrl, getAlternateLanguages } from '@/app/utils/seo';
 import { unstable_setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { formatDate } from '@/app/utils/formatDate';
@@ -53,8 +55,7 @@ export function generateMetadata({ params: { slug, locale } }: WorkParams) {
 		? `https://${baseURL}${image}`
 		: `https://${baseURL}/og?title=${title}`;
 
-    const localePrefix = locale === routing.defaultLocale ? '' : `/${locale}`;
-	const currentUrl = `https://${baseURL}${localePrefix}/projects/${post.slug}`;
+    const currentUrl = getCanonicalUrl(locale, `/projects/${post.slug}`);
 	
 	return {
 		title,
@@ -63,6 +64,7 @@ export function generateMetadata({ params: { slug, locale } }: WorkParams) {
 		team,
 		alternates: {
 			canonical: currentUrl,
+			languages: getAlternateLanguages(`/projects/${post.slug}`),
 		},
 		openGraph: {
 			title,
@@ -99,15 +101,16 @@ export default function Project({ params }: WorkParams) {
 	const { person, work } = renderContent(t);
     const localePrefix = params.locale === routing.defaultLocale ? '' : `/${params.locale}`;
 
-	const avatars = post.metadata.team?.map((person) => ({
-        src: person.avatar,
-    })) || [];
+	const avatars = post.metadata.team?.map((member) => ({
+        src: member.avatar || '/images/avatar.svg',
+    })).filter((a) => a.src) || [];
 
 	return (
 		<Flex as="section"
 			fillWidth maxWidth="m"
 			direction="column" alignItems="center"
-			gap="l">
+			gap="l"
+			paddingTop="xl">
 			<script
 				type="application/ld+json"
 				suppressHydrationWarning
@@ -131,10 +134,10 @@ export default function Project({ params }: WorkParams) {
 				}}
 			/>
 			<Flex
-				fillWidth maxWidth="xs" gap="16"
+				fillWidth maxWidth="s" gap="16"
 				direction="column">
 				<Button
-					href={`/${params.locale}/projects`}
+					href={params.locale === routing.defaultLocale ? '/projects' : `/${params.locale}/projects`}
 					variant="tertiary"
 					size="s"
 					prefixIcon="chevronLeft">
@@ -146,15 +149,18 @@ export default function Project({ params }: WorkParams) {
 				</Heading>
 			</Flex>
 			{post.metadata.images.length > 0 && (
-				<SmartImage
-					aspectRatio="16 / 9"
-					radius="m"
-					alt="image"
-					src={post.metadata.images[0]}/>
+				<Flex fillWidth maxWidth="s">
+					<ProjectImageGallery
+						images={post.metadata.images}
+						alt={post.metadata.title}
+						aspectRatio="16 / 9"
+						radius="m"
+					/>
+				</Flex>
 			)}
 			<Flex style={{margin: 'auto'}}
 				as="article"
-				maxWidth="xs" fillWidth
+				maxWidth="s" fillWidth
 				direction="column">
 				<Flex
 					gap="12" marginBottom="24"
@@ -168,10 +174,10 @@ export default function Project({ params }: WorkParams) {
 					<Text
 						variant="body-default-s"
 						onBackground="neutral-weak">
-						{formatDate(post.metadata.publishedAt)}
+						{formatDate(post.metadata.publishedAt, false, params.locale as 'en' | 'ar')}
 					</Text>
 				</Flex>
-				<CustomMDX source={post.content} />
+				<CustomMDX source={post.content} locale={params.locale} />
 			</Flex>
 			<ScrollToHash />
 		</Flex>

@@ -4,6 +4,8 @@ import TableOfContents from '@/components/about/TableOfContents';
 import styles from '@/components/about/about.module.scss'
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
+import { getCanonicalUrl, getAlternateLanguages } from '@/app/utils/seo';
+import { routing } from '@/i18n/routing';
 
 export async function generateMetadata(
     {params: {locale}}: { params: { locale: string }}
@@ -14,13 +16,14 @@ export async function generateMetadata(
 	const description = about.description;
 	const ogImage = `https://${baseURL}/og?title=${encodeURIComponent(title)}`;
 
-	const currentUrl = `https://${baseURL}/${locale}/about`;
+	const currentUrl = getCanonicalUrl(locale, '/about');
 	
 	return {
 		title,
 		description,
 		alternates: {
 			canonical: currentUrl,
+			languages: getAlternateLanguages('/about'),
 		},
 		openGraph: {
 			title,
@@ -78,17 +81,17 @@ export default function About(
         {
             title: about.work.title,
             display: about.work.display,
-            items: translatedWorkExperiences.map(experience => experience.displayName)
+            items: []
         },
         {
             title: about.studies.title,
             display: about.studies.display,
-            items: about.studies.institutions.map(institution => institution.name)
+            items: []
         },
         {
             title: about.technical.title,
             display: about.technical.display,
-            items: translatedSkills.map(skill => t(`about.technical.skills.${skill.title}.title`))
+            items: []
         },
     ]
     return (
@@ -107,7 +110,7 @@ export default function About(
                         name: person.name,
                         jobTitle: person.role,
                         description: about.intro.description,
-                        url: `https://${baseURL}/about`,
+                        url: `https://${baseURL}${locale === routing.defaultLocale ? '' : `/${locale}`}/about`,
                         image: `${baseURL}/images/${person.avatar}`,
                         sameAs: social
                             .filter((item) => item.link && !item.link.startsWith('mailto:')) // Filter out empty links and email links
@@ -373,25 +376,29 @@ export default function About(
                                         key={`${skill}-${index}`}
                                         fillWidth gap="4"
                                         direction="column">
-                                        <Flex
-                                            alignItems="center"
-                                            gap="8">
-                                            {skill.icon && (
-                                                <Icon
-                                                    name={skill.icon}
-                                                    size="l" />
-                                            )}
-                                            <Text
-                                                id={t(`about.technical.skills.${skill.title}.title`)}
-                                                variant="heading-strong-l">
-                                                {t(`about.technical.skills.${skill.title}.title`)}
-                                            </Text>
-                                        </Flex>
+                                        <Text
+                                            id={t(`about.technical.skills.${skill.title}.title`)}
+                                            variant="heading-strong-l">
+                                            {t(`about.technical.skills.${skill.title}.title`)}
+                                        </Text>
                                         <Text
                                             variant="body-default-m"
                                             onBackground="neutral-weak">
                                             {skill.description}
                                         </Text>
+                                        {skill.tags && skill.tags.length > 0 && (
+                                            <Flex wrap gap="8" paddingTop="8">
+                                                {skill.tags.map((tag, tagIndex) => (
+                                                    <Tag
+                                                        key={`${skill.title}-${tagIndex}`}
+                                                        style={{ padding: "8px 12px", borderRadius: "6px" }}
+                                                        size="l"
+                                                        prefixIcon={tag.icon}>
+                                                        {tag.name}
+                                                    </Tag>
+                                                ))}
+                                            </Flex>
+                                        )}
                                         {skill.images && skill.images.length > 0 && (
                                             <Flex
                                                 fillWidth paddingTop="m" gap="12"

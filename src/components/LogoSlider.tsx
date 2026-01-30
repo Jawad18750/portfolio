@@ -172,11 +172,11 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
             style={{
                 width: '100%',
                 maskImage: isMobile 
-                    ? 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
-                    : 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
+                    ? 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)'
+                    : 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
                 WebkitMaskImage: isMobile
-                    ? 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
-                    : 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
+                    ? 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)'
+                    : 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
                 overflow: 'hidden',
                 position: 'relative'
             }}
@@ -215,9 +215,9 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
                         <div
                             key={`${logo}-${index}`}
                             style={{
-                                minWidth: isMobile ? '110px' : '180px',
-                                width: isMobile ? '110px' : 'auto',
-                                height: isMobile ? '90px' : '120px',
+                                minWidth: isMobile ? '105px' : '200px',
+                                width: isMobile ? '105px' : 'auto',
+                                height: isMobile ? '90px' : '140px',
                                 flexShrink: 0,
                                 display: 'flex',
                                 alignItems: 'center',
@@ -227,9 +227,9 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
                         >
                             <div
                                 style={{
-                                    width: isMobile ? '90px' : 'clamp(45px, 6vw, 60px)',
-                                    height: isMobile ? '90px' : 'clamp(45px, 6vw, 60px)',
-                                    minWidth: isMobile ? '90px' : 'clamp(60px, 8vw, 90px)',
+                                    width: isMobile ? '90px' : 'clamp(55px, 7vw, 75px)',
+                                    height: isMobile ? '90px' : 'clamp(55px, 7vw, 75px)',
+                                    minWidth: isMobile ? '90px' : 'clamp(70px, 9vw, 105px)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -244,8 +244,8 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
                                     alt={`Client logo ${index + 1}`}
                                     loading="lazy"
                                     style={{
-                                        width: isMobile ? '90px' : 'clamp(68px, 9vw, 90px)',
-                                        height: isMobile ? '90px' : 'clamp(68px, 9vw, 90px)',
+                                        width: isMobile ? '90px' : 'clamp(80px, 10vw, 105px)',
+                                        height: isMobile ? '90px' : 'clamp(80px, 10vw, 105px)',
                                         objectFit: 'contain',
                                         opacity: 0,
                                         transition: 'opacity 0.3s ease'

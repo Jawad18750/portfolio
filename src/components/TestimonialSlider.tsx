@@ -111,7 +111,7 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
             tempDiv.style.width = measureWidth + 'px';
             tempDiv.style.fontSize = '16px';
             tempDiv.style.lineHeight = isRTL ? '1.6' : '1.5'; // Slightly more line height for Arabic
-            tempDiv.style.fontStyle = 'italic';
+            tempDiv.style.fontStyle = 'normal';
             tempDiv.style.textAlign = 'center';
             tempDiv.style.wordWrap = 'break-word';
             tempDiv.style.padding = isMobile ? '0 1rem' : '0';
@@ -187,14 +187,21 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
                     fillWidth
                     direction="column"
                     alignItems="center"
-                    gap="xl"
-                    padding="xl"
+                    gap={isMobile ? "40" : "xl"}
+                    padding={isMobile ? "l" : "xl"}
+                    paddingBottom={isMobile ? "80" : undefined}
                     radius="l"
                     position="relative"
                 >
                     {/* Client Logos */}
                     {allLogos && allLogos.length > 0 && (
-                        <LogoSlider logos={allLogos} />
+                        <div style={{ 
+                            width: '100%', 
+                            marginBottom: isMobile ? 'var(--static-space-24)' : 'var(--static-space-32)',
+                            flexShrink: 0
+                        }}>
+                            <LogoSlider logos={allLogos} />
+                        </div>
                     )}
 
                     {/* Navigation Arrows */}
@@ -246,10 +253,11 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
                             width: '100%',
                             maxWidth: isMobile ? '90vw' : 'var(--static-space-s)',
                             padding: isMobile ? '0 1rem' : '0',
+                            paddingTop: isMobile ? 'var(--static-space-8)' : 'var(--static-space-16)',
                             paddingBottom: expandedStates[activeIndex] 
                                 ? (isMobile ? (isRTL ? '3rem' : '2.5rem') : (isRTL ? '2rem' : '1rem'))
                                 : (isMobile ? (isRTL ? '2.5rem' : '2rem') : '0'),
-                            marginBottom: isMobile ? (testimonials.length > 4 ? '1rem' : '0.5rem') : '0',
+                            marginBottom: isMobile ? 'var(--static-space-16)' : '0',
                             boxSizing: 'border-box',
                             transition: 'all 0.3s ease-in-out',
                             opacity: isTransitioning ? 0.7 : 1,
@@ -267,7 +275,6 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
                                 onBackground="neutral-weak"
                                 align="center"
                                 style={{
-                                    fontStyle: 'italic',
                                     transition: 'opacity 0.3s ease-in-out',
                                     opacity: isTransitioning ? 0.7 : 1
                                 }}
@@ -330,7 +337,7 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
                         alignItems: 'center',
                         gap: '8px',
                         marginTop: isMobile 
-                            ? (testimonials.length > 4 ? (isRTL ? 'var(--static-space-l)' : 'var(--static-space-m)') : (isRTL ? 'var(--static-space-m)' : 'var(--static-space-s)'))
+                            ? 'var(--static-space-24)'
                             : (isRTL ? 'var(--static-space-xl)' : 'var(--static-space-l)')
                     }}>
                         <Text
@@ -351,7 +358,7 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
 
                     {/* Navigation Dots */}
                     {testimonials.length > 1 && (
-                        <Flex gap="4" justifyContent="center">
+                        <Flex gap="4" justifyContent="center" style={{ marginTop: isMobile ? 'var(--static-space-24)' : undefined }}>
                             {testimonials.map((_, index) => (
                                 <Flex
                                     key={index}

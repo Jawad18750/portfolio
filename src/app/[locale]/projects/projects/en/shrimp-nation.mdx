@@ -1,0 +1,52 @@
+---
+title: "Shrimp Nation — Food Delivery Ecosystem for Libya"
+publishedAt: "2026-01-15"
+summary: "A comprehensive food delivery platform for the Libyan market, featuring 5 Flutter apps, Next.js web, React admin panel, Laravel API, and full Arabic/RTL support."
+link: "https://shrimpnation.ly"
+images:
+  - "/images/projects/shrimp-nation/cover.jpg"
+  - "/images/projects/shrimp-nation/image-01.jpg"
+  - "/images/projects/shrimp-nation/image-02.jpg"
+  - "/images/projects/shrimp-nation/image-03.jpg"
+  - "/images/projects/shrimp-nation/image-04.jpg"
+  - "/images/projects/shrimp-nation/image-05.jpg"
+team:
+  - name: "Shrimp Nation"
+    role: "Client"
+---
+
+## Overview
+
+Shrimp Nation is a full-stack food delivery ecosystem designed for the Libyan market. The platform connects customers with restaurants, drivers, and delivery services through a unified Laravel backend API. The system consists of 5 Flutter mobile apps (Customer, Driver, Seller, POS, Waiter), a Next.js web app for customers, a React admin panel for business management, and a Vite/React QR landing page for table ordering. All components support Arabic (RTL), Libyan Dinar (LYD) payments, and local integrations like Moamalat Pay and iSend SMS.
+
+## Key Features
+
+- Customer App (Flutter): Browse restaurants and menus, cart, checkout, order tracking, Google Maps, reviews, Firebase Auth, and Arabic/English support.
+- Driver App (Flutter): Order acceptance, delivery flow, GPS tracking, earnings, push notifications, and background work via WorkManager.
+- Seller App (Flutter): Restaurant management—menu, orders, analytics, maps, and delivery zones.
+- POS App (Flutter): Desktop point-of-sale for Windows with receipt printing (ESC/POS), table management, and network printer discovery.
+- Waiter App (Flutter): Table order taking and submission with OSM maps.
+- Web App (Next.js): Customer-facing marketplace with restaurant browsing, cart, checkout, i18n, and Firebase.
+- Admin Panel (React + Ant Design): Restaurant, order, user, delivery, and finance management with RTL and iSend SMS integration.
+- QR Landing (Vite + React): Table-specific QR ordering pages deployable to Vercel.
+
+## Technologies Used
+
+- Laravel 8: REST API, Sanctum auth, Spatie permissions, MySQL, Redis, S3, multi-language, multi-currency.
+- Flutter 3.24+: Riverpod, Auto Route, Dio, Firebase (Auth, Messaging, Firestore), Google Maps, OSM.
+- Next.js 13: Customer web app with react-i18next, Redux, React Query.
+- React 18 + Ant Design 5: Admin panel with Redux Toolkit and SCSS RTL.
+- Vite + React: QR code landing page.
+- Integrations: Moamalat Pay, iSend SMS, Firebase.
+
+## Challenges and Learnings
+
+Building a multi-app ecosystem with 9 applications required a robust, well-documented API design so that Flutter apps, web apps, admin panel, and QR pages could all share the same Laravel backend. Implementing full Arabic/RTL support across React, Flutter, and Laravel—including Cairo font and dynamic language switching—taught me the importance of consistent localization patterns. Integrating Libya-specific services (Moamalat Pay, iSend SMS) required adapting to local APIs and payment flows. Managing real-time order sync across customer, driver, seller, and admin interfaces was a key challenge.
+
+## Outcome
+
+Shrimp Nation delivers a complete food delivery platform tailored for Libya: customers can order via web or mobile, restaurants manage operations through the seller app and admin panel, drivers handle deliveries with dedicated tracking, and in-restaurant diners can order via QR. The system supports LYD payments, Arabic/RTL, and local SMS—making it production-ready for the Libyan market.
+
+**Visit the website:** [shrimpnation.ly](https://shrimpnation.ly)
+
+<AppBadges appStoreUrl="https://apps.apple.com/ly/app/%D8%B4%D8%B1%D9%8A%D9%85%D8%A8-%D9%86%D9%8A%D8%B4%D9%86/id6749211498" playStoreUrl="https://play.google.com/store/apps/details?id=com.shrimpnation.customer" />

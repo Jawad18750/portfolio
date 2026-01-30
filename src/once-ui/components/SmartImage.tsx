@@ -149,6 +149,7 @@ const SmartImage: React.FC<SmartImageProps> = ({
                         src={src}
                         alt={alt}
                         fill
+                        sizes={props.sizes ?? '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'}
                         style={{ 
                             objectFit: isEnlarged ? 'contain' : objectFit,
                         }}

@@ -187,11 +187,13 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
                     style={{
                         width: '100%',
                         overflowX: 'auto',
+                        overflowY: 'hidden',
                         scrollbarWidth: 'none',
                         msOverflowStyle: 'none',
                         cursor: isMobile ? 'default' : (isDragging ? 'grabbing' : 'grab'),
                         direction: 'ltr', // Explicit LTR for scroll math consistency
-                        touchAction: isMobile ? 'none' : 'pan-x', // Prevent touch scrolling on mobile, allow on desktop
+                        touchAction: 'pan-x', // Allow horizontal scroll on iOS - 'none' prevented scrolling entirely
+                        WebkitOverflowScrolling: 'touch', // Required for iOS Safari scroll to work
                         userSelect: 'none',
                         WebkitUserSelect: 'none'
                     }}

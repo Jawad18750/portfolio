@@ -83,6 +83,7 @@ function createImage({ alt, src, ...props }: SmartImageProps & { src: string }) 
             aspectRatio="16 / 9"
             alt={alt}
             src={src}
+            sizes="(max-width: 768px) 100vw, 640px"
             {...props}/>
         )
 }

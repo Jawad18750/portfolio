@@ -58,6 +58,8 @@ export function ProjectImageGallery({
                         alt={alt}
                         aspectRatio={aspectRatio}
                         src={images[activeIndex]}
+                        priority={activeIndex === 0}
+                        sizes="(max-width: 768px) 100vw, 640px"
                         style={{
                             border: '1px solid var(--neutral-alpha-weak)',
                             ...(images.length > 1 && { cursor: 'pointer' }),

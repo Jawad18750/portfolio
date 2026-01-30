@@ -230,6 +230,12 @@ body[data-route-key="contact"] > * {
 }
 
 @media (max-width: 768px) {
+  /* Hide footer on home and contact pages for mobile */
+  body[data-route-key="home"] .layout-footer,
+  body[data-route-key="contact"] .layout-footer {
+    display: none;
+  }
+
   /* Footer mobile styles */
   footer .flex[data-justify-content="space-between"] {
     flex-direction: column !important;

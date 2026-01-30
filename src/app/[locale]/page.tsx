@@ -102,6 +102,7 @@ export default async function Home(
 				}}
 			/>
 			<Flex
+				className="hero-section"
 				fillWidth
 				paddingY="24"
 				direction="column"
@@ -117,7 +118,7 @@ export default async function Home(
 					style={{ textAlign: 'center' }}
 				>
 				{home.featured?.display && (
-					<RevealFx fillWidth justifyContent="center" alignItems="center" paddingTop="16" paddingBottom="32" paddingLeft="12">
+					<RevealFx fillWidth justifyContent="center" alignItems="center" paddingTop="16" paddingBottom="32" paddingLeft="12" className="hero-badge">
 						<Flex justifyContent="center" fillWidth>
 							<Badge arrow={false} href={badgeHref}>
 								{home.featured.title}
@@ -125,7 +126,7 @@ export default async function Home(
 						</Flex>
 					</RevealFx>
 				)}
-					<RevealFx translateY="4" fillWidth justifyContent="center" paddingBottom="16">
+					<RevealFx translateY="4" fillWidth justifyContent="center" paddingBottom="16" className="hero-heading">
 							<Heading
 								wrap="balance"
 							variant="display-strong-l"

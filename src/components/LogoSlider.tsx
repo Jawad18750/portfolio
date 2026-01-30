@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { Flex } from '@/once-ui/components';
+import React, { useEffect, useState } from 'react';
 
 interface LogoSliderProps {
     logos: string[];
-    speed?: number; // pixels per second
+    speed?: number; // pixels per second - affects animation duration
 }
 
 const LogoSlider: React.FC<LogoSliderProps> = ({
@@ -13,10 +12,7 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
     speed = 30
 }) => {
     const [isMobile, setIsMobile] = useState(false);
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const [isDragging, setIsDragging] = React.useState(false);
-    const [startX, setStartX] = React.useState(0);
-    const [scrollLeft, setScrollLeft] = React.useState(0);
+    const [isPaused, setIsPaused] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     // Detect theme and screen size changes
@@ -58,162 +54,46 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
         }
     };
 
-    // Handle drag functionality
-    const handlePointerDown = (e: React.PointerEvent) => {
-        if (!scrollRef.current) return;
-
-        setIsDragging(true);
-        setStartX(e.clientX - scrollRef.current.offsetLeft);
-        setScrollLeft(scrollRef.current.scrollLeft);
-        scrollRef.current.style.cursor = 'grabbing';
-
-        // Capture pointer for smooth dragging
-        scrollRef.current.setPointerCapture(e.pointerId);
-    };
-
-    const handlePointerMove = (e: React.PointerEvent) => {
-        if (!isDragging || !scrollRef.current) return;
-
-        e.preventDefault();
-        const x = e.clientX - scrollRef.current.offsetLeft;
-        const walk = (x - startX) * 2; // Multiply by 2 for faster scrolling
-        scrollRef.current.scrollLeft = scrollLeft - walk;
-    };
-
-    const handlePointerUp = (e: React.PointerEvent) => {
-        if (!scrollRef.current) return;
-
-        setIsDragging(false);
-        scrollRef.current.style.cursor = 'grab';
-        scrollRef.current.releasePointerCapture(e.pointerId);
-    };
-
-    useEffect(() => {
-        if (!scrollRef.current || logos.length <= 1) return;
-
-        const scrollElement = scrollRef.current;
-        let animationId: number | null = null;
-        let isPaused = false;
-        let lastTimestamp = performance.now();
-        let currentIsMobile = isMobile; // Capture current mobile state
-        let currentIsDragging = isDragging; // Capture current dragging state
-
-        const animate = (timestamp: number) => {
-            if (!scrollElement) {
-                animationId = requestAnimationFrame(animate);
-                return;
-            }
-
-            // Update captured states (in case they change)
-            currentIsMobile = window.innerWidth < 768;
-            currentIsDragging = isDragging;
-
-            // Only pause on hover for desktop, never pause on mobile
-            const shouldPause = !currentIsMobile && isPaused;
-            
-            if (!shouldPause && !currentIsDragging) {
-                const deltaTime = Math.min(timestamp - lastTimestamp, 100); // Cap delta to prevent large jumps
-                lastTimestamp = timestamp;
-                
-                // Slower speed on mobile for better UX
-                const currentSpeed = currentIsMobile ? speed * 0.5 : speed;
-                scrollElement.scrollLeft += (currentSpeed * deltaTime) / 1000; // Convert to pixels per millisecond
-
-                // Reset to beginning when reaching halfway point (duplicated content)
-                const singleSetWidth = scrollElement.scrollWidth / 3;
-                if (scrollElement.scrollLeft >= singleSetWidth) {
-                    scrollElement.scrollLeft = 0;
-                }
-            }
-            
-            animationId = requestAnimationFrame(animate);
-        };
-
-        // Only pause on hover for desktop (not mobile)
-        const handleMouseEnter = () => {
-            if (!currentIsMobile) {
-                isPaused = true;
-            }
-        };
-        const handleMouseLeave = () => {
-            if (!currentIsMobile) {
-                isPaused = false;
-            }
-        };
-
-        // Only add hover listeners on desktop
-        if (!currentIsMobile) {
-            scrollElement.addEventListener('mouseenter', handleMouseEnter);
-            scrollElement.addEventListener('mouseleave', handleMouseLeave);
-        }
-
-        // Start animation immediately
-        lastTimestamp = performance.now();
-        animationId = requestAnimationFrame(animate);
-
-        return () => {
-            if (animationId !== null) {
-                cancelAnimationFrame(animationId);
-            }
-            if (scrollElement && !currentIsMobile) {
-                scrollElement.removeEventListener('mouseenter', handleMouseEnter);
-                scrollElement.removeEventListener('mouseleave', handleMouseLeave);
-            }
-        };
-    }, [logos, speed, isDragging, isMobile]);
-
     if (logos.length === 0) return null;
 
-    // Create multiple copies for seamless infinite scroll
-    const duplicatedLogos = [...logos, ...logos, ...logos];
+    // Create multiple copies for seamless infinite scroll (3 sets for CSS animation loop)
+    const duplicatedLogos = logos.length <= 1 ? logos : [...logos, ...logos, ...logos];
+    const shouldAnimate = logos.length > 1;
+
+    // Duration: ~100px per logo, total width / speed. Slower on mobile. Base ~60s for 16 logos.
+    const logoCount = logos.length;
+    const baseDuration = Math.max(40, (logoCount * 120) / speed);
+    const duration = isMobile ? baseDuration * 1.2 : baseDuration;
 
     return (
         <div
             style={{
                 width: '100%',
-                maskImage: isMobile 
-                    ? 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)'
-                    : 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
-                WebkitMaskImage: isMobile
-                    ? 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)'
-                    : 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
+                maskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
                 overflow: 'hidden',
                 position: 'relative'
             }}
         >
-            {/* Native scroll container - direction: ltr for RTL safety */}
-                <div
-                    ref={scrollRef}
-                    style={{
-                        width: '100%',
-                        overflowX: 'auto',
-                        overflowY: 'hidden',
-                        scrollbarWidth: 'none',
-                        msOverflowStyle: 'none',
-                        cursor: isMobile ? 'default' : (isDragging ? 'grabbing' : 'grab'),
-                        direction: 'ltr', // Explicit LTR for scroll math consistency
-                        touchAction: 'pan-x', // Allow horizontal scroll on iOS - 'none' prevented scrolling entirely
-                        WebkitOverflowScrolling: 'touch', // Required for iOS Safari scroll to work
-                        userSelect: 'none',
-                        WebkitUserSelect: 'none'
-                    }}
-                    className="logo-slider"
-                    onPointerDown={isMobile ? undefined : handlePointerDown}
-                    onPointerMove={isMobile ? undefined : handlePointerMove}
-                    onPointerUp={isMobile ? undefined : handlePointerUp}
-                    onPointerLeave={isMobile ? undefined : handlePointerUp}
-                >
-                {/* Flex row with max-content width to guarantee overflow */}
-                <div
-                    style={{
-                        display: 'flex',
-                        width: 'max-content',
-                        flexWrap: 'nowrap',
-                        alignItems: 'center',
-                        gap: isMobile ? 'var(--static-space-m)' : 'clamp(var(--static-space-l), 6vw, var(--static-space-xxl))' // Adjusted responsive spacing
-                    }}
-                >
-                    {duplicatedLogos.map((logo, index) => (
+            {/* CSS transform animation - works reliably on iOS (no scrollLeft) */}
+            <div
+                style={{
+                    display: 'flex',
+                    width: 'max-content',
+                    flexWrap: 'nowrap',
+                    alignItems: 'center',
+                    gap: isMobile ? 'var(--static-space-m)' : 'clamp(var(--static-space-l), 6vw, var(--static-space-xxl))',
+                    ...(shouldAnimate && {
+                        animation: `logo-slide ${duration}s linear infinite`,
+                        animationPlayState: isPaused && !isMobile ? 'paused' : 'running',
+                        willChange: 'transform'
+                    })
+                }}
+                className="logo-slider-track"
+                onMouseEnter={() => !isMobile && setIsPaused(true)}
+                onMouseLeave={() => !isMobile && setIsPaused(false)}
+            >
+                {duplicatedLogos.map((logo, index) => (
                         <div
                             key={`${logo}-${index}`}
                             style={{
@@ -273,12 +153,12 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
                             </div>
                         </div>
                     ))}
-                </div>
             </div>
 
             <style jsx>{`
-                .logo-slider::-webkit-scrollbar {
-                    display: none;
+                @keyframes logo-slide {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-33.333%); }
                 }
             `}</style>
         </div>

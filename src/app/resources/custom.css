@@ -101,15 +101,28 @@
   transform-origin: right !important;
 }
 
+/* Hero section - reduce top spacing on mobile */
+@media (max-width: 768px) {
+  .hero-section {
+    padding-top: var(--static-space-12) !important;
+  }
+
+  .hero-badge {
+    padding-bottom: var(--static-space-20) !important;
+  }
+}
+
 /* Logo slider styling */
-.logo-slider img {
+.logo-slider img,
+.logo-slider-track img {
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
   background-color: transparent !important;
 }
 
 /* Ensure SVG logos are transparent */
-.logo-slider svg {
+.logo-slider svg,
+.logo-slider-track svg {
   background-color: transparent !important;
 }
 

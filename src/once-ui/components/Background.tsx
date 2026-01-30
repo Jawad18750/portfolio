@@ -100,9 +100,9 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(({
                 <Flex
                     position="absolute"
                     className={styles.gradient}
-                    pointerEvents="none"
-                        style={{
-                            opacity: gradient.opacity,
+                    style={{
+                        pointerEvents: 'none',
+                        opacity: gradient.opacity,
                         '--gradient-position-x': `${gradientPosition.x}%`,
                         '--gradient-position-y': `${gradientPosition.y}%`,
                         '--gradient-width': gradient.width != null ? `${gradient.width / 4}%` : '25%',
@@ -116,14 +116,14 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(({
                 {dots.display && (
                 <Flex
                     position="absolute"
-                    top="0"
-                    left="0"
                     fillWidth
                     fillHeight
-                    pointerEvents="none"
                     className={styles.dots}
-                        style={{
-                            opacity: dots.opacity,
+                    style={{
+                        top: 0,
+                        left: 0,
+                        pointerEvents: 'none',
+                        opacity: dots.opacity,
                         '--dots-color': `var(--${dots.color ?? 'brand-on-background-weak'})`,
                         '--dots-size': `var(--static-space-${dots.size ?? '24'})`,
                     } as CSSProperties}
@@ -132,14 +132,14 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(({
                 {lines.display && (
                 <Flex
                     position="absolute"
-                    top="0"
-                    left="0"
                     fillWidth
                     fillHeight
-                    pointerEvents="none"
                     className={styles.lines}
-                        style={{
-                            opacity: lines.opacity,
+                    style={{
+                        top: 0,
+                        left: 0,
+                        pointerEvents: 'none',
+                        opacity: lines.opacity,
                         '--lines-angle': `${lines.angle ?? -45}deg`,
                         '--lines-color': `var(--${lines.color ?? 'brand-on-background-weak'})`,
                         '--lines-thickness': `${lines.thickness ?? 1}px`,
@@ -159,12 +159,12 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(({
             {grid.display && (
                 <Flex
                     position="absolute"
-                    top="0"
-                    left="0"
                     fillWidth
                     fillHeight
-                    pointerEvents="none"
                     style={{
+                        top: 0,
+                        left: 0,
+                        pointerEvents: 'none',
                         opacity: grid.opacity,
                         backgroundImage: `
                             linear-gradient(
@@ -193,11 +193,11 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(({
             fillWidth
             fillHeight
             position="absolute"
-            top="0"
-            left="0"
             zIndex={0}
             overflow="hidden"
             style={{
+                top: 0,
+                left: 0,
                 pointerEvents: 'none',
                 ...style,
             }}
@@ -207,7 +207,7 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(({
                     cursor={mask.cursor}
                     x={mask.x}
                     y={mask.y}
-                    radius={mask.radius}>
+                    maskRadius={mask.radius}>
                     {renderLayers()}
                 </Mask>
             ) : (

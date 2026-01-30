@@ -10,14 +10,14 @@ type MaskProps = React.ComponentProps<typeof Flex> & {
     cursor?: boolean;
     x?: number;
     y?: number;
-    radius?: number;
+    maskRadius?: number;
 };
 
 const Mask = forwardRef<HTMLDivElement, MaskProps>(({
     cursor = false,
     x,
     y,
-    radius = 50,
+    maskRadius = 50,
     className,
     style,
     children,
@@ -86,7 +86,7 @@ const Mask = forwardRef<HTMLDivElement, MaskProps>(({
             return {
                 '--mask-position-x': `${smoothPosition.x}px`,
                 '--mask-position-y': `${smoothPosition.y}px`,
-                '--mask-radius': `${radius}vh`,
+                '--mask-radius': `${maskRadius}vh`,
             } as React.CSSProperties;
         }
 
@@ -94,7 +94,7 @@ const Mask = forwardRef<HTMLDivElement, MaskProps>(({
             return {
                 '--mask-position-x': `${x}%`,
                 '--mask-position-y': `${y}%`,
-                '--mask-radius': `${radius}vh`,
+                '--mask-radius': `${maskRadius}vh`,
             } as React.CSSProperties;
         }
 
@@ -108,11 +108,11 @@ const Mask = forwardRef<HTMLDivElement, MaskProps>(({
             fillWidth
             fillHeight
             position="absolute"
-            top="0"
-            left="0"
             zIndex={0}
             overflow="hidden"
             style={{
+                top: 0,
+                left: 0,
                 ...maskStyle(),
                 ...style,
             }}

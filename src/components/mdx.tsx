@@ -94,7 +94,7 @@ function slugify(str: string): string {
         .trim() // Remove whitespace from both ends of a string
         .replace(/\s+/g, '-') // Replace spaces with -
         .replace(/&/g, '-and-') // Replace & with 'and'
-        .replace(/[^\w\-]+/gu, '') // Remove non-word chars (u flag = Unicode, keeps Arabic)
+        .replace(/[^\w\u0600-\u06FF\-]+/g, '') // Remove non-word chars (keeps Arabic \u0600-\u06FF)
         .replace(/\-\-+/g, '-') // Replace multiple - with single -
         .replace(/^-|-$/g, '') // Trim leading/trailing hyphens
         || 'section' // Fallback for empty slugs (e.g. from non-Latin text)

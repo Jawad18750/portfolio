@@ -1,7 +1,7 @@
 "use client";
 
 import { AvatarGroup, Flex, Heading, RevealFx, SmartImage, SmartLink, Text } from "@/once-ui/components";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from 'next-intl';
 
 interface ProjectCardProps {
@@ -13,12 +13,9 @@ interface ProjectCardProps {
     avatars: { src: string }[];
     link: string;
     priority?: boolean;
-    /** Stagger offset in ms - each card gets different start delay for auto-switch */
-    staggerIndex?: number;
 }
 
-const AUTO_SWITCH_INTERVAL = 4500; // ms per image - not too quick
-const STAGGER_OFFSET = 800; // ms between each card's first switch
+const SWIPE_THRESHOLD = 50;
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
     href,
@@ -29,7 +26,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
     avatars,
     link,
     priority = false,
-    staggerIndex = 0,
 }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
@@ -44,55 +40,50 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         return () => clearTimeout(timer);
     }, []);
 
-    // Auto-switch images infinitely with staggered timing per card
-    useEffect(() => {
-        if (images.length <= 1) return;
+    const touchStartX = useRef<number>(0);
 
-        const initialDelay = staggerIndex * STAGGER_OFFSET;
-        let intervalId: ReturnType<typeof setInterval> | null = null;
-
-        const switchToNext = () => {
-            setIsTransitioning(false);
-            setTimeout(() => {
-                setActiveIndex((prev) => (prev + 1) % images.length);
-                setIsTransitioning(true);
-            }, 630);
-        };
-
-        const startTimer = setTimeout(() => {
-            intervalId = setInterval(switchToNext, AUTO_SWITCH_INTERVAL);
-        }, initialDelay);
-
-        return () => {
-            clearTimeout(startTimer);
-            if (intervalId) clearInterval(intervalId);
-        };
-    }, [images.length, staggerIndex]);
-
-    const handleImageClick = () => {
-        if(images.length > 1) {
-            setIsTransitioning(false);
-            const nextIndex = (activeIndex + 1) % images.length;
-            handleControlClick(nextIndex);
-
-        }
-    };
-
-    const handleControlClick = (index: number) => {
-        if (index !== activeIndex) {
+    const goToIndex = useCallback((index: number) => {
+        if (index !== activeIndex && index >= 0 && index < images.length) {
             setIsTransitioning(false);
             setTimeout(() => {
                 setActiveIndex(index);
                 setIsTransitioning(true);
             }, 630);
         }
+    }, [activeIndex, images.length]);
+
+    const handleSwipe = useCallback((deltaX: number) => {
+        if (images.length <= 1) return;
+        if (deltaX < -SWIPE_THRESHOLD) {
+            goToIndex((activeIndex + 1) % images.length);
+        } else if (deltaX > SWIPE_THRESHOLD) {
+            goToIndex(activeIndex === 0 ? images.length - 1 : activeIndex - 1);
+        }
+    }, [activeIndex, images.length, goToIndex]);
+
+    const handleImageClick = () => {
+        if (images.length > 1) {
+            goToIndex((activeIndex + 1) % images.length);
+        }
+    };
+
+    const handleControlClick = (index: number) => {
+        goToIndex(index);
     };
 
     return (
         <Flex
             fillWidth gap="m"
             direction="column">
-            {images[activeIndex] && <Flex onClick={handleImageClick}>
+            {images[activeIndex] && (
+                <Flex
+                    onClick={handleImageClick}
+                    onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+                    onTouchEnd={(e) => {
+                        const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+                        handleSwipe(deltaX);
+                    }}
+                >
                 <RevealFx
                     style={{width: '100%'}}
                     delay={0.4}
@@ -113,7 +104,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                             }),
                         }}/>
                 </RevealFx>
-            </Flex>}
+            </Flex>
+            )}
             {images.length > 1 && (
                 <Flex
                     gap="4" paddingX="s"

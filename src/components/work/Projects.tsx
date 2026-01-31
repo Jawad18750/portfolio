@@ -36,7 +36,6 @@ export function Projects({ range, locale }: ProjectsProps) {
                     avatars={post.metadata.team?.map((member) => ({ src: member.avatar || '/images/avatar.svg' })) || []}
                     link={post.metadata.link || ""}
                     priority={index === 0}
-                    staggerIndex={index}
                 />
             ))}
         </Flex>

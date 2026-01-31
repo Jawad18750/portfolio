@@ -1,7 +1,7 @@
 'use client';
 
 import { Flex, RevealFx, SmartImage } from '@/once-ui/components';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface ProjectImageGalleryProps {
     images: string[];
@@ -9,6 +9,8 @@ interface ProjectImageGalleryProps {
     aspectRatio?: string;
     radius?: string;
 }
+
+const SWIPE_THRESHOLD = 50;
 
 export function ProjectImageGallery({
     images,
@@ -18,35 +20,54 @@ export function ProjectImageGallery({
 }: ProjectImageGalleryProps) {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
+    const touchStartX = useRef<number>(0);
 
     useEffect(() => {
         const timer = setTimeout(() => setIsTransitioning(true), 1000);
         return () => clearTimeout(timer);
     }, []);
 
-    const handleImageClick = () => {
-        if (images.length > 1) {
-            setIsTransitioning(false);
-            const nextIndex = (activeIndex + 1) % images.length;
-            handleControlClick(nextIndex);
-        }
-    };
-
-    const handleControlClick = (index: number) => {
-        if (index !== activeIndex) {
+    const goToIndex = useCallback((index: number) => {
+        if (index !== activeIndex && index >= 0 && index < images.length) {
             setIsTransitioning(false);
             setTimeout(() => {
                 setActiveIndex(index);
                 setIsTransitioning(true);
             }, 630);
         }
+    }, [activeIndex, images.length]);
+
+    const handleSwipe = useCallback((deltaX: number) => {
+        if (images.length <= 1) return;
+        if (deltaX < -SWIPE_THRESHOLD) {
+            goToIndex((activeIndex + 1) % images.length);
+        } else if (deltaX > SWIPE_THRESHOLD) {
+            goToIndex(activeIndex === 0 ? images.length - 1 : activeIndex - 1);
+        }
+    }, [activeIndex, images.length, goToIndex]);
+
+    const handleImageClick = () => {
+        if (images.length > 1) {
+            goToIndex((activeIndex + 1) % images.length);
+        }
+    };
+
+    const handleControlClick = (index: number) => {
+        goToIndex(index);
     };
 
     if (images.length === 0) return null;
 
     return (
         <Flex fillWidth direction="column" gap="4">
-            <Flex onClick={handleImageClick}>
+            <Flex
+                onClick={handleImageClick}
+                onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+                onTouchEnd={(e) => {
+                    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+                    handleSwipe(deltaX);
+                }}
+            >
                 <RevealFx
                     style={{ width: '100%' }}
                     delay={0.4}

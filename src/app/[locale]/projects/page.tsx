@@ -105,6 +105,7 @@ export default function ProjectsPage(
                         testimonials={testimonials}
                         allLogos={allLogos}
                         locale={locale}
+                        autoPlayInterval={12000}
                     />
                 </Flex>
             )}

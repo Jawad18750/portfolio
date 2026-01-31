@@ -112,6 +112,13 @@
   }
 }
 
+/* Logo slider - force LTR for seamless loop in both Arabic and English */
+.logo-slider-track,
+.arabic-font .logo-slider-track {
+  direction: ltr !important;
+  flex-direction: row !important;
+}
+
 /* Logo slider styling */
 .logo-slider img,
 .logo-slider-track img {

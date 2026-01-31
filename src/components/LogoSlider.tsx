@@ -69,6 +69,7 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
         <div
             style={{
                 width: '100%',
+                direction: 'ltr', // Force LTR for consistent scroll in both Arabic (RTL) and English
                 maskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
                 overflow: 'hidden',
@@ -79,12 +80,14 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
             <div
                 style={{
                     display: 'flex',
+                    flexDirection: 'row',
                     width: 'max-content',
                     flexWrap: 'nowrap',
                     alignItems: 'center',
                     gap: isMobile ? 'var(--static-space-m)' : 'clamp(var(--static-space-l), 6vw, var(--static-space-xxl))',
                     ...(shouldAnimate && {
                         animation: `logo-slide ${duration}s linear infinite`,
+                        animationIterationCount: 'infinite',
                         animationPlayState: isPaused && !isMobile ? 'paused' : 'running',
                         willChange: 'transform'
                     })
@@ -157,8 +160,8 @@ const LogoSlider: React.FC<LogoSliderProps> = ({
 
             <style jsx>{`
                 @keyframes logo-slide {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(-33.333%); }
+                    0% { transform: translate3d(0, 0, 0); }
+                    100% { transform: translate3d(-33.333%, 0, 0); }
                 }
             `}</style>
         </div>

@@ -183,36 +183,6 @@ export default function About(
                         fillWidth minHeight="160"
                         direction="column" justifyContent="center"
                         marginBottom="32">
-                        {about.calendar.display && (
-                            <a
-                                href={about.calendar.link}
-                                target="_blank"
-                                rel="noreferrer"
-                                style={{ textDecoration: 'none', display: 'inline-block' }}>
-                                <Flex
-                                    className={styles.blockAlign}
-                                    style={{
-                                        backdropFilter: 'blur(var(--static-space-1))',
-                                        border: '1px solid var(--brand-alpha-medium)',
-                                        width: 'fit-content'
-                                    }}
-                                    alpha="brand-weak" radius="full"
-                                    padding="4" gap="8" marginBottom="m"
-                                    alignItems="center">
-                                    <Flex paddingLeft="12">
-                                        <Icon
-                                            name="whatsapp"
-                                            onBackground="brand-weak"/>
-                                    </Flex>
-                                    <Flex paddingX="8">
-                                        WhatsApp
-                                    </Flex>
-                                    <Icon
-                                        name="chevronRight"
-                                        onBackground="brand-weak"/>
-                                </Flex>
-                            </a>
-                        )}
                         <Heading
                             className={`${styles.textAlign} ${styles.nameHeading}`}
                             variant="display-strong-l">
@@ -225,21 +195,40 @@ export default function About(
                             {person.role}
                         </Text>
                         {social.length > 0 && (
-                            <Flex
-                                className={`${styles.blockAlign} ${styles.aboutSocialLinks}`}
-                                paddingTop="20" paddingBottom="8" gap="8" wrap>
-                                {social.map((item) => (
-                                    item.link && (
-                                        <Button
-                                            key={item.name}
-                                            href={item.link}
-                                            prefixIcon={item.icon}
-                                            label={item.name}
-                                            size="s"
-                                            variant="tertiary"/>
-                                    )
-                                ))}
-                            </Flex>
+                            <>
+                                <Flex
+                                    className={`${styles.blockAlign} ${styles.aboutSocialLinks}`}
+                                    paddingTop="20" paddingBottom="8" gap="8" wrap
+                                    hide="s">
+                                    {social.map((item) => (
+                                        item.link && (
+                                            <Button
+                                                key={item.name}
+                                                href={item.link}
+                                                prefixIcon={item.icon}
+                                                label={item.name}
+                                                size="s"
+                                                variant="tertiary"/>
+                                        )
+                                    ))}
+                                </Flex>
+                                <Flex
+                                    className={`${styles.blockAlign} ${styles.aboutSocialIcons}`}
+                                    paddingTop="20" paddingBottom="8" gap="8"
+                                    show="s">
+                                    {social.map((item) => (
+                                        item.link && (
+                                            <IconButton
+                                                key={item.name}
+                                                href={item.link}
+                                                icon={item.icon}
+                                                tooltip={item.name}
+                                                size="s"
+                                                variant="tertiary"/>
+                                        )
+                                    ))}
+                                </Flex>
+                            </>
                         )}
                     </Flex>
 

@@ -27,6 +27,10 @@ const createI18nContent = (t) => {
         channels: {
             email: t("contact.channels.email"),
             whatsapp: t("contact.channels.whatsapp")
+        },
+        whatsapp: {
+            display: true,
+            link: 'https://wa.me/218910170735'
         }
     }
 
@@ -161,10 +165,6 @@ const createI18nContent = (t) => {
         },
         avatar: {
             display: true
-        },
-        calendar: {
-            display: true,
-            link: 'https://wa.me/218910170735'
         },
         intro: {
             display: true,

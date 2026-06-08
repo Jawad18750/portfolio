@@ -43,12 +43,16 @@
         letter-spacing: -0.02em;
     }
 
-    /* Center WhatsApp button and social links on mobile */
     .aboutIntroSection {
         align-items: center;
     }
 
     .aboutSocialLinks {
         justify-content: center;
+    }
+
+    .aboutSocialIcons {
+        justify-content: center;
+        flex-wrap: nowrap;
     }
 }

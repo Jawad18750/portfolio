@@ -4,7 +4,7 @@ import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { baseURL, renderContent } from '@/app/resources';
 import { getCanonicalUrl, getAlternateLanguages } from '@/app/utils/seo';
 import { ContactForm } from '@/components';
-import { Flex, Icon } from '@/once-ui/components';
+import { Flex } from '@/once-ui/components';
 
 export async function generateMetadata(
 	{ params: { locale } }: { params: { locale: string } }
@@ -64,39 +64,11 @@ export default async function ContactPage(
 			style={{ minHeight: 'calc(100vh - 120px)' }}
 			flex={1}
 		>
-			{contact.whatsapp.display && (
-				<a
-					href={contact.whatsapp.link}
-					target="_blank"
-					rel="noreferrer"
-					style={{ textDecoration: 'none', display: 'inline-block' }}>
-					<Flex
-						style={{
-							backdropFilter: 'blur(var(--static-space-1))',
-							border: '1px solid var(--brand-alpha-medium)',
-							width: 'fit-content'
-						}}
-						alpha="brand-weak" radius="full"
-						padding="4" gap="8" marginBottom="l"
-						alignItems="center">
-						<Flex paddingLeft="12">
-							<Icon
-								name="whatsapp"
-								onBackground="brand-weak"/>
-						</Flex>
-						<Flex paddingX="8">
-							{t('contact.channels.whatsapp')}
-						</Flex>
-						<Icon
-							name="chevronRight"
-							onBackground="brand-weak"/>
-					</Flex>
-				</a>
-			)}
 			<ContactForm
 				display={contact.display}
 				title={contact.title}
 				description={contact.description}
+				whatsapp={contact.whatsapp}
 			/>
 		</Flex>
 	);

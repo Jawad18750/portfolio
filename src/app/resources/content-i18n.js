@@ -73,7 +73,7 @@ const createI18nContent = (t) => {
         featured: {
             display: true,
             title: <>{t("home.selectedWork")}</>,
-            href: '/projects/shrimp-nation'
+            href: '/projects/jibly'
         }
     }
 

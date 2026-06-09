@@ -1,14 +1,36 @@
-/* Custom Arabic font styles */
-.arabic-font {
-  --font-family-body: var(--font-secondary);
-  --font-family-heading: var(--font-secondary);
-  --font-family-label: var(--font-secondary);
+/* Once UI tokens reference --font-secondary/--font-tertiary; map them to Inter by default */
+html {
+  --font-secondary: var(--font-primary);
+  --font-tertiary: var(--font-primary);
+}
+
+/* English locale uses Inter for all text roles */
+html:not(.arabic-font) {
+  --font-family-body: var(--font-primary);
+  --font-family-heading: var(--font-primary);
+  --font-family-label: var(--font-primary);
+}
+
+/* Thmanyah Sans for all Arabic text roles */
+html.arabic-font {
+  --font-family-body: var(--font-thmanyah-sans);
+  --font-family-heading: var(--font-thmanyah-sans);
+  --font-family-label: var(--font-thmanyah-sans);
+  --font-secondary: var(--font-thmanyah-sans);
+  --font-tertiary: var(--font-thmanyah-sans);
   direction: rtl;
 }
 
-.arabic-font * {
-  font-family: var(--font-secondary) !important;
-  line-height: 1.4 !important;
+.arabic-font {
+  line-height: 1.4;
+}
+
+.arabic-font h1,
+.arabic-font h2,
+.arabic-font h3,
+.arabic-font [class*="display"],
+.arabic-font [class*="heading"] {
+  line-height: 1.35;
 }
 
 .arabic-font .english-text {
@@ -175,6 +197,24 @@
   flex: 1;
 }
 
+.contact-form-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--static-space-m);
+  width: 100%;
+}
+
+.contact-form-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--neutral-border-medium);
+}
+
+.contact-form-divider-text {
+  flex-shrink: 0;
+  text-transform: lowercase;
+}
+
 /* Email/Phone wrapper spacing when stacked */
 .contact-email-phone-wrapper > *:not(:last-child) {
   margin-bottom: var(--static-space-m) !important;
@@ -218,44 +258,7 @@
   text-align: left;
 }
 
-/* Prevent scrollbar on home and contact pages */
-html:has(body[data-route-key="home"]),
-html:has(body[data-route-key="contact"]) {
-  overflow: hidden !important;
-  height: 100vh !important;
-}
-
-body[data-route-key="home"],
-body[data-route-key="contact"] {
-  overflow: hidden !important;
-  height: 100vh !important;
-  max-height: 100vh !important;
-}
-
-/* Position footer absolutely on home and contact pages to prevent overflow */
-body[data-route-key="home"] .layout-footer,
-body[data-route-key="contact"] .layout-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
-}
-
-/* Ensure main content doesn't overflow on these pages */
-body[data-route-key="home"] > *,
-body[data-route-key="contact"] > * {
-  max-height: 100vh;
-  overflow: hidden;
-}
-
 @media (max-width: 768px) {
-  /* Hide footer on home and contact pages for mobile */
-  body[data-route-key="home"] .layout-footer,
-  body[data-route-key="contact"] .layout-footer {
-    display: none;
-  }
-
   /* Footer mobile styles */
   footer .flex[data-justify-content="space-between"] {
     flex-direction: column !important;

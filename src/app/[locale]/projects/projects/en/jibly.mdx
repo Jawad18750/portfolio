@@ -1,0 +1,83 @@
+---
+title: "Jibly — Multi-Vendor Commerce & Delivery Platform for Libya"
+publishedAt: "2026-06-09"
+summary: "Jibly is a multi-vendor commerce and delivery platform for Al-Jamil — Flutter apps for customers, drivers, and sellers, Laravel admin, Muamalat payments, and real-time tracking."
+link: "https://apps.apple.com/us/app/%D8%AC%D9%8A%D8%A8%D9%84%D9%8A-jibly/id6759195374"
+images:
+  - "/images/projects/jibly/image-02.avif"
+  - "/images/projects/jibly/cover.avif"
+  - "/images/projects/jibly/image-01.avif"
+  - "/images/projects/jibly/image-03.avif"
+  - "/images/projects/jibly/image-04.avif"
+team:
+  - name: "Jibly"
+    role: "Client"
+---
+
+## Overview
+
+For **entrepreneur Nizar Balagha** in **Al-Jamil, Libya**, we did not stop at a single mobile app. We built **Jibly (جيبلي)** as a full **multi-vendor commerce and delivery platform** — designed for the local market and built to reshape how people buy and sell in the city.
+
+Jibly connects customers, stores, and drivers through one unified API. Food, grocery, pharmacy, parcels, and additional services run in one ecosystem, with full central control from the admin panel.
+
+## Key Features
+
+**Customer app (Flutter — iOS / Android / Web)**
+- Location-based store discovery and module switching (food, grocery, pharmacy, parcel, taxi)
+- Cart, coupons, scheduled delivery, and map-based addresses
+- Payments: cash on delivery, in-app wallet, and online checkout via **Muamalat**
+- Real-time order tracking with live driver map
+- Wallet, loyalty points, referrals, and guest checkout
+
+**Driver app (Flutter — iOS / Android)**
+- Incoming order queue with accept / reject flow
+- Step-by-step delivery status updates
+- Background GPS tracking and live location broadcast
+- Earnings dashboard, withdrawals, and wallet
+
+**Seller app (Flutter — iOS / Android)**
+- Store profile, menu, and incoming order management
+- Bluetooth thermal printing (ESC/POS) for receipts
+- Sales reports, coupons, and driver assignment
+
+**Admin panel & API (Laravel)**
+- Zone, module, vendor, driver, and customer management
+- Orders, commissions, subscriptions, and financial settlements
+- Payment gateways (including **Muamalat**), SMS, and Firebase push
+- Platform-wide analytics and reporting
+
+**Built for the Libyan market**
+- Online payments via **Muamalat** (NUMO cards, Visa, Mastercard, mobile wallets)
+- SMS OTP for verification and notifications
+- Cash and in-app wallet
+- Live order and driver tracking
+
+## Tech Stack
+
+- **Flutter 3.38+** — Customer, driver, and seller apps (GetX)
+- **Laravel 12** — REST API v1, admin panel, Laravel Passport
+- **MySQL** — Database
+- **Laravel Reverb / WebSockets** — Real-time order and location updates
+- **Firebase** — FCM push notifications, Firebase Auth (customer app)
+- **Google Maps** — Tracking and navigation
+- **AWS S3** — File storage
+- **Muamalat** — Local payment gateway
+- **Laravel modules** — AI (OpenAI) and TaxModule
+
+## Challenges & Learnings
+
+A multi-app, multi-module platform needs a **single source of truth** in the API. Every customer, driver, seller, and admin screen must reflect the same order state — any drift breaks trust immediately.
+
+**Real-time sync** across the customer app, driver app, and admin panel was a core engineering challenge. We combined WebSockets (Reverb) with Firebase push so each party sees updates when it matters.
+
+**Local integrations** — Muamalat for payments and SMS for OTP — required adapting to Libyan API flows and LYD checkout, not just flipping on a generic gateway.
+
+**Multi-module architecture** (food, grocery, pharmacy, parcel, and more) in one customer app reinforced the value of per-zone configuration in admin: each vertical can run independently without rebuilding the platform.
+
+## Outcome
+
+**Jibly** is **live on the App Store and Google Play** — a shipped product serving **Al-Jamil**, not a prototype. An integrated system built for Libyan market requirements, from mobile apps through admin and local payments.
+
+**Download the app:**
+
+<AppBadges appStoreUrl="https://apps.apple.com/us/app/%D8%AC%D9%8A%D8%A8%D9%84%D9%8A-jibly/id6759195374" playStoreUrl="https://play.google.com/store/apps/details?id=com.jibly.user" />

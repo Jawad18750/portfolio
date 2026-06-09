@@ -93,7 +93,12 @@ export default function Blog(
 				<Posts range={[4]} columns="2" locale={locale}/>
 			</Flex>
             {contact.display && (
-                <ContactForm display={contact.display} title={contact.title} description={contact.description} />
+                <ContactForm
+                    display={contact.display}
+                    title={contact.title}
+                    description={contact.description}
+                    whatsapp={contact.whatsapp}
+                />
             )}
         </Flex>
     );

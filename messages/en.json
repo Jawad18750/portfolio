@@ -47,6 +47,7 @@
         "error": "Failed to send message. Please try again.",
         "tryAgain": "Try Again",
         "sendAnother": "Send Another",
+        "or": "or",
         "continueWhatsApp": "Continue on WhatsApp"
     },
     "home": {
@@ -55,7 +56,7 @@
         "description": "Abdeljawad Almiladi's website, showcasing my work as a software developer",
         "headline": "Evolving ambitious ideas into software reality",
         "subline": "I'm Abdeljawad Almiladi, an experienced software developer specialized in developing systems, applications, and web services.",
-        "selectedWork": "Latest Projects: Shrimp Nation",
+        "selectedWork": "Latest Projects: Jibly",
         "intro": {
             "title": "I work at the intersection of design and development.",
             "description": "My approach focuses on building systems that feel intuitive, look refined, and scale with purpose.\nEvery project is shaped by context, users, and long-term value — not trends."

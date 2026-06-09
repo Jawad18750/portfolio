@@ -22,9 +22,13 @@ type ContactFormProps = {
     display: boolean;
     title: string | JSX.Element;
     description: string | JSX.Element;
+    whatsapp?: {
+        display: boolean;
+        link: string;
+    };
 }
 
-export const ContactForm = ({ display, title, description }: ContactFormProps) => {
+export const ContactForm = ({ display, title, description, whatsapp }: ContactFormProps) => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -388,6 +392,32 @@ export const ContactForm = ({ display, title, description }: ContactFormProps) =
                                 {isSubmitting ? t('contact.sending') : t('contact.send')}
                             </Button>
                         </div>
+                        {whatsapp?.display && (
+                            <>
+                                <div className="contact-form-divider" role="separator">
+                                    <span className="contact-form-divider-line" />
+                                    <Text
+                                        variant="body-default-s"
+                                        onBackground="neutral-weak"
+                                        className="contact-form-divider-text">
+                                        {t('contact.or')}
+                                    </Text>
+                                    <span className="contact-form-divider-line" />
+                                </div>
+                                <div className="contact-field-wrapper">
+                                    <Button
+                                        variant="secondary"
+                                        size="m"
+                                        fillWidth
+                                        prefixIcon="whatsapp"
+                                        href={whatsapp.link}
+                                        className="contact-whatsapp-button"
+                                    >
+                                        {t('contact.continueWhatsApp')}
+                                    </Button>
+                                </div>
+                            </>
+                        )}
                         {/* Invisible Turnstile widget container */}
                         <div ref={turnstileContainerRef} style={{ display: 'none' }} />
                     </Flex>

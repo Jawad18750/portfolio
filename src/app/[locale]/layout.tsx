@@ -83,53 +83,18 @@ const primary = Inter({
 	fallback: ['system-ui', 'arial'],
 })
 
-// IBM Plex Sans Arabic Font Setup
-// Using weights that match Inter font usage in the portfolio
-const secondary = localFont({
-    variable: '--font-secondary',
+const thmanyahSans = localFont({
+    variable: '--font-thmanyah-sans',
     src: [
-        {
-            path: '../../../public/fonts/IBMPlexSansArabic-Light.ttf',
-            weight: '300',
-            style: 'normal',
-        },
-        {
-            path: '../../../public/fonts/IBMPlexSansArabic-Regular.ttf',
-            weight: '400',
-            style: 'normal',
-        },
-        {
-            path: '../../../public/fonts/IBMPlexSansArabic-Medium.ttf',
-            weight: '500',
-            style: 'normal',
-        },
-        {
-            path: '../../../public/fonts/IBMPlexSansArabic-SemiBold.ttf',
-            weight: '600',
-            style: 'normal',
-        },
-        {
-            path: '../../../public/fonts/IBMPlexSansArabic-Bold.ttf',
-            weight: '700',
-            style: 'normal',
-        },
+        { path: '../../../public/fonts/thmanyah/thmanyahsans/thmanyahsans-Light.woff2', weight: '300', style: 'normal' },
+        { path: '../../../public/fonts/thmanyah/thmanyahsans/thmanyahsans-Regular.woff2', weight: '400', style: 'normal' },
+        { path: '../../../public/fonts/thmanyah/thmanyahsans/thmanyahsans-Medium.woff2', weight: '500', style: 'normal' },
+        { path: '../../../public/fonts/thmanyah/thmanyahsans/thmanyahsans-Bold.woff2', weight: '700', style: 'normal' },
     ],
     display: 'swap',
     preload: true,
     fallback: ['system-ui', 'arial'],
-})
-
-type FontConfig = {
-    variable: string;
-};
-
-/*
-	Replace with code for tertiary fonts
-	from https://once-ui.com/customize
-*/
-const tertiary: FontConfig | undefined = undefined;
-/*
-*/
+});
 
 const code = Source_Code_Pro({
 	variable: '--font-code',
@@ -166,8 +131,7 @@ export default async function RootLayout({
 				data-transition={style.transition}
 				className={classNames(
 					primary.variable,
-					secondary ? secondary.variable : '',
-					tertiary ? tertiary.variable : '',
+					thmanyahSans.variable,
 					code.variable,
 					locale === 'ar' ? 'arabic-font' : '')}>
 			<Flex

@@ -28,9 +28,12 @@ html.arabic-font {
 .arabic-font h1,
 .arabic-font h2,
 .arabic-font h3,
+.arabic-font h4,
+.arabic-font h5,
+.arabic-font h6,
 .arabic-font [class*="display"],
 .arabic-font [class*="heading"] {
-  line-height: 1.35;
+  line-height: 1.5;
 }
 
 .arabic-font .english-text {

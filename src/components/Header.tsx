@@ -2,7 +2,7 @@
 
 import { Fragment, useEffect, useState, useTransition } from "react";
 
-import { Flex, ToggleButton } from "@/once-ui/components"
+import { Flex, IconButton, ToggleButton } from "@/once-ui/components"
 import styles from '@/components/Header.module.scss'
 
 import { routes, display } from '@/app/resources'
@@ -110,7 +110,7 @@ export const Header = ({ locale }: HeaderProps) => {
     }
 
     const t = useTranslations();
-    const { person, about, work, contact } = renderContent(t);
+    const { person, about, work, contact, social } = renderContent(t);
 
     const isDefaultLocale = locale === routing.defaultLocale;
     const localePrefix = isDefaultLocale ? '' : `/${locale}`;
@@ -121,6 +121,8 @@ export const Header = ({ locale }: HeaderProps) => {
         }
         return `${localePrefix}${path}`;
     };
+
+    const isHomePage = pathname === withLocale('/');
 
     const navItems: { key: string; element: JSX.Element }[] = [];
 
@@ -208,6 +210,31 @@ export const Header = ({ locale }: HeaderProps) => {
 
     return (
         <>
+            {isHomePage && (
+                <Flex
+                    className={`${styles.mobileSocial} mobile-social-bar`}
+                    show="s"
+                    position="fixed"
+                    zIndex={9}
+                    fillWidth
+                    paddingX="12"
+                    paddingY="8"
+                    justifyContent="center"
+                    alignItems="center"
+                    gap="12">
+                    {social.map((item) => (
+                        item.link && (
+                            <IconButton
+                                key={item.name}
+                                href={item.link}
+                                icon={item.icon}
+                                tooltip={item.name}
+                                size="s"
+                                variant="ghost"/>
+                        )
+                    ))}
+                </Flex>
+            )}
             <Flex
                 className={styles.mask}
                 position="fixed" zIndex={9}

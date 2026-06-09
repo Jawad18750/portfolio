@@ -16,68 +16,88 @@ team:
 
 ## Overview
 
-For **entrepreneur Nizar Balagha** in **Al-Jamil, Libya**, we did not stop at a single mobile app. We built **Jibly (جيبلي)** as a full **multi-vendor commerce and delivery platform** — designed for the local market and built to reshape how people buy and sell in the city.
+**Jibly** is a multi-vendor commerce and delivery platform built for **entrepreneur Nizar Balagha** in **Al-Jamil**, with the goal of connecting customers, stores, and drivers through one unified digital system.
 
-Jibly connects customers, stores, and drivers through one unified API. Restaurants, groceries, stores, delivery, and more run in one ecosystem, with full central control from the admin panel.
+Rather than shipping a standalone app, we designed Jibly as an integrated platform — multiple connected applications plus a central admin panel — shaped around Libyan market needs and the day-to-day operations of stores and delivery teams.
+
+Today, Jibly is **live on the App Store and Google Play**, serving real users in Al-Jamil.
+
+## The Challenge
+
+The core challenge was building one platform that supports several business types inside a single customer experience: **restaurants, grocery stores, retail shops, and delivery services**.
+
+Customers needed a simple way to order and track deliveries. Drivers needed reliable tools to manage runs. Store owners needed practical control over orders and sales — all within one technical foundation that could grow over time.
+
+Local integrations were also essential: **Muamalat** for online payments and **SMS OTP** for user verification.
+
+## The Solution
+
+We delivered an integrated system made up of:
+
+### Customer app
+
+Browse stores and products, place and pay for orders, track drivers in real time, manage addresses, use coupons and promotions, and access an in-app wallet and referral system.
+
+### Driver app
+
+Receive and manage delivery requests, update delivery status step by step, share live location, and track earnings and withdrawals from a dedicated interface.
+
+### Seller app
+
+Manage products, orders, and promotions; monitor performance and sales; print receipts directly from the store.
+
+### Central admin panel
+
+A full control panel for customers, drivers, stores, operating zones, orders, subscriptions, commissions, and payments.
 
 ## Key Features
 
-**Customer app (Flutter — iOS / Android / Web)**
-- Location-based store discovery and module switching (restaurants, groceries, stores, delivery, and more)
-- Cart, coupons, scheduled delivery, and map-based addresses
-- Payments: cash on delivery, in-app wallet, and online checkout via **Muamalat**
-- Real-time order tracking with live driver map
-- Wallet, loyalty points, referrals, and guest checkout
-
-**Driver app (Flutter — iOS / Android)**
-- Incoming order queue with accept / reject flow
-- Step-by-step delivery status updates
-- Background GPS tracking and live location broadcast
-- Earnings dashboard, withdrawals, and wallet
-
-**Seller app (Flutter — iOS / Android)**
-- Store profile, menu, and incoming order management
-- Bluetooth thermal printing (ESC/POS) for receipts
-- Sales reports, coupons, and driver assignment
-
-**Admin panel & API (Laravel)**
-- Zone, module, vendor, driver, and customer management
-- Orders, commissions, subscriptions, and financial settlements
-- Payment gateways (including **Muamalat**), SMS, and Firebase push
-- Platform-wide analytics and reporting
-
-**Built for the Libyan market**
-- Online payments via **Muamalat** (NUMO cards, Visa, Mastercard, mobile wallets)
-- SMS OTP for verification and notifications
-- Cash and in-app wallet
+- Separate apps for customers, drivers, and sellers
+- Central admin panel for end-to-end platform management
+- Online payments via **Muamalat**
+- Cash on delivery and in-app wallet
+- SMS OTP verification
 - Live order and driver tracking
+- Multi-module architecture in one platform (restaurants, groceries, stores, delivery, and more)
+- Push notifications and real-time order status updates
+
+## Technical Challenges
+
+The hardest part was **real-time sync** across every side of the platform. When a customer places an order, the driver, seller, and admin panel must reflect that update immediately.
+
+We also needed a **multi-module architecture** that supports different business types in one app while keeping per-zone settings independent.
+
+Integrating **local payment** and **SMS services** meant adapting to Libyan API requirements and checkout flows — not just enabling a generic gateway.
 
 ## Tech Stack
 
-- **Flutter 3.38+** — Customer, driver, and seller apps (GetX)
-- **Laravel 12** — REST API v1, admin panel, Laravel Passport
+- **Flutter** — Customer, driver, and seller apps
+- **Laravel** — REST API and admin panel
 - **MySQL** — Database
-- **Laravel Reverb / WebSockets** — Real-time order and location updates
-- **Firebase** — FCM push notifications, Firebase Auth (customer app)
+- **Laravel Reverb / WebSockets** — Real-time updates
+- **Firebase** — Push notifications
 - **Google Maps** — Tracking and navigation
 - **AWS S3** — File storage
 - **Muamalat** — Local payment gateway
-- **Laravel modules** — AI (OpenAI) and TaxModule
 
-## Challenges & Learnings
+## Results
 
-A multi-app, multi-module platform needs a **single source of truth** in the API. Every customer, driver, seller, and admin screen must reflect the same order state — any drift breaks trust immediately.
+The project launched as a full operating system:
 
-**Real-time sync** across the customer app, driver app, and admin panel was a core engineering challenge. We combined WebSockets (Reverb) with Firebase push so each party sees updates when it matters.
+- 3 independent mobile apps
+- Advanced central admin panel
+- Integrated online payment flow
+- Live driver and order tracking
+- Scalable architecture for future modules
 
-**Local integrations** — Muamalat for payments and SMS for OTP — required adapting to Libyan API flows and LYD checkout, not just flipping on a generic gateway.
-
-**Multi-module architecture** (restaurants, groceries, stores, delivery, and more) in one customer app reinforced the value of per-zone configuration in admin: each vertical can run independently without rebuilding the platform.
-
-## Outcome
-
-**Jibly** is **live on the App Store and Google Play** — a shipped product serving **Al-Jamil**, not a prototype. An integrated system built for Libyan market requirements, from mobile apps through admin and local payments.
+**Jibly** moved from concept to a product in daily use across **Al-Jamil**, delivering one digital experience for customers, stores, and drivers.
 
 **Download the app:**
 
 <AppBadges appStoreUrl="https://apps.apple.com/us/app/%D8%AC%D9%8A%D8%A8%D9%84%D9%8A-jibly/id6759195374" playStoreUrl="https://play.google.com/store/apps/details?id=com.jibly.user" />
+
+## Planning something similar?
+
+If you are building a delivery platform, multi-sided app, or full commerce system, we can help turn the idea into a launch-ready product — with modern tooling and flows built for the Libyan market.
+
+[Get in touch to discuss your project](/en/contact)

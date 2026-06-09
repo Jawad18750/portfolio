@@ -57,11 +57,6 @@ const createI18nContent = (t) => {
             icon: 'instagram',
             link: 'https://www.instagram.com/jawadalmiladi/',
         },
-        {
-            name: 'Email',
-            icon: 'email',
-            link: 'mailto:me@abdeljawad.com',
-        },
     ]
 
     const home = {

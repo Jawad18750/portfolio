@@ -262,6 +262,12 @@ html.arabic-font {
 }
 
 @media (max-width: 768px) {
+  /* Hide footer attribution and social icons on mobile — social moves to top bar */
+  .footer-attribution,
+  .footer-social {
+    display: none !important;
+  }
+
   /* Footer mobile styles */
   footer .flex[data-justify-content="space-between"] {
     flex-direction: column !important;
@@ -272,16 +278,6 @@ html.arabic-font {
   footer .flex[data-justify-content="space-between"] > * {
     width: 100%;
     justify-content: center;
-  }
-  
-  /* Center footer text on mobile */
-  .footer-text {
-    text-align: center !important;
-  }
-  
-  /* Center social icons on mobile */
-  footer .flex[data-gap="16"] {
-    justify-content: center !important;
   }
 }
 

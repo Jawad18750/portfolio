@@ -11,6 +11,17 @@
     mask-size: 100% 100%;
 }
 
+.mobileSocial {
+    top: var(--static-space-8);
+    left: 0;
+    right: 0;
+    pointer-events: none;
+}
+
+.mobileSocial > * {
+    pointer-events: auto;
+}
+
 @media (--s) {
     .position {
         top: auto;

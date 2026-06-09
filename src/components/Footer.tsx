@@ -28,7 +28,7 @@ export const Footer = () => {
                 <Text
                     variant="body-default-s"
                     onBackground="neutral-strong"
-                    className="footer-text">
+                    className="footer-text footer-attribution">
                     <Text
                         onBackground="neutral-weak">
                         © {currentYear} /
@@ -42,7 +42,8 @@ export const Footer = () => {
                     </Text>
                 </Text>
                 <Flex
-                    gap="16">
+                    gap="16"
+                    className="footer-social">
                     {social.map((item) => (
                         item.link && (
                             <IconButton

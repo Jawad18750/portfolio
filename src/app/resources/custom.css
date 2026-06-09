@@ -123,6 +123,41 @@ html.arabic-font {
   transform-origin: right !important;
 }
 
+/*
+ * Home hero — visual sandbox (home page only, .hero-section)
+ * Tweak the variables below to try different depth / emphasis without touching TSX.
+ */
+.hero-section {
+  --hero-ambient-spread: 85%;
+  --hero-ambient-falloff: 62%;
+  position: relative;
+  isolation: isolate;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -10%;
+  transform: translateX(-50%);
+  width: min(140vw, 72rem);
+  height: min(55vh, 28rem);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse var(--hero-ambient-spread) 70% at 50% 0%,
+    var(--brand-alpha-medium) 0%,
+    var(--brand-alpha-weak) var(--hero-ambient-falloff),
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-section > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* Hero section - reduce top spacing on mobile */
 @media (max-width: 768px) {
   .hero-section {
